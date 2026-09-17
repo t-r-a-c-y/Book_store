@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# CAP build/runtime output
+target/
+_out/
+gen/
+@cds-models/
+
+# Local/private CAP configuration
+.cdsrc-private.json
+default-*.json
+.env
+.env.*
+*.sqlite
+*.db
+
+# MTA build/deployment artifacts
+mta_archives/
+*_mta_build_tmp
+*.mtar
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE / OS
+.DS_Store
+.vscode/
+.idea/
+
+# @cap-js/cds-typer
+@cds-models/

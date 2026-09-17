@@ -1,0 +1,6 @@
+ID,quantity,order_ID,book_ID
+item-1,2,order-1,book-1
+item-2,1,order-1,book-3
+item-3,3,order-2,book-5
+item-4,1,order-2,book-7
+item-5,2,order-3,book-10

@@ -1,0 +1,11 @@
+ID,title,description,price,stock,author_ID
+book-1,Clean Code,A practical guide to writing clean software,35.00,10,author-1
+book-2,Things Fall Apart,A classic African novel,20.00,5,author-1
+book-3,Harry Potter,The beginning of a magical adventure,25.00,3,author-2
+book-4,1984,A dystopian novel about surveillance,18.00,0,author-3
+book-5,Animal Farm,A political satire,15.00,8,author-3
+book-6,Romeo and Juliet,A classic Shakespearean play,12.00,2,author-4
+book-7,Macbeth,A tragedy by William Shakespeare,14.00,0,author-4
+book-8,The River Between,A novel about tradition and change,22.00,6,author-5
+book-9,Weep Not Child,A novel about colonial Kenya,19.00,4,author-5
+book-10,The Hobbit,A fantasy adventure novel,28.00,7,author-2
