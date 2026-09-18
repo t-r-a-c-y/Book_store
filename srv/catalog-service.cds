@@ -4,13 +4,20 @@ using { API_BUSINESS_PARTNER as external }
     from './external/API_BUSINESS_PARTNER';
 
 @impl: 'srv/catalog-service.cjs'
-@(requires: 'any')
+@requires: 'authenticated-user'
 service CatalogService {
 
+    @restrict: [
+    { grant: 'READ', to: 'Viewer' },
+    { grant: '*', to: 'Admin' }
+    ]
     entity Books as projection on db.Books actions {
         action restock(amount : Integer) returns Books;
     };
-
+    @restrict: [
+    { grant: 'READ', to: 'Viewer' },
+    { grant: '*', to: 'Admin' }
+    ]
     entity Authors as projection on db.Authors;
 
     @cds.redirection.target
