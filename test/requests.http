@@ -637,3 +637,22 @@ Content-Type: text/plain
 
 ####
 https://bbaea2a7trial-kevine-bookshop-srv.cfapps.us10-001.hana.ondemand.com/odata/v4/catalog/Books
+
+### 1. Test Restock as TRACY (Should SUCCEED - Admin)
+POST https://ondemand.com
+Authorization: Basic tracy.tesi@moyotech.net password
+Content-Type: application/json
+
+{
+    "amount": 50
+}
+
+
+### 2. Test Restock as RICHARD (Should FAIL - Viewer Only)
+POST https://bbaea2a7trial-kevine-tracy-bookstore-srv.cfapps.us10-001.hana.ondemand.com/odata/v4/catalog/Books(BOOK_001)/restock
+Authorization: Basic richard.musime@moyotech.net password
+Content-Type: application/json
+
+{
+    "amount": 50
+}
