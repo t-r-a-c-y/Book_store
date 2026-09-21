@@ -1,16 +1,7 @@
 @baseUrl = http://localhost:4004/odata/v4/catalog
 
-############################################################
-# 1. SERVICE METADATA
-############################################################
-
 ### Get service metadata
 GET {{baseUrl}}/$metadata
-
-
-############################################################
-# 2. BASIC READ TESTS
-############################################################
 
 ### Get all Books
 GET {{baseUrl}}/Books
@@ -40,10 +31,6 @@ GET {{baseUrl}}/PurchaseLogs
 GET {{baseUrl}}/Suppliers
 
 
-############################################################
-# 3. CREATE AUTHOR - VALID
-############################################################
-
 ### Create a valid Author
 POST {{baseUrl}}/Authors
 Content-Type: application/json
@@ -53,38 +40,6 @@ Content-Type: application/json
     "country": "GB"
 }
 
-
-############################################################
-# 4. CREATE AUTHOR - EMPTY NAME
-############################################################
-
-### Author name required
-POST {{baseUrl}}/Authors
-Content-Type: application/json
-
-{
-    "name": "",
-    "country": "GB"
-}
-
-
-############################################################
-# 5. CREATE AUTHOR - DUPLICATE
-############################################################
-
-### Duplicate Author
-POST {{baseUrl}}/Authors
-Content-Type: application/json
-
-{
-    "name": "George Orwell",
-    "country": "GB"
-}
-
-
-############################################################
-# 6. CREATE AUTHOR - INVALID COUNTRY
-############################################################
 
 ### Invalid country
 POST {{baseUrl}}/Authors
@@ -96,16 +51,7 @@ Content-Type: application/json
 }
 
 
-############################################################
-# 7. CREATE BOOK - VALID
-############################################################
-
-### Create a valid Book
-#
-# IMPORTANT:
-# Replace AUTHOR_ID_HERE with an actual Author ID
-# returned from GET /Authors.
-#
+### 7. CREATE BOOK - VALID
 POST {{baseUrl}}/Books
 Content-Type: application/json
 
@@ -118,48 +64,10 @@ Content-Type: application/json
 }
 
 
-############################################################
-# 8. CREATE BOOK - EMPTY TITLE
-############################################################
-
-### Book title required
-POST {{baseUrl}}/Books
-Content-Type: application/json
-
-{
-    "title": "",
-    "description": "Test book",
-    "price": 50,
-    "stock": 10,
-    "author_ID": "AUTHOR_ID_HERE"
-}
 
 
-############################################################
-# 9. CREATE BOOK - DUPLICATE
-############################################################
-
-### Duplicate Book
-POST {{baseUrl}}/Books
-Content-Type: application/json
-
-{
-    "title": "My Test Book",
-    "description": "A test book for the CAP project",
-    "price": 50,
-    "stock": 10,
-    "author_ID": "AUTHOR_ID_HERE"
-}
-
-
-############################################################
-# 10. RESTOCK BOOK
-############################################################
 
 ### Restock a Book
-#
-# Replace BOOK_ID_HERE with an actual Book ID.
-#
 POST {{baseUrl}}/Books(BOOK_ID_HERE)/restock
 Content-Type: application/json
 
@@ -168,47 +76,9 @@ Content-Type: application/json
 }
 
 
-############################################################
-# 11. RESTOCK - INVALID AMOUNT
-############################################################
-
-### Restock with zero
-POST {{baseUrl}}/Books(BOOK_ID_HERE)/restock
-Content-Type: application/json
-
-{
-    "amount": 0
-}
 
 
-### Restock with negative amount
-POST {{baseUrl}}/Books(BOOK_ID_HERE)/restock
-Content-Type: application/json
-
-{
-    "amount": -5
-}
-
-
-### Restock with decimal amount
-POST {{baseUrl}}/Books(BOOK_ID_HERE)/restock
-Content-Type: application/json
-
-{
-    "amount": 1.5
-}
-
-
-############################################################
-# 12. CREATE ORDER - VALID
-############################################################
-
-### Create a valid Order
-#
-# Replace:
-# USER_ID_HERE with an existing User ID
-# BOOK_ID_HERE with an existing Book ID
-#
+### 12. CREATE ORDER - VALID
 POST {{baseUrl}}/Orders
 Content-Type: application/json
 
@@ -223,22 +93,7 @@ Content-Type: application/json
     ]
 }
 
-
-############################################################
-# 13. CREATE ORDER - SAME BOOK TWICE
-############################################################
-
-### Test duplicate books in one order
-#
-# Your Map should combine:
-#
-# Book A -> 2
-# Book A -> 3
-#
-# into:
-#
-# Book A -> 5
-#
+### 12. CREATE ORDER - VALID
 POST {{baseUrl}}/Orders
 Content-Type: application/json
 
@@ -258,401 +113,29 @@ Content-Type: application/json
 }
 
 
-############################################################
-# 14. ORDER - MISSING USER
-############################################################
-
-### Missing user
-POST {{baseUrl}}/Orders
-Content-Type: application/json
-
-{
-    "orderDate": "2026-09-16",
-    "items": [
-        {
-            "quantity": 1,
-            "book_ID": "BOOK_ID_HERE"
-        }
-    ]
-}
 
 
-############################################################
-# 15. ORDER - NONEXISTENT USER
-############################################################
-
-### User does not exist
-POST {{baseUrl}}/Orders
-Content-Type: application/json
-
-{
-    "orderDate": "2026-09-16",
-    "user_ID": "00000000-0000-0000-0000-000000000000",
-    "items": [
-        {
-            "quantity": 1,
-            "book_ID": "BOOK_ID_HERE"
-        }
-    ]
-}
-
-
-############################################################
-# 16. ORDER - EMPTY
-############################################################
-
-### Empty order
-POST {{baseUrl}}/Orders
-Content-Type: application/json
-
-{
-    "orderDate": "2026-09-16",
-    "user_ID": "USER_ID_HERE",
-    "items": []
-}
-
-
-############################################################
-# 17. ORDER - INVALID QUANTITY
-############################################################
-
-### Quantity = 0
-POST {{baseUrl}}/Orders
-Content-Type: application/json
-
-{
-    "orderDate": "2026-09-16",
-    "user_ID": "USER_ID_HERE",
-    "items": [
-        {
-            "quantity": 0,
-            "book_ID": "BOOK_ID_HERE"
-        }
-    ]
-}
-
-
-### Quantity = -1
-POST {{baseUrl}}/Orders
-Content-Type: application/json
-
-{
-    "orderDate": "2026-09-16",
-    "user_ID": "USER_ID_HERE",
-    "items": [
-        {
-            "quantity": -1,
-            "book_ID": "BOOK_ID_HERE"
-        }
-    ]
-}
-
-
-### Quantity = 1.5
-POST {{baseUrl}}/Orders
-Content-Type: application/json
-
-{
-    "orderDate": "2026-09-16",
-    "user_ID": "USER_ID_HERE",
-    "items": [
-        {
-            "quantity": 1.5,
-            "book_ID": "BOOK_ID_HERE"
-        }
-    ]
-}
-
-
-############################################################
-# 18. ORDER - BOOK DOES NOT EXIST
-############################################################
-
-### Nonexistent Book
-POST {{baseUrl}}/Orders
-Content-Type: application/json
-
-{
-    "orderDate": "2026-09-16",
-    "user_ID": "USER_ID_HERE",
-    "items": [
-        {
-            "quantity": 1,
-            "book_ID": "00000000-0000-0000-0000-000000000000"
-        }
-    ]
-}
-
-
-############################################################
-# 19. ORDER - INSUFFICIENT STOCK
-############################################################
-
-### Request more books than available stock
-#
-# Make sure BOOK_ID_HERE has less than 999 stock.
-#
-POST {{baseUrl}}/Orders
-Content-Type: application/json
-
-{
-    "orderDate": "2026-09-16",
-    "user_ID": "USER_ID_HERE",
-    "items": [
-        {
-            "quantity": 999,
-            "book_ID": "BOOK_ID_HERE"
-        }
-    ]
-}
-
-
-############################################################
-# 20. ORDER - INSUFFICIENT BUDGET
-############################################################
-
-### Insufficient budget
-#
-# Use a real User ID and a Book with enough stock,
-# but make the quantity expensive enough to exceed
-# the user's budget.
-#
-POST {{baseUrl}}/Orders
-Content-Type: application/json
-
-{
-    "orderDate": "2026-09-16",
-    "user_ID": "USER_ID_HERE",
-    "items": [
-        {
-            "quantity": 100,
-            "book_ID": "BOOK_ID_HERE"
-        }
-    ]
-}
-
-
-############################################################
-# 21. GET ORDERS AFTER CREATION
-############################################################
 
 ### Check Orders
 GET {{baseUrl}}/Orders
 
 
-############################################################
-# 22. GET ORDER ITEMS
-############################################################
-
-# OrderItems are not directly exposed by your service,
-# so this request should NOT be used.
-#
-# OrderItems are created in the database by the CREATE
-# Order handler.
-
-
-############################################################
-# 23. GET PURCHASE LOGS AFTER ORDER
-############################################################
-
-### Check PurchaseLogs
-GET {{baseUrl}}/PurchaseLogs
-
-
-############################################################
-# 24. CHECK BOOK STOCK AFTER ORDER
-############################################################
-
-### Check Books
-GET {{baseUrl}}/Books
-
-
-############################################################
-# 25. CHECK USER BUDGET AFTER ORDER
-############################################################
-
-### Check Users
-GET {{baseUrl}}/Users
-
-
-############################################################
-# 26. CANCEL ORDER
-############################################################
-
-### Cancel an Order
-#
-# Replace ORDER_ID_HERE with the ID of a successfully
-# created order.
-#
+### Cancel Order
 POST {{baseUrl}}/Orders(ORDER_ID_HERE)/cancelOrder
 
 
-############################################################
-# 27. CANCEL ORDER AGAIN
-############################################################
-
-### Cancel already cancelled Order
-POST {{baseUrl}}/Orders(ORDER_ID_HERE)/cancelOrder
-
-
-############################################################
-# 28. CHECK ORDER AFTER CANCELLATION
-############################################################
-
-### Check Orders
-GET {{baseUrl}}/Orders
-
-
-############################################################
-# 29. SUPPLIER TEST
-############################################################
-
-### Get Suppliers from Business Partner service
-GET {{baseUrl}}/Suppliers
-
-
-############################################################
-# 30. SUPPLIER FILTER TEST
-############################################################
 
 ### Get non-blocked suppliers
 GET {{baseUrl}}/Suppliers?$filter=BusinessPartnerIsBlocked eq false
 
 
-############################################################
-# 31. SUPPLIER SELECT TEST
-############################################################
 
 ### Select specific Supplier fields
 GET {{baseUrl}}/Suppliers?$select=BusinessPartner,BusinessPartnerFullName
 
 
-############################################################
-# 32. SUPPLIER ORDER TEST
-############################################################
 
 ### Order Suppliers by name
 GET {{baseUrl}}/Suppliers?$orderby=BusinessPartnerFullName
 
 
-############################################################
-# 33. SUPPLIER FAILURE TEST
-############################################################
-
-# TEMPORARY TEST ONLY
-#
-# To test this, temporarily change your handler:
-#
-# cds.connect.to('API_BUSINESS_PARTNER')
-#
-# to:
-#
-# cds.connect.to('API_BUSINESS_PARTNER_TEST')
-#
-# Then run:
-#
-# GET {{baseUrl}}/Suppliers
-#
-# Expected:
-# 503 SUPPLIER_SERVICE_UNAVAILABLE
-#
-# AFTER TESTING, CHANGE THE HANDLER BACK TO:
-#
-# cds.connect.to('API_BUSINESS_PARTNER')
-
-
-############################################################
-# 34. FINAL CHECK
-############################################################
-
-### Final Books
-GET {{baseUrl}}/Books
-
-
-### Final Authors
-GET {{baseUrl}}/Authors
-
-
-### Final Users
-GET {{baseUrl}}/Users
-
-
-### Final BudgetUsers
-GET {{baseUrl}}/BudgetUsers
-
-
-### Final Orders
-GET {{baseUrl}}/Orders
-
-
-### Final PurchaseLogs
-GET {{baseUrl}}/PurchaseLogs
-
-
-### Final Suppliers
-GET {{baseUrl}}/Suppliers
-
-
-###
-GET {{baseUrl}}/Suppliers?$filter=BusinessPartnerIsBlocked eq false
-
-
-###
-GET {{baseUrl}}/Books
-
-###
-GET http://localhost:4004/odata/v2/catalog/$metadata
-
-###
-GET http://localhost:4004/odata/v4/catalog/Books?$expand=attachments
-
-
-###
-GET http://localhost:4004/odata/v4/catalog/$metadata
-
-###
-GET http://localhost:4004/odata/v4/catalog/Books(book-1)/attachments
-
-
-###
-POST http://localhost:4004/odata/v4/catalog/Books(book-1)/attachments
-Content-Type: application/json
-
-{
-  "filename": "test-book.txt",
-  "mimeType": "text/plain",
-  "note": "Test attachment for Clean Code"
-}
-
-
-###
-GET http://localhost:4004/odata/v4/catalog/Books(book-1)/attachments(2db89834-d5f5-4a0f-a30a-61ce860a0f33)/content
-
-###
-PUT http://localhost:4004/odata/v4/catalog/Books(book-1)/attachments(ID=2db89834-d5f5-4a0f-a30a-61ce860a0f33)/content
-Content-Type: text/plain
-
-< ./test-book.txt
-
-
-####
-https://bbaea2a7trial-kevine-bookshop-srv.cfapps.us10-001.hana.ondemand.com/odata/v4/catalog/Books
-
-### 1. Test Restock as TRACY (Should SUCCEED - Admin)
-POST https://ondemand.com
-Authorization: Basic tracy.tesi@moyotech.net password
-Content-Type: application/json
-
-{
-    "amount": 50
-}
-
-
-### 2. Test Restock as RICHARD (Should FAIL - Viewer Only)
-POST https://bbaea2a7trial-kevine-tracy-bookstore-srv.cfapps.us10-001.hana.ondemand.com/odata/v4/catalog/Books(BOOK_001)/restock
-Authorization: Basic richard.musime@moyotech.net password
-Content-Type: application/json
-
-{
-    "amount": 50
-}
