@@ -28,22 +28,16 @@
         "model": "srv/external/API_BUSINESS_PARTNER"
       },
       "[production]": {
+        "auth": "xsuaa",
         "db": {
           "kind": "hana"
         },
-        "auth": {
-          "kind": "mocked",
-          "users": {
-            "richard.musime@moyotech.net": {
-              "roles": ["Viewer", "Admin", "authenticated-user"]
-            },
-            "tracy.tesi@moyotech.net": {
-              "roles": ["Viewer", "authenticated-user"]
-            }
-          }
-        },
         "API_BUSINESS_PARTNER": {
-          "impl": "@sap/cds/srv/app-service.js"
+          "kind": "odata-v2",
+          "model": "srv/external/API_BUSINESS_PARTNER",
+          "credentials": {
+            "destination": "API_BUSINESS_PARTNER"
+          }
         }
       }
     }
