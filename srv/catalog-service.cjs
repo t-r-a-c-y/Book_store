@@ -259,4 +259,18 @@ module.exports = cds.service.impl(function () {
             );
         }
     });
+
+    this.before('SAVE', 'Books', async (req) => {
+    const { title, ID } = req.data;
+
+    const existing = await SELECT.one.from('CatalogService.Books')
+        .where({
+            title,
+            IsActiveEntity: true
+        });
+
+    if (existing && existing.ID !== ID) {
+        req.error(400, 'A book with this title already exists.');
+    }
+});
 });
