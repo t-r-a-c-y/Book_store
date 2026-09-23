@@ -44,13 +44,13 @@ service CatalogService {
             ]
         }
     );
-
+    @odata.draft.enabled
     entity Books as projection on db.Books actions {
         action restock(amount : Integer) returns Books;
     };
 
     entity Authors as projection on db.Authors;
-
+    
     @cds.redirection.target
     entity Users as projection on db.Users;
 
@@ -60,7 +60,7 @@ service CatalogService {
         name,
         budget
     };
-
+    @odata.draft.enabled
     entity Orders as projection on db.Orders actions {
         action cancelOrder() returns Orders;
     };
