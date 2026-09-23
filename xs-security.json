@@ -9,6 +9,14 @@
     {
       "name": "$XSAPPNAME.Admin",
       "description": "Admin access"
+    },
+    {
+      "name": "$XSAPPNAME.Viewer",
+      "description": "Viewer"
+    },
+    {
+      "name": "$XSAPPNAME.Admin",
+      "description": "Admin"
     }
   ],
   "role-templates": [
@@ -27,5 +35,6 @@
         "$XSAPPNAME.Admin"
       ]
     }
-  ]
+  ],
+  "attributes": []
 }
