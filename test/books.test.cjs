@@ -1,9 +1,11 @@
 const cds = require('@sap/cds');
 
-// Start your local CAP instance using standard directory resolution
+// 1. Force Jest to wait up to 30 seconds for any setup hooks to complete
+jest.setTimeout(30000);
+
+// 2. Start your local CAP instance safely using standard directory resolution
 const { GET } = cds.test(__dirname + '/..');
 
-// We append 15000 (15 seconds) as the 3rd argument to give the compiler enough setup time
 describe('Bookshop', () => {
 
     test('CAP server starts', async () => {
@@ -12,6 +14,6 @@ describe('Bookshop', () => {
 
         expect(response.status).toBe(200);
 
-    }, 15000);
+    });
 
-}, 15000);
+});
