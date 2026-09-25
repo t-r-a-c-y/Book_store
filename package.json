@@ -16,10 +16,12 @@
   "devDependencies": {
     "@cap-js/sqlite": "^3",
     "@sap/cds-dk": "^10",
-    "cds-plugin-ui5": "^0.17.0"
+    "cds-plugin-ui5": "^0.17.0",
+    "jest": "^30.5.2"
   },
   "scripts": {
     "start": "cds-serve",
+    "test": "jest --runInBand",
     "watch-bookshop-fiori": "cds watch --open ns.bookshopfiori/index.html?sap-ui-xx-viewCache=false --livereload false"
   },
   "private": true,
