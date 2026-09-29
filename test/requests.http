@@ -47,7 +47,7 @@ Content-Type: application/json
 
 {
     "name": "Test Author",
-    "country": "rwanda"
+    "country": "RW"
 }
 
 
@@ -68,7 +68,7 @@ Content-Type: application/json
 
 
 ### Restock a Book
-POST {{baseUrl}}/Books(BOOK_ID_HERE)/restock
+POST {{baseUrl}}/Books(book-2)/restock
 Content-Type: application/json
 
 {
@@ -139,3 +139,33 @@ GET {{baseUrl}}/Suppliers?$select=BusinessPartner,BusinessPartnerFullName
 GET {{baseUrl}}/Suppliers?$orderby=BusinessPartnerFullName
 
 
+
+### 1. Get a book ID
+GET http://localhost:4004/odata/v4/catalog/Books
+Authorization: Basic admin:
+
+
+### 2. Change the price (this triggers the changelog)
+PATCH http://localhost:4004/odata/v4/catalog/Books(book-1)
+Content-Type: application/json
+Authorization: Basic admin:
+
+{
+  "price": 99.99
+}
+
+###
+GET http://localhost:4004/odata/v4/catalog/Users
+Authorization: Basic admin:
+
+### Option 1 (most common)
+GET http://localhost:4004/odata/v4/catalog/Changes
+Authorization: Basic admin:
+
+### Option 2
+GET http://localhost:4004/odata/v4/catalog/sap.changelog.Changes
+Authorization: Basic admin:
+
+### Option 3 – check what is actually available
+GET http://localhost:4004/odata/v4/catalog/$metadata
+Authorization: Basic admin:

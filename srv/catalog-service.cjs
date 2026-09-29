@@ -29,26 +29,32 @@ module.exports = cds.service.impl(function () {
         }
     });
 
-    this.before('CREATE', 'Books', async (req) => {
+         this.before(['CREATE', 'NEW'], ['Books', 'Books.drafts'], async (req) => {
         const title = req.data.title?.trim();
         if (!title) {
-            return req.reject(
-                400,
-                'BOOK_TITLE_REQUIRED'
-            );
+            return req.reject(400, 'BOOK_TITLE_REQUIRED');
         }
 
-        const existingBook = await SELECT.one
+        
+        const existingActiveBook = await SELECT.one
             .from('my.bookshop.Books')
             .where({ title });
 
-        if (existingBook) {
-            return req.reject(
-                400,
-                'BOOK_ALREADY_EXISTS'
-            );
+        if (existingActiveBook && existingActiveBook.ID !== req.data.ID) {
+            return req.reject(400, 'BOOK_ALREADY_EXISTS');
+        }
+
+       
+        const existingDraftBook = await SELECT.one
+            .from('CatalogService.Books.drafts')
+            .where({ title });
+
+        if (existingDraftBook && existingDraftBook.ID !== req.data.ID) {
+            return req.reject(400, 'BOOK_ALREADY_EXISTS');
         }
     });
+
+
 
     this.after('READ', 'Books', async (books) => {
         const list = Array.isArray(books) ? books : [books];
@@ -68,9 +74,9 @@ module.exports = cds.service.impl(function () {
         const bookId = req.params[0].ID;
 
         if (!Number.isInteger(amount) || amount <= 0) {
-            return req.reject(
+            return req.error(
                 400,
-                'INVALID_RESTOCK_AMOUNT'
+                'Restock amount must be a positive whole number.'
             );
         }
 
@@ -212,6 +218,7 @@ module.exports = cds.service.impl(function () {
                     .where({ ID: bookId })
             );
 
+            // throw new Error('ROLLBACK_TEST');
             await tx.run(
                 INSERT.into('my.bookshop.PurchaseLogs').entries({
                     ID: cds.utils.uuid(),
@@ -259,16 +266,6 @@ module.exports = cds.service.impl(function () {
             );
         }
     });
-    this.before('SAVE', 'Books', async (req) => {
-    const { title, ID } = req.data;
 
-    const existing = await SELECT.one
-        .from('my.bookshop.Books')
-        .where({ title });
-
-    if (existing && existing.ID !== ID) {
-        req.error(400, 'A book with this title already exists.');
-    }
-});
     
 });

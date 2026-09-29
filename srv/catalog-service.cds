@@ -3,9 +3,9 @@ using my.bookshop as db from '../db/schema';
 using { API_BUSINESS_PARTNER as external }
     from './external/API_BUSINESS_PARTNER';
 
-@impl: 'srv/catalog-service.cjs'
-
+@impl: './catalog-service.cjs'
 service CatalogService {
+
 
     @odata.draft.enabled
   
@@ -26,7 +26,7 @@ service CatalogService {
         budget
     };
 
-     @odata.draft.enabled
+     
    
     entity Orders as projection on db.Orders actions {
         action cancelOrder() returns Orders;
@@ -35,4 +35,6 @@ service CatalogService {
     entity PurchaseLogs as projection on db.PurchaseLogs;
 
     entity Suppliers as projection on external.A_BusinessPartner;
+
+    
 }

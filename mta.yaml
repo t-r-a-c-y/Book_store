@@ -30,6 +30,7 @@ modules:
       - name: tracy-bookstore-auth
       - name: tracy-bookstore-db
       - name: tracy-bookstore-destination
+      - name: tracy-bookstore-auditlog
 
   - name: tracy-bookstore-db-deployer
     type: hdb
@@ -67,3 +68,8 @@ resources:
     parameters:
       service: destination
       service-plan: lite
+  - name: tracy-bookstore-auditlog
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: auditlog
+      service-plan: premium
