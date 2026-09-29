@@ -1,0 +1,22 @@
+<mvc:View
+  controllerName="ns.bookshopfiori.controller.Books"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  displayBlock="true">
+
+  <Page id="booksPage" title="Bookshop - Books">
+    <content>
+      <List id="booksList"
+            items="{/Books}"
+            headerText="Available Books">
+        <ObjectListItem
+          title="{title}"
+          number="{price}"
+          numberUnit="EUR"
+          intro="{author/name}"
+          type="Active" />
+      </List>
+    </content>
+  </Page>
+
+</mvc:View>
