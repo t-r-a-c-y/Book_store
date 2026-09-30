@@ -5,12 +5,19 @@
   displayBlock="true"
   height="100%">
 
-  <Page title="Bookshop - Books (from CAP)" height="100%" enableScrolling="true">
+  
+  <Page 
+    title="{i18n>booksPageTitle}" 
+    height="100%" 
+    enableScrolling="true">
+
     <content>
-      <List id="booksList"
-            items="{/Books}"
-            headerText="Books from CAP Service"
-            class="sapUiSmallMargin">
+      <List 
+        id="booksList"
+        items="{/Books}"
+        headerText="{i18n>booksListHeader}"
+        class="sapUiSmallMargin">
+
         <ObjectListItem
           title="{title}"
           number="{price}"
@@ -20,5 +27,4 @@
       </List>
     </content>
   </Page>
-
 </mvc:View>
