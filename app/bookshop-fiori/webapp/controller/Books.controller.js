@@ -1,14 +1,12 @@
 sap.ui.define([
   "sap/ui/core/mvc/Controller",
-  "sap/ui/model/json/JSONModel"          // ← we need this
+  "sap/ui/model/json/JSONModel"
 ], function (Controller, JSONModel) {
   "use strict";
 
   return Controller.extend("ns.bookshopfiori.controller.Books", {
 
     onInit: function () {
-
-      // 1. Create some dummy data
       var oData = {
         Books: [
           {
@@ -29,13 +27,10 @@ sap.ui.define([
         ]
       };
 
-      // 2. Create a JSONModel with that data
       var oModel = new JSONModel(oData);
+      this.getView().setModel(oModel, "books");
 
-      // 3. Set the model on the view
-      this.getView().setModel(oModel);
-
-      console.log("JSON Model has been set");
+      console.log("JSON Model with books has been set");
     }
 
   });

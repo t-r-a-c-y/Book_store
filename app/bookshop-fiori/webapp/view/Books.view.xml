@@ -2,18 +2,20 @@
   controllerName="ns.bookshopfiori.controller.Books"
   xmlns:mvc="sap.ui.core.mvc"
   xmlns="sap.m"
-  displayBlock="true">
+  displayBlock="true"
+  height="100%">
 
-  <Page id="booksPage" title="Bookshop - Books">
+  <Page title="Bookshop - Books" height="100%" enableScrolling="true">
     <content>
       <List id="booksList"
-            items="{/Books}"
-            headerText="Available Books">
+            items="{books>/Books}"
+            headerText="Available Books"
+            class="sapUiSmallMargin">
         <ObjectListItem
-          title="{title}"
-          number="{price}"
+          title="{books>title}"
+          number="{books>price}"
           numberUnit="EUR"
-          intro="{author/name}"
+          intro="{books>author/name}"
           type="Active" />
       </List>
     </content>
