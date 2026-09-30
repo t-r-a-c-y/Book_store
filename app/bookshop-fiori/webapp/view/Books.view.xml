@@ -2,29 +2,39 @@
   controllerName="ns.bookshopfiori.controller.Books"
   xmlns:mvc="sap.ui.core.mvc"
   xmlns="sap.m"
-  displayBlock="true"
-  height="100%">
+  displayBlock="true">
 
-  
   <Page 
-    title="{i18n>booksPageTitle}" 
-    height="100%" 
-    enableScrolling="true">
+    id="booksPage"
+    title="{i18n>booksPageTitle}"
+    showNavButton="false">
+
+    <!-- Optional header content -->
+    <headerContent>
+      <Button icon="sap-icon://refresh" tooltip="Refresh" press=".onRefresh" />
+    </headerContent>
 
     <content>
-      <List 
-        id="booksList"
-        items="{/Books}"
+      <!-- Panel gives a nice titled section -->
+      <Panel 
         headerText="{i18n>booksListHeader}"
-        class="sapUiSmallMargin">
+        expandable="false"
+        class="sapUiResponsiveMargin">
 
-        <ObjectListItem
-          title="{title}"
-          number="{price}"
-          numberUnit="EUR"
-          intro="{author/name}"
-          type="Active" />
-      </List>
+        <List 
+          id="booksList"
+          items="{/Books}"
+          mode="SingleSelectMaster">
+          <ObjectListItem
+            title="{title}"
+            number="{price}"
+            numberUnit="EUR"
+            intro="{author/name}"
+            type="Active"
+            press=".onBookPress" />
+        </List>
+      </Panel>
     </content>
+
   </Page>
 </mvc:View>
