@@ -1,12 +1,22 @@
-sap.ui.define(
-    ["sap/fe/core/AppComponent"],
-    function (Component) {
-        "use strict";
+sap.ui.define([
+  "sap/ui/core/UIComponent",
+  "sap/ui/Device"
+], function (UIComponent, Device) {
+  "use strict";
 
-        return Component.extend("ns.bookshopfiori.Component", {
-            metadata: {
-                manifest: "json"
-            }
-        });
+  return UIComponent.extend("ns.bookshopfiori.Component", {
+
+    metadata: {
+      manifest: "json"   
+    },
+
+    
+    init: function () {
+      
+      UIComponent.prototype.init.apply(this, arguments);
+
+     
+      this.getRouter().initialize();
     }
-);
+  });
+});

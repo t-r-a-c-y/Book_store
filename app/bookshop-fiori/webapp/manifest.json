@@ -43,13 +43,7 @@
     }
   },
   "sap.ui5": {
-    "flexEnabled": true,
-    "rootView": {
-    "viewName": "ns.bookshopfiori.view.Books",
-    "type": "XML",
-    "async": true,
-    "id": "booksView"
-  },
+    "flexEnabled": false,
     "dependencies": {
       "minUI5Version": "1.152.0",
       "libs": {
@@ -87,9 +81,28 @@
       "css": []
     },
     "routing": {
-  "config": {},
-  "routes": [],
-  "targets": {}
+    "config": {
+      "routerClass": "sap.m.routing.Router",
+      "viewType": "XML",
+      "viewPath": "ns.bookshopfiori.view",
+      "controlId": "app",
+      "controlAggregation": "pages",
+      "async": true
+    },
+    "routes": [
+      {
+        "pattern": "",
+        "name": "books",
+        "target": "books"
+      }
+    ],
+    "targets": {
+      "books": {
+        "viewId": "books",
+        "viewName": "Books",
+        "viewLevel": 1
+      }
+    }
 }
   },
   "sap.fiori": {
