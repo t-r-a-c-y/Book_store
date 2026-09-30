@@ -5,17 +5,17 @@
   displayBlock="true"
   height="100%">
 
-  <Page title="Bookshop - Books" height="100%" enableScrolling="true">
+  <Page title="Bookshop - Books (from CAP)" height="100%" enableScrolling="true">
     <content>
       <List id="booksList"
-            items="{books>/Books}"
-            headerText="Available Books"
+            items="{/Books}"
+            headerText="Books from CAP Service"
             class="sapUiSmallMargin">
         <ObjectListItem
-          title="{books>title}"
-          number="{books>price}"
+          title="{title}"
+          number="{price}"
           numberUnit="EUR"
-          intro="{books>author/name}"
+          intro="{author/name}"
           type="Active" />
       </List>
     </content>
