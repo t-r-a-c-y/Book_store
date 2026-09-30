@@ -1,0 +1,21 @@
+/* Custom style for the Books list */
+
+.myBookListItem {
+  border-left: 4px solid #0070f2; /* SAP blue accent */
+  margin-bottom: 0.5rem;
+}
+
+.myBookListItem .sapMObjLTitle {
+  font-weight: bold;
+  color: #1a1a1a;
+}
+
+.myPageTitle {
+  font-size: 1.4rem !important;
+}
+
+/* Make the Panel header a bit nicer */
+.myBooksPanel .sapMPanelHdr {
+  background-color: #f5f6f7;
+  font-weight: 600;
+}

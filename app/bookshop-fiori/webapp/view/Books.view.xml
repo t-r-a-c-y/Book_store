@@ -7,19 +7,18 @@
   <Page 
     id="booksPage"
     title="{i18n>booksPageTitle}"
-    showNavButton="false">
-
+    titleAlignment="Center"
+    class="myPageTitle">
 
     <headerContent>
       <Button icon="sap-icon://refresh" tooltip="Refresh" press=".onRefresh" />
     </headerContent>
 
     <content>
-     
       <Panel 
         headerText="{i18n>booksListHeader}"
         expandable="false"
-        class="sapUiResponsiveMargin">
+        class="sapUiResponsiveMargin myBooksPanel">
 
         <List 
           id="booksList"
@@ -31,7 +30,8 @@
             numberUnit="EUR"
             intro="{author/name}"
             type="Active"
-            press=".onBookPress" />
+            press=".onBookPress"
+            class="myBookListItem" />
         </List>
       </Panel>
     </content>
