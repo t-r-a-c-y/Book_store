@@ -8,17 +8,15 @@ sap.ui.define([
 
     onInit: function () {
       
-      var oModel = new ODataModel({
-        serviceUrl: "/odata/v4/catalog/",
-        synchronizationMode: "None",
-        operationMode: "Server",
-        autoExpandSelect: true
-      });
+    },
 
-      
-      this.getView().setModel(oModel);
+    onRefresh: function () {
+      this.getView().getModel().refresh();
+    },
 
-      console.log("OData Model connected to CAP service");
+    onBookPress: function (oEvent) {
+      var oBook = oEvent.getSource().getBindingContext().getObject();
+      console.log("Book clicked:", oBook.title);
     }
 
   });

@@ -9,13 +9,13 @@
     title="{i18n>booksPageTitle}"
     showNavButton="false">
 
-    <!-- Optional header content -->
+
     <headerContent>
       <Button icon="sap-icon://refresh" tooltip="Refresh" press=".onRefresh" />
     </headerContent>
 
     <content>
-      <!-- Panel gives a nice titled section -->
+     
       <Panel 
         headerText="{i18n>booksListHeader}"
         expandable="false"
