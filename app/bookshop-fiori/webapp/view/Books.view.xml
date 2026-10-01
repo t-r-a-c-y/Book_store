@@ -24,15 +24,23 @@
           id="booksList"
           items="{/Books}">
           <ObjectListItem
-            title="{title}"
-            number="{
-               path: 'price',
-                formatter: '.formatter.price'
-              }"
-            intro="{author/name}"
-            type="Active"
-            press=".onBookPress"
-            class="myBookListItem" />
+  title="{title}"
+  number="{
+    path: 'price',
+    formatter: '.formatter.price'
+  }"
+  intro="{author/name}"
+  type="Active"
+  press=".onBookPress"
+  class="myBookListItem">
+
+  <firstStatus>
+    <ObjectStatus
+      text="{= ${stock} > 0 ? 'In Stock' : 'Out of Stock' }"
+      state="{= ${stock} > 0 ? 'Success' : 'Error' }" />
+  </firstStatus>
+
+</ObjectListItem>
         </List>
       </Panel>
     </content>
