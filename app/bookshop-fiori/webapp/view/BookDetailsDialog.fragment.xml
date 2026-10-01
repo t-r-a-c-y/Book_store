@@ -5,21 +5,31 @@
   <Dialog
     id="bookDetailsDialog"
     title="Book Details"
-    type="Message"
+    icon="sap-icon://course-book"
     class="sapUiResponsiveContentPadding">
 
     <content>
-      <VBox class="sapUiSmallMargin">
-        <Text text="Title: {title}" />
-        <Text text="Price: {price} EUR" />
-        <Text text="Author: {author/name}" />
+      <VBox class="sapUiSmallMargin" alignItems="Start">
+        <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+          <core:Icon src="sap-icon://course-book" class="sapUiTinyMarginEnd" />
+          <Text text="{title}" class="sapUiMediumMarginBegin" />
+        </HBox>
+
+        <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+          <core:Icon src="sap-icon://money-bills" class="sapUiTinyMarginEnd" />
+          <Text text="{price} EUR" />
+        </HBox>
+
+        <HBox alignItems="Center">
+          <core:Icon src="sap-icon://person-placeholder" class="sapUiTinyMarginEnd" />
+          <Text text="{author/name}" />
+        </HBox>
       </VBox>
     </content>
 
     <beginButton>
-      <Button text="Close" press=".onCloseDialog" />
+      <Button text="Close" icon="sap-icon://decline" press=".onCloseDialog" type="Emphasized" />
     </beginButton>
 
   </Dialog>
-
 </core:FragmentDefinition>

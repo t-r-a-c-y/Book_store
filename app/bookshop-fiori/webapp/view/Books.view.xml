@@ -22,8 +22,7 @@
 
         <List 
           id="booksList"
-          items="{/Books}"
-          mode="SingleSelectMaster">
+          items="{/Books}">
           <ObjectListItem
             title="{title}"
             number="{price}"
