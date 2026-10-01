@@ -1,8 +1,10 @@
 sap.ui.define([
   "sap/ui/core/mvc/Controller",
   "sap/ui/core/Fragment",
-  "ns/bookshopfiori/model/formatter"
-], function (Controller, Fragment,formatter) {
+  "ns/bookshopfiori/model/formatter",
+  "sap/ui/model/Filter",
+  "sap/ui/model/FilterOperator",
+], function (Controller, Fragment,formatter, Filter, FilterOperator) {
   "use strict";
 
   return Controller.extend("ns.bookshopfiori.controller.Books", {
@@ -46,5 +48,20 @@ sap.ui.define([
       this.byId("bookDetailsDialog").close();
     }
 
+    onSearch: function (oEvent) {
+  var sQuery = oEvent.getParameter("newValue");
+  var oBinding = this.byId("booksList").getBinding("items");
+
+  if (sQuery) {
+    oBinding.filter([
+      new Filter("title", FilterOperator.Contains, sQuery)
+    ]);
+  } else {
+    oBinding.filter([]);
+  }
+}
+
   });
+
+  
 });

@@ -13,6 +13,14 @@
     <headerContent>
       <Button icon="sap-icon://refresh" tooltip="Refresh" press=".onRefresh" />
     </headerContent>
+    <subHeader>
+    <Toolbar>
+      <SearchField 
+        width="100%" 
+        placeholder="Search books..."
+        liveChange=".onSearch" />
+    </Toolbar>
+  </subHeader>
 
     <content>
       <Panel 
