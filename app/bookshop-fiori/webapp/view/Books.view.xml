@@ -2,57 +2,49 @@
   controllerName="ns.bookshopfiori.controller.Books"
   xmlns:mvc="sap.ui.core.mvc"
   xmlns="sap.m"
+  xmlns:core="sap.ui.core"
   displayBlock="true">
 
-  <Page 
-    id="booksPage"
-    title="{i18n>booksPageTitle}"
-    titleAlignment="Center"
-    class="myPageTitle">
+  <Page title="{i18n>booksPageTitle}">
+
+    <subHeader>
+      <Toolbar>
+        <SearchField
+          width="100%"
+          placeholder="Search books..."
+          liveChange=".onSearch" />
+      </Toolbar>
+    </subHeader>
 
     <headerContent>
-  <Button icon="sap-icon://sort" press=".onSort" tooltip="Sort by Title" />
-  <Button icon="sap-icon://refresh" press=".onRefresh" />
-</headerContent>
-    <subHeader>
-    <Toolbar>
-      <SearchField 
-        width="100%" 
-        placeholder="Search books..."
-        liveChange=".onSearch" />
-    </Toolbar>
-  </subHeader>
+      <Button icon="sap-icon://sort" press=".onSort" tooltip="Sort by Title" />
+      <Button icon="sap-icon://refresh" press=".onRefresh" tooltip="Refresh" />
+    </headerContent>
 
     <content>
-      <Panel 
+      <Panel
         headerText="{i18n>booksListHeader}"
-        expandable="false"
         class="sapUiResponsiveMargin myBooksPanel">
 
-        <List 
-          id="booksList"
-          items="{/Books}">
+        <List id="booksList" items="{/Books}">
           <ObjectListItem
-  title="{title}"
-  number="{
-    path: 'price',
-    formatter: '.formatter.price'
-  }"
-  intro="{author/name}"
-  type="Active"
-  press=".onBookPress"
-  class="myBookListItem">
+            title="{title}"
+            number="{price}"
+            numberUnit="EUR"
+            intro="{author/name}"
+            type="Active"
+            press=".onBookPress"
+            class="myBookListItem">
 
-  <firstStatus>
-    <ObjectStatus
-      text="{= ${stock} > 0 ? 'In Stock' : 'Out of Stock' }"
-      state="{= ${stock} > 0 ? 'Success' : 'Error' }" />
-  </firstStatus>
+            <firstStatus>
+              <ObjectStatus
+                text="{= ${stock} > 0 ? 'In Stock' : 'Out of Stock' }"
+                state="{= ${stock} > 0 ? 'Success' : 'Error' }" />
+            </firstStatus>
 
-</ObjectListItem>
+          </ObjectListItem>
         </List>
       </Panel>
     </content>
-
   </Page>
 </mvc:View>
