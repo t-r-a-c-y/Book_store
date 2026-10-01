@@ -1,8 +1,7 @@
-/* Custom style for the Books list */
-
 .myBookListItem {
-  border-left: 4px solid #0070f2; 
-  margin-bottom: 0.5rem;
+  border-left: 4px solid #0070f2;
+  margin-bottom: 0.4rem;
+  border-radius: 0.25rem;
 }
 
 .myBookListItem .sapMObjLTitle {
@@ -14,15 +13,19 @@
   font-size: 1.4rem !important;
 }
 
-/* Make the Panel header a bit nicer */
+
 .myBooksPanel .sapMPanelHdr {
   background-color: #f5f6f7;
   font-weight: 600;
 }
 
-/* Give the Panel more space on left and right */
 .myBooksPanel {
-  margin-left: 2rem !important;
-  margin-right: 2rem !important;
+  margin-left: 1.5rem !important;
+  margin-right: 1.5rem !important;
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.sapMSF {
   max-width: 100%;
 }

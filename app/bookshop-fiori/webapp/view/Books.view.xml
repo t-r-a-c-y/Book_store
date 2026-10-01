@@ -7,12 +7,15 @@
 
   <Page title="{i18n>booksPageTitle}">
 
+    <!-- Better looking search area -->
     <subHeader>
-      <Toolbar>
+      <Toolbar class="sapUiSizeCompact">
         <SearchField
+          id="searchField"
           width="100%"
-          placeholder="Search books..."
-          liveChange=".onSearch" />
+          placeholder="Search by book title..."
+          liveChange=".onSearch"
+          showSearchButton="true" />
       </Toolbar>
     </subHeader>
 
@@ -22,6 +25,7 @@
     </headerContent>
 
     <content>
+      <!-- More space on left and right -->
       <Panel
         headerText="{i18n>booksListHeader}"
         class="sapUiResponsiveMargin myBooksPanel">
