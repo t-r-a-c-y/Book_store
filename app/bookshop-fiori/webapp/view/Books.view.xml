@@ -11,8 +11,9 @@
     class="myPageTitle">
 
     <headerContent>
-      <Button icon="sap-icon://refresh" tooltip="Refresh" press=".onRefresh" />
-    </headerContent>
+  <Button icon="sap-icon://sort" press=".onSort" tooltip="Sort by Title" />
+  <Button icon="sap-icon://refresh" press=".onRefresh" />
+</headerContent>
     <subHeader>
     <Toolbar>
       <SearchField 

@@ -4,7 +4,8 @@ sap.ui.define([
   "ns/bookshopfiori/model/formatter",
   "sap/ui/model/Filter",
   "sap/ui/model/FilterOperator",
-], function (Controller, Fragment,formatter, Filter, FilterOperator) {
+  "sap/ui/model/Sorter"
+], function (Controller, Fragment,formatter, Filter, FilterOperator, Sorter) {
   "use strict";
 
   return Controller.extend("ns.bookshopfiori.controller.Books", {
@@ -59,6 +60,12 @@ sap.ui.define([
   } else {
     oBinding.filter([]);
   }
+}
+
+onSort: function () {
+  var oBinding = this.byId("booksList").getBinding("items");
+  var oSorter = new sap.ui.model.Sorter("title", false); 
+  oBinding.sort([oSorter]);
 }
 
   });
