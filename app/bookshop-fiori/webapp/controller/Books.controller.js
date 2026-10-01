@@ -1,10 +1,13 @@
 sap.ui.define([
   "sap/ui/core/mvc/Controller",
-  "sap/ui/core/Fragment"
-], function (Controller, Fragment) {
+  "sap/ui/core/Fragment",
+  "ns/bookshopfiori/model/formatter"
+], function (Controller, Fragment,formatter) {
   "use strict";
 
   return Controller.extend("ns.bookshopfiori.controller.Books", {
+
+    formatter: formatter,
 
     onInit: function () {
       
