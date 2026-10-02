@@ -3,15 +3,21 @@ sap.ui.define([
 ], function (formatter) {
   "use strict";
 
-  QUnit.module("formatter");
+  QUnit.module("Formatter");
 
-  QUnit.test("price formatter returns correct format", function (assert) {
-    var sResult = formatter.price(29.5);
-    assert.strictEqual(sResult, "29.50 EUR", "Price was formatted correctly");
+  QUnit.test("Price formatter - normal value", function (assert) {
+    assert.strictEqual(formatter.price(29.5), "29.50 EUR", "Formats 29.5 correctly");
   });
 
-  QUnit.test("price formatter handles null", function (assert) {
-    var sResult = formatter.price(null);
-    assert.strictEqual(sResult, "", "Null returns empty string");
+  QUnit.test("Price formatter - zero", function (assert) {
+    assert.strictEqual(formatter.price(0), "0.00 EUR", "Formats 0 correctly");
+  });
+
+  QUnit.test("Price formatter - null", function (assert) {
+    assert.strictEqual(formatter.price(null), "", "Returns empty string for null");
+  });
+
+  QUnit.test("Price formatter - undefined", function (assert) {
+    assert.strictEqual(formatter.price(undefined), "", "Returns empty string for undefined");
   });
 });
