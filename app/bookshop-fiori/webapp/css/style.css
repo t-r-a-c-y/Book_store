@@ -41,3 +41,8 @@
   margin-left: 1.5rem !important;
   margin-right: 1.5rem !important;
 }
+
+.myBookRating {
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+}

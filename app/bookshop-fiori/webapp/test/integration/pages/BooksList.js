@@ -20,9 +20,9 @@ sap.ui.define([
       assertions: {
         iShouldSeeTheBooksList: function () {
           return this.waitFor({
-            id: "booksList",
-            success: function () {
-              Opa5.assert.ok(true, "The books list is visible");
+            controlType: "sap.m.List",
+            success: function (aLists) {
+              Opa5.assert.ok(aLists.length > 0, "The books list is visible");
             },
             errorMessage: "The books list was not found"
           });
