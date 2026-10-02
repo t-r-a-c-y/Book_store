@@ -25,7 +25,7 @@
     </headerContent>
 
     <content>
-      <!-- More space on left and right -->
+      <!-- More space on left and right -->n
       <Panel
         headerText="{i18n>booksListHeader}"
         class="sapUiResponsiveMargin myBooksPanel">

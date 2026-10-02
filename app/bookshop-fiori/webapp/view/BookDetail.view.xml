@@ -1,0 +1,41 @@
+<mvc:View
+  controllerName="ns.bookshopfiori.controller.BookDetail"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  displayBlock="true">
+
+  <Page
+    id="bookDetailPage"
+    title="Book Details"
+    showNavButton="true"
+    navButtonPress=".onNavBack">
+
+    <content>
+      <ObjectHeader
+        title="{title}"
+        number="{price}"
+        numberUnit="EUR"
+        class="sapUiResponsiveMargin">
+
+        <attributes>
+          <ObjectAttribute title="Author" text="{author/name}" />
+          <ObjectAttribute title="Stock" text="{stock}" />
+        </attributes>
+
+        <statuses>
+          <ObjectStatus
+            text="{= ${stock} > 0 ? 'In Stock' : 'Out of Stock' }"
+            state="{= ${stock} > 0 ? 'Success' : 'Error' }" />
+        </statuses>
+      </ObjectHeader>
+
+      <Panel headerText="Description" class="sapUiResponsiveMargin">
+        <content>
+          <Text text="{description}" />
+        </content>
+      </Panel>
+    </content>
+
+  </Page>
+</mvc:View>
