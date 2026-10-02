@@ -29,3 +29,15 @@
 .sapMSF {
   max-width: 100%;
 }
+
+/* Consistent side spacing on Detail page panels */
+.sapMPanel.sapUiResponsiveMargin {
+  margin-left: 1.5rem !important;
+  margin-right: 1.5rem !important;
+}
+
+/* Also keep nice spacing for the ObjectHeader */
+.sapMOHR.sapUiResponsiveMargin {
+  margin-left: 1.5rem !important;
+  margin-right: 1.5rem !important;
+}

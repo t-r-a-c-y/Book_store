@@ -7,35 +7,78 @@
 
   <Page
     id="bookDetailPage"
-    title="Book Details"
+    title="{title}"
     showNavButton="true"
-    navButtonPress=".onNavBack">
+    navButtonPress=".onNavBack"
+    class="sapUiResponsiveContentPadding">
 
     <content>
+
+      <!-- Header with main information -->
       <ObjectHeader
         title="{title}"
         number="{price}"
         numberUnit="EUR"
+        backgroundDesign="Translucent"
         class="sapUiResponsiveMargin">
 
         <attributes>
           <ObjectAttribute title="Author" text="{author/name}" />
-          <ObjectAttribute title="Stock" text="{stock}" />
+          <ObjectAttribute title="Stock" text="{stock} pieces" />
         </attributes>
 
         <statuses>
           <ObjectStatus
             text="{= ${stock} > 0 ? 'In Stock' : 'Out of Stock' }"
-            state="{= ${stock} > 0 ? 'Success' : 'Error' }" />
+            state="{= ${stock} > 0 ? 'Success' : 'Error' }"
+            icon="{= ${stock} > 0 ? 'sap-icon://accept' : 'sap-icon://error' }" />
         </statuses>
       </ObjectHeader>
 
-      <Panel headerText="Description" class="sapUiResponsiveMargin">
+      <!-- Description Section -->
+      <Panel
+        headerText="Description"
+        expandable="false"
+        class="sapUiResponsiveMargin">
         <content>
-          <Text text="{description}" />
+          <Text text="{description}" class="sapUiSmallMargin" />
         </content>
       </Panel>
-    </content>
 
+      <!-- Extra Information -->
+      <Panel
+        headerText="Additional Information"
+        expandable="false"
+        class="sapUiResponsiveMargin">
+        <content>
+          <VBox class="sapUiSmallMargin">
+            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+              <core:Icon src="sap-icon://course-book" class="sapUiTinyMarginEnd" />
+              <Label text="Title:" class="sapUiTinyMarginEnd" />
+              <Text text="{title}" />
+            </HBox>
+
+            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+              <core:Icon src="sap-icon://money-bills" class="sapUiTinyMarginEnd" />
+              <Label text="Price:" class="sapUiTinyMarginEnd" />
+              <Text text="{price} EUR" />
+            </HBox>
+
+            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+              <core:Icon src="sap-icon://person-placeholder" class="sapUiTinyMarginEnd" />
+              <Label text="Author:" class="sapUiTinyMarginEnd" />
+              <Text text="{author/name}" />
+            </HBox>
+
+            <HBox alignItems="Center">
+              <core:Icon src="sap-icon://product" class="sapUiTinyMarginEnd" />
+              <Label text="Stock:" class="sapUiTinyMarginEnd" />
+              <Text text="{stock}" />
+            </HBox>
+          </VBox>
+        </content>
+      </Panel>
+
+    </content>
   </Page>
 </mvc:View>
