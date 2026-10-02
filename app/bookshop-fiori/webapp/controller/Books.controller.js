@@ -36,27 +36,36 @@ sap.ui.define([
       oBinding.sort([new Sorter("title", false)]);
     },
 
+    // onBookPress: function (oEvent) {
+    //   var oBookContext = oEvent.getSource().getBindingContext();
+    //   var oView = this.getView();
+
+    //   if (!this._pBookDialog) {
+    //     this._pBookDialog = Fragment.load({
+    //       id: oView.getId(),
+    //       name: "ns.bookshopfiori.view.BookDetailsDialog",
+    //       controller: this
+    //     }).then(function (oDialog) {
+    //       oView.addDependent(oDialog);
+    //       return oDialog;
+    //     });
+    //   }
+
+    //   this._pBookDialog.then(function (oDialog) {
+    //     oDialog.bindElement(oBookContext.getPath());
+    //     oDialog.open();
+    //   });
+    // },
+
     onBookPress: function (oEvent) {
-      var oBookContext = oEvent.getSource().getBindingContext();
-      var oView = this.getView();
+  var oItem = oEvent.getSource();
+  var oBindingContext = oItem.getBindingContext();
+  var sBookId = oBindingContext.getProperty("ID");
 
-      if (!this._pBookDialog) {
-        this._pBookDialog = Fragment.load({
-          id: oView.getId(),
-          name: "ns.bookshopfiori.view.BookDetailsDialog",
-          controller: this
-        }).then(function (oDialog) {
-          oView.addDependent(oDialog);
-          return oDialog;
-        });
-      }
-
-      this._pBookDialog.then(function (oDialog) {
-        oDialog.bindElement(oBookContext.getPath());
-        oDialog.open();
-      });
-    },
-
+  this.getOwnerComponent().getRouter().navTo("bookDetail", {
+    bookId: sBookId
+  });
+},
     onCloseDialog: function () {
       this.byId("bookDetailsDialog").close();
     }

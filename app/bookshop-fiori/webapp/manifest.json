@@ -70,7 +70,7 @@
     }
   ]
     },
-  "routing": {
+"routing": {
   "config": {
     "routerClass": "sap.m.routing.Router",
     "viewType": "XML",
