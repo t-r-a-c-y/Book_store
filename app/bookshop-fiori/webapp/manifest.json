@@ -70,29 +70,39 @@
     }
   ]
     },
-    "routing": {
-      "config": {
-        "routerClass": "sap.m.routing.Router",
-        "viewType": "XML",
-        "viewPath": "ns.bookshopfiori.view",
-        "controlId": "app",
-        "controlAggregation": "pages",
-        "async": true
-      },
-      "routes": [
-        {
-          "pattern": "",
-          "name": "books",
-          "target": "books"
-        }
-      ],
-      "targets": {
-        "books": {
-          "viewId": "books",
-          "viewName": "Books",
-          "viewLevel": 1
-        }
-      }
+  "routing": {
+  "config": {
+    "routerClass": "sap.m.routing.Router",
+    "viewType": "XML",
+    "viewPath": "ns.bookshopfiori.view",
+    "controlId": "app",
+    "controlAggregation": "pages",
+    "async": true
+  },
+  "routes": [
+    {
+      "pattern": "",
+      "name": "books",
+      "target": "books"
+    },
+    {
+      "pattern": "Books/{bookId}",
+      "name": "bookDetail",
+      "target": "bookDetail"
     }
+  ],
+  "targets": {
+    "books": {
+      "viewId": "books",
+      "viewName": "Books",
+      "viewLevel": 1
+    },
+    "bookDetail": {
+      "viewId": "bookDetail",
+      "viewName": "BookDetail",
+      "viewLevel": 2
+    }
+  }
+}
   }
 }
