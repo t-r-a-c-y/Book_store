@@ -1,0 +1,31 @@
+<mvc:View
+    controllerName="bookshop.freestyle.controller.App"
+    displayBlock="true"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+
+    <Page title="Bookshop">
+
+        <content>
+
+            <VBox class="sapUiSmallMargin">
+
+                <Title
+                    text="Welcome to My Bookshop"
+                    level="H2" />
+
+                <Text
+                    text="This is my first freestyle SAPUI5 application." />
+
+                <Button
+                    text="Say Hello"
+                    press=".onSayHello"
+                    class="sapUiSmallMarginTop" />
+
+            </VBox>
+
+        </content>
+
+    </Page>
+
+</mvc:View>
