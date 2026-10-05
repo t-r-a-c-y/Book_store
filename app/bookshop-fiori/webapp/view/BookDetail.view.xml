@@ -15,13 +15,13 @@
 
     <content>
 
-      <!-- Header with main information -->
+      
       <ObjectHeader
         title="{title}"
         number="{price}"
         numberUnit="EUR"
         backgroundDesign="Translucent"
-        class="sapUiResponsiveMargin">
+        class="sapUiSmallMarginBottom">
 
         <attributes>
           <ObjectAttribute title="Author" text="{author/name}" />
@@ -36,11 +36,11 @@
         </statuses>
       </ObjectHeader>
 
-      <!-- Description Section -->
+      
       <Panel
         headerText="Description"
         expandable="false"
-        class="sapUiResponsiveMargin">
+        class="sapUiSmallMarginBottom">
         <content>
           <Text text="{description}" class="sapUiSmallMargin" />
         </content>
@@ -50,7 +50,7 @@
       <Panel
         headerText="Additional Information"
         expandable="false"
-        class="sapUiResponsiveMargin">
+        class="sapUiSmallMarginBottom">
         <content>
           <VBox class="sapUiSmallMargin">
             <HBox alignItems="Center" class="sapUiTinyMarginBottom">

@@ -7,6 +7,7 @@
 
   <Page title="{i18n>booksPageTitle}">
 
+    <!-- Search -->
     <subHeader>
       <Toolbar>
         <SearchField
@@ -16,6 +17,7 @@
       </Toolbar>
     </subHeader>
 
+    <!-- Buttons -->
     <headerContent>
       <Button icon="sap-icon://sort" press=".onSort" tooltip="Sort by Title" />
       <Button icon="sap-icon://refresh" press=".onRefresh" tooltip="Refresh" />
@@ -26,24 +28,54 @@
         headerText="{i18n>booksListHeader}"
         class="sapUiResponsiveMargin myBooksPanel">
 
-        <List id="booksList" items="{/Books}">
-          <ObjectListItem
-            title="{title}"
-            number="{price}"
-            numberUnit="EUR"
-            intro="{author/name}"
-            type="Active"
-            press=".onBookPress"
-            class="myBookListItem">
+        <!-- ========== TABLE ========== -->
+        <Table
+          id="booksTable"
+          items="{/Books}"
+          mode="None"
+          growing="true"
+          growingThreshold="20">
 
-            <firstStatus>
-              <ObjectStatus
-                text="{= ${stock} > 0 ? 'In Stock' : 'Out of Stock' }"
-                state="{= ${stock} > 0 ? 'Success' : 'Error' }" />
-            </firstStatus>
+          <columns>
+            <Column width="40%">
+              <Text text="Title" />
+            </Column>
+            <Column width="25%">
+              <Text text="Author" />
+            </Column>
+            <Column width="15%" hAlign="End">
+              <Text text="Price" />
+            </Column>
+            <Column width="20%" hAlign="Center">
+              <Text text="Stock" />
+            </Column>
+          </columns>
 
-          </ObjectListItem>
-        </List>
+          <items>
+            <ColumnListItem
+              type="Navigation"
+              press=".onBookPress">
+              <cells>
+                <!-- Title -->
+                <ObjectIdentifier title="{title}" />
+
+                <!-- Author -->
+                <Text text="{author/name}" />
+
+                <!-- Price -->
+                <ObjectNumber
+                  number="{price}"
+                  unit="EUR" />
+
+                <!-- Stock status -->
+                <ObjectStatus
+                  text="{= ${stock} > 0 ? 'In Stock (' + ${stock} + ')' : 'Out of Stock' }"
+                  state="{= ${stock} > 0 ? 'Success' : 'Error' }" />
+              </cells>
+            </ColumnListItem>
+          </items>
+        </Table>
+
       </Panel>
     </content>
   </Page>

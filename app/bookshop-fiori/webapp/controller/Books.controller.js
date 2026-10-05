@@ -14,27 +14,29 @@ sap.ui.define([
 
     onInit: function () {},
 
-    onRefresh: function () {
-      this.getView().getModel().refresh();
-    },
+   onRefresh: function () {
+  this.getView().getModel().refresh();
+},
 
     onSearch: function (oEvent) {
-      var sQuery = oEvent.getParameter("newValue");
-      var oBinding = this.byId("booksList").getBinding("items");
+  var sQuery = oEvent.getParameter("newValue");
+  var oBinding = this.byId("booksTable").getBinding("items");
 
-      if (sQuery) {
-        oBinding.filter([
-          new Filter("title", FilterOperator.Contains, sQuery)
-        ]);
-      } else {
-        oBinding.filter([]);
-      }
-    },
+  if (sQuery) {
+    oBinding.filter([
+      new Filter("title", FilterOperator.Contains, sQuery)
+    ]);
+  } else {
+    oBinding.filter([]);
+  }
+},
 
-    onSort: function () {
-      var oBinding = this.byId("booksList").getBinding("items");
-      oBinding.sort([new Sorter("title", false)]);
-    },
+onSort: function () {
+  var oBinding = this.byId("booksTable").getBinding("items");
+  oBinding.sort([new Sorter("title", false)]);
+},
+
+    
 
     // onBookPress: function (oEvent) {
     //   var oBookContext = oEvent.getSource().getBindingContext();
@@ -57,10 +59,8 @@ sap.ui.define([
     //   });
     // },
 
-    onBookPress: function (oEvent) {
-  var oItem = oEvent.getSource();
-  var oBindingContext = oItem.getBindingContext();
-  var sBookId = oBindingContext.getProperty("ID");
+  onBookPress: function (oEvent) {
+  var sBookId = oEvent.getSource().getBindingContext().getProperty("ID");
 
   this.getOwnerComponent().getRouter().navTo("bookDetail", {
     bookId: sBookId
