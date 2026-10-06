@@ -6,6 +6,12 @@ sap.ui.define([
     return UIComponent.extend("floorplans.Component", {
         metadata: {
             manifest: "json"
+        },
+
+        init: function () {
+           
+            UIComponent.prototype.init.apply(this, arguments);
         }
+
     });
 });

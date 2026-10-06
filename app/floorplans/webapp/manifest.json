@@ -13,7 +13,7 @@
 
     "sap.ui5": {
         "rootView": {
-            "viewName": "floorplans.view.App",
+            "viewName": "floorplans.view.Books",
             "type": "XML",
             "async": true,
             "id": "app"
@@ -26,5 +26,34 @@
                 "sap.ui.core": {}
             }
         }
+    },"routing": {
+    "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "viewPath": "floorplans.view",
+        "controlId": "app",
+        "controlAggregation": "pages",
+        "async": true
+    },
+    "routes": [
+        {
+            "pattern": "",
+            "name": "home",
+            "target": "home"
+        },
+        {
+            "pattern": "books",
+            "name": "books",
+            "target": "books"
+        }
+    ],
+    "targets": {
+        "home": {
+            "viewName": "App"
+        },
+        "books": {
+            "viewName": "Books"
+        }
     }
+}
 }

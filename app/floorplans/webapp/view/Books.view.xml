@@ -1,0 +1,47 @@
+<mvc:View
+    controllerName="floorplans.controller.Books"
+    displayBlock="true"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+
+    <Page title="Books">
+
+        <content>
+
+            <VBox class="sapUiSmallMargin">
+
+                <Input
+                    id="searchInput"
+                    placeholder="Search books..."
+                    liveChange=".onSearch" />
+
+                <Table
+                    id="booksTable"
+                    headerText="Books"
+                    class="sapUiSmallMarginTop">
+
+                    <columns>
+
+                        <Column>
+                            <Text text="Title" />
+                        </Column>
+
+                        <Column>
+                            <Text text="Price" />
+                        </Column>
+
+                        <Column>
+                            <Text text="Stock" />
+                        </Column>
+
+                    </columns>
+
+                </Table>
+
+            </VBox>
+
+        </content>
+
+    </Page>
+
+</mvc:View>
