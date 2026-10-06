@@ -1,10 +1,26 @@
 sap.ui.define([
-	"sap/ui/core/mvc/Controller"
-], function(
-	Controller
+    "sap/ui/core/mvc/Controller",
+    "sap/m/MessageToast"
+], function (
+    Controller,
+    MessageToast
 ) {
-	"use strict";
+    "use strict";
 
-	return Controller.extend("floorplans.controller.Wizard", {
-	});
+    return Controller.extend("floorplans.controller.Wizard", {
+
+        onComplete: function () {
+
+            MessageToast.show(
+                "Order information completed!"
+            );
+        },
+
+        onBack: function () {
+            this.getOwnerComponent()
+                .getRouter()
+                .navTo("home");
+        }
+
+    });
 });
