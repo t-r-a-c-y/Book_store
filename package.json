@@ -13,7 +13,8 @@
     "@sap-cloud-sdk/http-client": "^4",
     "@sap-cloud-sdk/resilience": "^4",
     "@sap/cds": "^10",
-    "@sap/xssec": "^4"
+    "@sap/xssec": "^4",
+    "@ui5/cli": "^4.0.70"
   },
   "devDependencies": {
     "@cap-js/cds-test": "^1.0.2",
@@ -30,37 +31,40 @@
   },
   "private": true,
   "cds": {
-  "requires": {
-    "db": {
-      "kind": "sqlite",
-      "credentials": {
-        "url": "db.sqlite"
-      }
-    },
-    "change-tracking": true,
-    "audit-logging": {
-      "handle": ["READ", "WRITE"],
-      "outbox": true
-    },
-    "API_BUSINESS_PARTNER": {
-      "kind": "odata-v2",
-      "model": "srv/external/API_BUSINESS_PARTNER"
-    },
-    "[production]": {
-      "auth": "xsuaa",
+    "requires": {
       "db": {
-        "kind": "hana"
+        "kind": "sqlite",
+        "credentials": {
+          "url": "db.sqlite"
+        }
+      },
+      "change-tracking": true,
+      "audit-logging": {
+        "handle": [
+          "READ",
+          "WRITE"
+        ],
+        "outbox": true
       },
       "API_BUSINESS_PARTNER": {
         "kind": "odata-v2",
-        "model": "srv/external/API_BUSINESS_PARTNER",
-        "credentials": {
-          "destination": "API_BUSINESS_PARTNER"
+        "model": "srv/external/API_BUSINESS_PARTNER"
+      },
+      "[production]": {
+        "auth": "xsuaa",
+        "db": {
+          "kind": "hana"
+        },
+        "API_BUSINESS_PARTNER": {
+          "kind": "odata-v2",
+          "model": "srv/external/API_BUSINESS_PARTNER",
+          "credentials": {
+            "destination": "API_BUSINESS_PARTNER"
+          }
         }
       }
     }
-  }
-},
+  },
   "sapux": [
     "app/bookshop-fiori"
   ],
