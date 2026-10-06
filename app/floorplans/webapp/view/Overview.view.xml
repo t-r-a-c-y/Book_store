@@ -1,10 +1,79 @@
 <mvc:View
-	controllerName=""
-	xmlns:mvc="sap.ui.core.mvc"
-	xmlns="sap.m"
-	xmlns:c="sap.ui.core"
-	displayBlock="true"
-	height="100%"
-	busyIndicatorDelay="0"
->
+    displayBlock="true"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+
+    <Page
+        title="Bookshop Overview"
+        showNavButton="true"
+        navButtonPress=".onBack">
+
+        <content>
+
+            <VBox class="sapUiMediumMargin">
+
+                <Title
+                    text="Bookshop Overview"
+                    level="H1" />
+
+                <Text
+                    text="High-level information about the bookshop."
+                    class="sapUiSmallMarginBottom" />
+
+                <HBox
+                    wrap="Wrap"
+                    justifyContent="SpaceBetween">
+
+                    <GenericTile
+                        header="Total Books"
+                        subheader="Available in catalog"
+                        press=".onBooks">
+
+                        <TileContent>
+
+                            <NumericContent
+                                value="120"
+                                icon="sap-icon://bookshelf" />
+
+                        </TileContent>
+
+                    </GenericTile>
+
+                    <GenericTile
+                        header="Orders"
+                        subheader="Current orders">
+
+                        <TileContent>
+
+                            <NumericContent
+                                value="35"
+                                icon="sap-icon://sales-order" />
+
+                        </TileContent>
+
+                    </GenericTile>
+
+                    <GenericTile
+                        header="Low Stock"
+                        subheader="Need attention"
+                        press=".onWorklist">
+
+                        <TileContent>
+
+                            <NumericContent
+                                value="8"
+                                icon="sap-icon://alert" />
+
+                        </TileContent>
+
+                    </GenericTile>
+
+                </HBox>
+
+            </VBox>
+
+        </content>
+
+    </Page>
+
 </mvc:View>
