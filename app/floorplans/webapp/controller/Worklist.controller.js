@@ -1,10 +1,15 @@
 sap.ui.define([
-	"sap/ui/core/mvc/Controller"
-], function(
-	Controller
-) {
-	"use strict";
+    "sap/ui/core/mvc/Controller"
+], function (Controller) {
+    "use strict";
 
-	return Controller.extend("floorplans.controller.Worklist", {
-	});
+    return Controller.extend("floorplans.controller.Worklist", {
+
+        onBack: function () {
+            this.getOwnerComponent()
+                .getRouter()
+                .navTo("home");
+        }
+
+    });
 });
