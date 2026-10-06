@@ -3,13 +3,5 @@ sap.ui.define([
 ], function (Controller) {
     "use strict";
 
-    return Controller.extend("floorplans.controller.App", {
-
-        onOpenBooks: function () {
-            this.getOwnerComponent()
-                .getRouter()
-                .navTo("books");
-        }
-
-    });
+    return Controller.extend("floorplans.controller.App", {});
 });

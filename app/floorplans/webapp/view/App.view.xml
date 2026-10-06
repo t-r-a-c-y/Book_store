@@ -1,5 +1,4 @@
 <mvc:View
-    controllerName="floorplans.controller.App"
     displayBlock="true"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">
