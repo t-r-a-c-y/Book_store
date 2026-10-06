@@ -1,0 +1,30 @@
+{
+    "_version": "1.65.0",
+
+    "sap.app": {
+        "id": "floorplans",
+        "type": "application",
+        "title": "Fiori Floor Plans"
+    },
+
+    "sap.ui": {
+        "technology": "UI5"
+    },
+
+    "sap.ui5": {
+        "rootView": {
+            "viewName": "floorplans.view.App",
+            "type": "XML",
+            "async": true,
+            "id": "app"
+        },
+
+        "dependencies": {
+            "minUI5Version": "1.120.0",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {}
+            }
+        }
+    }
+}
