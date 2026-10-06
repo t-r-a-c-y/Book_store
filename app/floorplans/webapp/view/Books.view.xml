@@ -4,20 +4,45 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">
 
-    <Page title="Books">
+    <Page title="Books - List Report">
+
+        <headerContent>
+
+            <Button
+                icon="sap-icon://home"
+                tooltip="Home"
+                press=".onHome" />
+
+        </headerContent>
 
         <content>
 
             <VBox class="sapUiSmallMargin">
 
+                <Toolbar>
+
+                    <Title
+                        text="Books"
+                        level="H2" />
+
+                    <ToolbarSpacer />
+
+                    <Button
+                        text="Overview"
+                        press=".onOverview" />
+
+                </Toolbar>
+
                 <Input
                     id="searchInput"
                     placeholder="Search books..."
-                    liveChange=".onSearch" />
+                    liveChange=".onSearch"
+                    class="sapUiSmallMarginTop" />
 
                 <Table
                     id="booksTable"
-                    headerText="Books"
+                    headerText="Book Catalog"
+                    items="{/books}"
                     class="sapUiSmallMarginTop">
 
                     <columns>
@@ -35,6 +60,29 @@
                         </Column>
 
                     </columns>
+
+                    <items>
+
+                        <ColumnListItem
+                            type="Navigation"
+                            press=".onBookPress">
+
+                            <cells>
+
+                                <Text text="{title}" />
+
+                                <ObjectNumber
+                                    number="{price}"
+                                    unit="USD" />
+
+                                <ObjectNumber
+                                    number="{stock}" />
+
+                            </cells>
+
+                        </ColumnListItem>
+
+                    </items>
 
                 </Table>
 
