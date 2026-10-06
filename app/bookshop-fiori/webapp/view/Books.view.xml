@@ -7,28 +7,52 @@
 
   <Page title="{i18n>booksPageTitle}">
 
-    <!-- Search -->
-    <subHeader>
-      <Toolbar>
-        <SearchField
-          width="100%"
-          placeholder="Search by book title..."
-          liveChange=".onSearch" />
-      </Toolbar>
-    </subHeader>
+    <!-- ========== FILTER AREA (important for List Report) ========== -->
+   <subHeader>
+  <Toolbar>
+    <SearchField
+      id="searchField"
+      width="30%"
+      placeholder="Search by title..."
+      liveChange=".onSearch" />
 
-    <!-- Buttons -->
+    <ToolbarSpacer />
+
+    <Label text="Author:" labelFor="authorFilter" />
+    <Select
+      id="authorFilter"
+      selectedKey="ALL"
+      change=".onFilterAuthor"
+      width="12rem"
+      items="{path: 'authors>/'}">
+      <core:Item key="{authors>key}" text="{authors>text}" />
+    </Select>
+
+    <Label text="Stock:" labelFor="stockFilter" class="sapUiTinyMarginBegin" />
+    <Select
+      id="stockFilter"
+      selectedKey="ALL"
+      change=".onFilterStock"
+      width="10rem">
+      <core:Item key="ALL" text="All" />
+      <core:Item key="IN_STOCK" text="In Stock" />
+      <core:Item key="OUT_OF_STOCK" text="Out of Stock" />
+    </Select>
+  </Toolbar>
+</subHeader>
+
+    <!-- ========== ACTIONS ========== -->
     <headerContent>
       <Button icon="sap-icon://sort" press=".onSort" tooltip="Sort by Title" />
       <Button icon="sap-icon://refresh" press=".onRefresh" tooltip="Refresh" />
     </headerContent>
 
+    <!-- ========== TABLE ========== -->
     <content>
       <Panel
         headerText="{i18n>booksListHeader}"
         class="sapUiResponsiveMargin myBooksPanel">
 
-        <!-- ========== TABLE ========== -->
         <Table
           id="booksTable"
           items="{/Books}"
@@ -37,17 +61,17 @@
           growingThreshold="20">
 
           <columns>
-            <Column width="40%">
-              <Text text="Title" />
+            <Column width="35%">
+              <Text text="{i18n>columnTitle}" />
             </Column>
             <Column width="25%">
-              <Text text="Author" />
+              <Text text="{i18n>columnAuthor}" />
             </Column>
             <Column width="15%" hAlign="End">
-              <Text text="Price" />
+              <Text text="{i18n>columnPrice}" />
             </Column>
-            <Column width="20%" hAlign="Center">
-              <Text text="Stock" />
+            <Column width="25%" hAlign="Center">
+              <Text text="{i18n>Stock}" />
             </Column>
           </columns>
 
@@ -56,18 +80,9 @@
               type="Navigation"
               press=".onBookPress">
               <cells>
-                <!-- Title -->
                 <ObjectIdentifier title="{title}" />
-
-                <!-- Author -->
                 <Text text="{author/name}" />
-
-                <!-- Price -->
-                <ObjectNumber
-                  number="{price}"
-                  unit="EUR" />
-
-                <!-- Stock status -->
+                <ObjectNumber number="{price}" unit="EUR" />
                 <ObjectStatus
                   text="{= ${stock} > 0 ? 'In Stock (' + ${stock} + ')' : 'Out of Stock' }"
                   state="{= ${stock} > 0 ? 'Success' : 'Error' }" />

@@ -15,12 +15,12 @@
 
     <content>
 
-      
+      <!-- ========== OBJECT HEADER ========== -->
       <ObjectHeader
         title="{title}"
         number="{price}"
         numberUnit="EUR"
-        backgroundDesign="Translucent"
+        backgroundDesign="Solid"
         class="sapUiSmallMarginBottom">
 
         <attributes>
@@ -36,23 +36,26 @@
         </statuses>
       </ObjectHeader>
 
-      
+      <!-- ========== SECTION 1: Description ========== -->
       <Panel
         headerText="Description"
         expandable="false"
         class="sapUiSmallMarginBottom">
         <content>
-          <Text text="{description}" class="sapUiSmallMargin" />
+          <Text
+            text="{= ${description} ? ${description} : 'No description available.' }"
+            class="sapUiSmallMargin" />
         </content>
       </Panel>
 
-      <!-- Extra Information -->
+      <!-- ========== SECTION 2: Additional Information ========== -->
       <Panel
         headerText="Additional Information"
         expandable="false"
         class="sapUiSmallMarginBottom">
         <content>
           <VBox class="sapUiSmallMargin">
+
             <HBox alignItems="Center" class="sapUiTinyMarginBottom">
               <core:Icon src="sap-icon://course-book" class="sapUiTinyMarginEnd" />
               <Label text="Title:" class="sapUiTinyMarginEnd" />
@@ -72,15 +75,17 @@
             </HBox>
 
             <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-        <core:Icon src="sap-icon://favorite" class="sapUiTinyMarginEnd" />
-        <Label text="Rating:" class="sapUiTinyMarginEnd" />
-        <custom:BookRating value="4" />
-      </HBox>
+              <core:Icon src="sap-icon://favorite" class="sapUiTinyMarginEnd" />
+              <Label text="Rating:" class="sapUiTinyMarginEnd" />
+              <custom:BookRating value="4" />
+            </HBox>
+
             <HBox alignItems="Center">
               <core:Icon src="sap-icon://product" class="sapUiTinyMarginEnd" />
               <Label text="Stock:" class="sapUiTinyMarginEnd" />
               <Text text="{stock}" />
             </HBox>
+
           </VBox>
         </content>
       </Panel>

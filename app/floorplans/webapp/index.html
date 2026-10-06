@@ -4,18 +4,29 @@
     <meta charset="utf-8">
 
     <title>Fiori Floor Plans</title>
+     <style>
+        html, body, body > div, #container, #container-uiarea {
+            height: 100%;
+        }
+    </style>
 
-    <script
+     <script
         id="sap-ui-bootstrap"
-        src="https://ui5.sap.com/resources/sap-ui-core.js"
+        src="https://sapui5.hana.ondemand.com/1.152.0/resources/sap-ui-core.js"
         data-sap-ui-theme="sap_horizon"
+        data-sap-ui-resource-roots='{
+             "floorplans": "./"
+        }'
+        data-sap-ui-on-init="module:sap/ui/core/ComponentSupport"
         data-sap-ui-compat-version="edge"
         data-sap-ui-async="true"
-        data-sap-ui-on-init="module:sap/ui/core/ComponentSupport"
-        data-sap-ui-resourceroots='{
-            "floorplans": "./"
-        }'>
-    </script>
+        data-sap-ui-frame-options="trusted"
+    ></script>
+
+    
+
+ 
+
 </head>
 
 <body class="sapUiBody sapUiSizeCompact">
