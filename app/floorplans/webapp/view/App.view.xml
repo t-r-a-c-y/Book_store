@@ -1,0 +1,26 @@
+<mvc:View
+    controllerName="floorplans.controller.App"
+    displayBlock="true"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+
+    <Page title="Fiori Floor Plans">
+
+        <content>
+
+            <VBox class="sapUiSmallMargin">
+
+                <Title
+                    text="Fiori Floor Plans"
+                    level="H2" />
+
+                <Text
+                    text="Learning different Fiori application patterns." />
+
+            </VBox>
+
+        </content>
+
+    </Page>
+
+</mvc:View>
