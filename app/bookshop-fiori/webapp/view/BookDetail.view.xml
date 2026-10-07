@@ -13,6 +13,19 @@
     navButtonPress=".onNavBack"
     class="sapUiResponsiveContentPadding">
 
+    <headerContent>
+  <Button
+    icon="sap-icon://edit"
+    text="Edit"
+    press=".onEditBook"
+    type="Emphasized" />
+  <Button
+    icon="sap-icon://delete"
+    text="Delete"
+    press=".onDeleteBook"
+    type="Reject" />
+</headerContent>
+
     <content>
 
       <!-- ========== OBJECT HEADER ========== -->

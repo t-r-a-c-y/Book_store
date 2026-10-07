@@ -1,7 +1,11 @@
 sap.ui.define([
   "sap/ui/core/mvc/Controller",
-  "sap/ui/core/routing/History"
-], function (Controller, History) {
+  "sap/ui/core/routing/History",
+  "sap/ui/core/Fragment",
+  "sap/ui/model/json/JSONModel",
+  "sap/m/MessageToast",
+  "sap/m/MessageBox"
+], function (Controller, History, Fragment, JSONModel, MessageToast, MessageBox) {, function (Controller, History) {
   "use strict";
 
   return Controller.extend("ns.bookshopfiori.controller.BookDetail", {
