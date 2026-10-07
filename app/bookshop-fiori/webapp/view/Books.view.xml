@@ -42,9 +42,14 @@
 </subHeader>
 
     <!-- ========== ACTIONS ========== -->
-    <headerContent>
+  <headerContent>
   <Button
     icon="sap-icon://add"
+    text="Create Book"
+    press=".onCreateBook"
+    tooltip="Create Book" />
+  <Button
+    icon="sap-icon://add-document"
     text="Create Order"
     press=".onCreateOrder"
     tooltip="Create Order" />
@@ -78,6 +83,9 @@
             <Column width="25%" hAlign="Center">
               <Text text="{i18n>Stock}" />
             </Column>
+            <Column width="10rem" hAlign="Center">
+  <Text text="Actions" />
+</Column>
           </columns>
 
           <items>
@@ -90,7 +98,19 @@
                 <ObjectNumber number="{price}" unit="EUR" />
                 <ObjectStatus
                   text="{= ${stock} > 0 ? 'In Stock (' + ${stock} + ')' : 'Out of Stock' }"
-                  state="{= ${stock} > 0 ? 'Success' : 'Error' }" />
+                  state="{= ${stock} > 0 ? 'Success' : 'Error' }" /> 
+                  <HBox justifyContent="Center">
+  <Button
+    icon="sap-icon://edit"
+    type="Transparent"
+    tooltip="Edit"
+    press=".onEditBook" />
+  <Button
+    icon="sap-icon://delete"
+    type="Transparent"
+    tooltip="Delete"
+    press=".onDeleteBook" />
+</HBox>
               </cells>
             </ColumnListItem>
           </items>
