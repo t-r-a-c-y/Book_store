@@ -43,9 +43,14 @@
 
     <!-- ========== ACTIONS ========== -->
     <headerContent>
-      <Button icon="sap-icon://sort" press=".onSort" tooltip="Sort by Title" />
-      <Button icon="sap-icon://refresh" press=".onRefresh" tooltip="Refresh" />
-    </headerContent>
+  <Button
+    icon="sap-icon://add"
+    text="Create Order"
+    press=".onCreateOrder"
+    tooltip="Create Order" />
+  <Button icon="sap-icon://sort" press=".onSort" tooltip="Sort by Title" />
+  <Button icon="sap-icon://refresh" press=".onRefresh" tooltip="Refresh" />
+</headerContent>
 
     <!-- ========== TABLE ========== -->
     <content>

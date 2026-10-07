@@ -16,6 +16,7 @@ sap.ui.define([
       this._sSearchQuery = "";
       this._sStockKey = "ALL";
       this._sAuthorId = "ALL";
+      this._sAuthorName = "";
 
       // Local model for author dropdown (includes "All Authors")
       var oAuthorsModel = new JSONModel([
@@ -72,41 +73,45 @@ sap.ui.define([
     },
 
     onFilterAuthor: function (oEvent) {
-      this._sAuthorId = oEvent.getSource().getSelectedKey() || "ALL";
-      this._applyFilters();
-    },
+  var oSelect = oEvent.getSource();
+  var oItem = oSelect.getSelectedItem();
 
-    _applyFilters: function () {
-      var aFilters = [];
+  this._sAuthorId = oSelect.getSelectedKey() || "ALL";
+  this._sAuthorName = oItem ? oItem.getText() : "";
 
-      // 1) Title search
-      if (this._sSearchQuery) {
-        aFilters.push(new Filter("title", FilterOperator.Contains, this._sSearchQuery));
-      }
+  this._applyFilters();
+},
 
-      // 2) Author filter
-      if (this._sAuthorId && this._sAuthorId !== "ALL") {
-        // Try author_ID first (normal CAP association key)
-        aFilters.push(new Filter("author_ID", FilterOperator.EQ, this._sAuthorId));
-      }
+  _applyFilters: function () {
+  var aFilters = [];
 
-      // 3) Stock filter
-      if (this._sStockKey === "IN_STOCK") {
-        aFilters.push(new Filter("stock", FilterOperator.GT, 0));
-      } else if (this._sStockKey === "OUT_OF_STOCK") {
-        aFilters.push(new Filter("stock", FilterOperator.EQ, 0));
-      }
+  // Title search
+  if (this._sSearchQuery) {
+    aFilters.push(new Filter("title", FilterOperator.Contains, this._sSearchQuery));
+  }
 
-      var oTable = this.byId("booksTable");
-      if (!oTable) {
-        return;
-      }
+  // Author filter by name
+  if (this._sAuthorId && this._sAuthorId !== "ALL" && this._sAuthorName) {
+    aFilters.push(new Filter("author/name", FilterOperator.EQ, this._sAuthorName));
+  }
 
-      var oBinding = oTable.getBinding("items");
-      if (oBinding) {
-        oBinding.filter(aFilters);
-      }
-    },
+  // Stock filter
+  if (this._sStockKey === "IN_STOCK") {
+    aFilters.push(new Filter("stock", FilterOperator.GT, 0));
+  } else if (this._sStockKey === "OUT_OF_STOCK") {
+    aFilters.push(new Filter("stock", FilterOperator.EQ, 0));
+  }
+
+  var oTable = this.byId("booksTable");
+  if (!oTable) {
+    return;
+  }
+
+  var oBinding = oTable.getBinding("items");
+  if (oBinding) {
+    oBinding.filter(aFilters);
+  }
+},
 
     onSort: function () {
       var oBinding = this.byId("booksTable").getBinding("items");
@@ -120,7 +125,10 @@ sap.ui.define([
       this.getOwnerComponent().getRouter().navTo("bookDetail", {
         bookId: sBookId
       });
-    }
+    },
+    onCreateOrder: function () {
+  this.getOwnerComponent().getRouter().navTo("createOrder");
+},
 
   });
 });

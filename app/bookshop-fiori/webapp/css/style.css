@@ -48,4 +48,22 @@
 }
 
 
+/* Show only current wizard step (no scroll to other steps) */
+.sapMWizardStepContainer {
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+  height: auto !important;
+}
 
+/* Hide non-active steps more aggressively if needed */
+.sapMWizard .sapMWizardStep:not(.sapMWizardStepActivated) {
+  /* keep default activation behavior */
+}
+
+/* Disable clicking the top step progress bar */
+.sapMWizardProgressNav,
+.sapMWizardProgressNavStep,
+.sapMWizardProgressNav .sapMWizardProgressNavStep {
+  pointer-events: none !important;
+  cursor: default !important;
+}

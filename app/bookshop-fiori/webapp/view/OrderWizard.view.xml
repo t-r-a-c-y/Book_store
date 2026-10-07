@@ -14,16 +14,14 @@
     <content>
       <Wizard
         id="orderWizard"
+        showNextButton="false"
         complete=".onWizardComplete"
         class="sapUiResponsivePadding--header sapUiResponsivePadding--content">
 
-        <!-- ========== STEP 1: Customer ========== -->
-        <WizardStep
-          id="stepCustomer"
-          title="Customer"
-          validated="true">
+        <!-- STEP 1: Customer -->
+        <WizardStep id="stepCustomer" title="Customer" validated="true">
           <MessageStrip
-            text="Select the customer for this order."
+            text="Step 1: Select the customer."
             type="Information"
             showIcon="true"
             class="sapUiSmallMarginBottom" />
@@ -42,13 +40,10 @@
           </Select>
         </WizardStep>
 
-        <!-- ========== STEP 2: Book ========== -->
-        <WizardStep
-          id="stepBook"
-          title="Book"
-          validated="true">
+        <!-- STEP 2: Book -->
+        <WizardStep id="stepBook" title="Book" validated="true">
           <MessageStrip
-            text="Select a book and enter the quantity."
+            text="Step 2: Select a book and quantity."
             type="Information"
             showIcon="true"
             class="sapUiSmallMarginBottom" />
@@ -75,13 +70,10 @@
             liveChange=".onQuantityChange" />
         </WizardStep>
 
-        <!-- ========== STEP 3: Confirm ========== -->
-        <WizardStep
-          id="stepConfirm"
-          title="Confirm"
-          validated="true">
+        <!-- STEP 3: Confirm -->
+        <WizardStep id="stepConfirm" title="Confirm" validated="true">
           <MessageStrip
-            text="Review the order details, then click Finish."
+            text="Step 3: Review and finish."
             type="Success"
             showIcon="true"
             class="sapUiSmallMarginBottom" />
@@ -101,8 +93,27 @@
             </HBox>
           </VBox>
         </WizardStep>
-
       </Wizard>
     </content>
+
+    <!-- Explicit Back / Next / Finish buttons -->
+    <footer>
+      <Toolbar>
+        <Button
+          id="btnWizardBack"
+          text="Back"
+          icon="sap-icon://navigation-left-arrow"
+          press=".onWizardBack"
+          enabled="{wizard>/backEnabled}" />
+        <ToolbarSpacer />
+        <Button
+          id="btnWizardNext"
+          text="{wizard>/nextText}"
+          icon="{wizard>/nextIcon}"
+          type="Emphasized"
+          press=".onWizardNext" />
+      </Toolbar>
+    </footer>
+
   </Page>
 </mvc:View>
