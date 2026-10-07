@@ -89,7 +89,12 @@
       "pattern": "Books/{bookId}",
       "name": "bookDetail",
       "target": "bookDetail"
-    }
+    },
+    {
+  "pattern": "create-order",
+  "name": "createOrder",
+  "target": "createOrder"
+  }
   ],
   "targets": {
     "books": {
@@ -101,7 +106,12 @@
       "viewId": "bookDetail",
       "viewName": "BookDetail",
       "viewLevel": 2
-    }
+    },
+    "createOrder": {
+  "viewId": "createOrder",
+  "viewName": "OrderWizard",
+  "viewLevel": 2
+  }
   }
 }
   }

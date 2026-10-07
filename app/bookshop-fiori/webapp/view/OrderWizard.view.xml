@@ -1,0 +1,108 @@
+<mvc:View
+  controllerName="ns.bookshopfiori.controller.OrderWizard"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  displayBlock="true">
+
+  <Page
+    id="orderWizardPage"
+    title="Create Order"
+    showNavButton="true"
+    navButtonPress=".onNavBack">
+
+    <content>
+      <Wizard
+        id="orderWizard"
+        complete=".onWizardComplete"
+        class="sapUiResponsivePadding--header sapUiResponsivePadding--content">
+
+        <!-- ========== STEP 1: Customer ========== -->
+        <WizardStep
+          id="stepCustomer"
+          title="Customer"
+          validated="true">
+          <MessageStrip
+            text="Select the customer for this order."
+            type="Information"
+            showIcon="true"
+            class="sapUiSmallMarginBottom" />
+
+          <Label text="Customer" labelFor="customerSelect" />
+          <Select
+            id="customerSelect"
+            forceSelection="false"
+            change=".onCustomerChange"
+            width="100%"
+            items="{
+              path: '/Users',
+              sorter: { path: 'name' }
+            }">
+            <core:Item key="{ID}" text="{name}" />
+          </Select>
+        </WizardStep>
+
+        <!-- ========== STEP 2: Book ========== -->
+        <WizardStep
+          id="stepBook"
+          title="Book"
+          validated="true">
+          <MessageStrip
+            text="Select a book and enter the quantity."
+            type="Information"
+            showIcon="true"
+            class="sapUiSmallMarginBottom" />
+
+          <Label text="Book" labelFor="bookSelect" />
+          <Select
+            id="bookSelect"
+            forceSelection="false"
+            change=".onBookChange"
+            width="100%"
+            items="{
+              path: '/Books',
+              sorter: { path: 'title' }
+            }">
+            <core:Item key="{ID}" text="{title}" />
+          </Select>
+
+          <Label text="Quantity" labelFor="quantityInput" class="sapUiSmallMarginTop" />
+          <Input
+            id="quantityInput"
+            type="Number"
+            value="{wizard>/quantity}"
+            width="8rem"
+            liveChange=".onQuantityChange" />
+        </WizardStep>
+
+        <!-- ========== STEP 3: Confirm ========== -->
+        <WizardStep
+          id="stepConfirm"
+          title="Confirm"
+          validated="true">
+          <MessageStrip
+            text="Review the order details, then click Finish."
+            type="Success"
+            showIcon="true"
+            class="sapUiSmallMarginBottom" />
+
+          <VBox class="sapUiSmallMargin">
+            <HBox class="sapUiTinyMarginBottom">
+              <Label text="Customer:" class="sapUiTinyMarginEnd" />
+              <Text text="{wizard>/customerName}" />
+            </HBox>
+            <HBox class="sapUiTinyMarginBottom">
+              <Label text="Book:" class="sapUiTinyMarginEnd" />
+              <Text text="{wizard>/bookTitle}" />
+            </HBox>
+            <HBox>
+              <Label text="Quantity:" class="sapUiTinyMarginEnd" />
+              <Text text="{wizard>/quantity}" />
+            </HBox>
+          </VBox>
+        </WizardStep>
+
+      </Wizard>
+    </content>
+  </Page>
+</mvc:View>
