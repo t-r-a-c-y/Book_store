@@ -7,7 +7,7 @@ using { API_BUSINESS_PARTNER as external }
 service CatalogService {
 
 
-    @odata.draft.enabled
+    // @odata.draft.enabled
   
     entity Books as projection on db.Books actions {
         action restock(amount : Integer) returns Books;

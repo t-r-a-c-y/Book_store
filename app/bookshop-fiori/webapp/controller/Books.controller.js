@@ -4,11 +4,21 @@ sap.ui.define([
   "sap/ui/model/FilterOperator",
   "sap/ui/model/Sorter",
   "sap/ui/model/json/JSONModel",
-  "ns/bookshopfiori/model/formatter",
   "sap/ui/core/Fragment",
-"sap/m/MessageToast",
-"sap/m/MessageBox"
-], function (Controller, Filter, FilterOperator, Sorter, JSONModel, formatter, Fragment, MessageToast, MessageBox) {
+  "sap/m/MessageToast",
+  "sap/m/MessageBox",
+  "ns/bookshopfiori/model/formatter"
+], function (
+  Controller,
+  Filter,
+  FilterOperator,
+  Sorter,
+  JSONModel,
+  Fragment,
+  MessageToast,
+  MessageBox,
+  formatter
+) {
   "use strict";
 
   return Controller.extend("ns.bookshopfiori.controller.Books", {
@@ -21,13 +31,11 @@ sap.ui.define([
       this._sAuthorId = "ALL";
       this._sAuthorName = "";
 
-      // Local model for author dropdown (includes "All Authors")
       var oAuthorsModel = new JSONModel([
         { key: "ALL", text: "All Authors" }
       ]);
       this.getView().setModel(oAuthorsModel, "authors");
 
-      // Load real authors from CAP
       this._loadAuthors();
     },
 
@@ -39,12 +47,9 @@ sap.ui.define([
         return;
       }
 
-      // OData V4 way to read a list
       var oListBinding = oModel.bindList("/Authors");
       oListBinding.requestContexts(0, 100).then(function (aContexts) {
-        var aAuthors = [
-          { key: "ALL", text: "All Authors" }
-        ];
+        var aAuthors = [{ key: "ALL", text: "All Authors" }];
 
         aContexts.forEach(function (oContext) {
           var oAuthor = oContext.getObject();
@@ -61,7 +66,12 @@ sap.ui.define([
     },
 
     onRefresh: function () {
-      this.getView().getModel().refresh();
+      var oBinding = this.byId("booksTable") && this.byId("booksTable").getBinding("items");
+      if (oBinding) {
+        oBinding.refresh();
+      } else {
+        this.getView().getModel().refresh();
+      }
       this._loadAuthors();
     },
 
@@ -76,45 +86,68 @@ sap.ui.define([
     },
 
     onFilterAuthor: function (oEvent) {
-  var oSelect = oEvent.getSource();
-  var oItem = oSelect.getSelectedItem();
+      var oSelect = oEvent.getSource();
+      var oItem = oSelect.getSelectedItem();
 
-  this._sAuthorId = oSelect.getSelectedKey() || "ALL";
-  this._sAuthorName = oItem ? oItem.getText() : "";
+      this._sAuthorId = oSelect.getSelectedKey() || "ALL";
+      this._sAuthorName = oItem ? oItem.getText() : "";
+      this._applyFilters();
+    },
 
-  this._applyFilters();
-},
+    _applyFilters: function () {
+      var aFilters = [];
 
-  _applyFilters: function () {
-  var aFilters = [];
+      if (this._sSearchQuery) {
+        aFilters.push(new Filter("title", FilterOperator.Contains, this._sSearchQuery));
+      }
 
-  // Title search
-  if (this._sSearchQuery) {
-    aFilters.push(new Filter("title", FilterOperator.Contains, this._sSearchQuery));
-  }
+      if (this._sAuthorId && this._sAuthorId !== "ALL" && this._sAuthorName && this._sAuthorName !== "All Authors") {
+        aFilters.push(new Filter("author/name", FilterOperator.EQ, this._sAuthorName));
+      }
 
-  // Author filter by name
-  if (this._sAuthorId && this._sAuthorId !== "ALL" && this._sAuthorName) {
-    aFilters.push(new Filter("author/name", FilterOperator.EQ, this._sAuthorName));
-  }
+      if (this._sStockKey === "IN_STOCK") {
+        aFilters.push(new Filter("stock", FilterOperator.GT, 0));
+      } else if (this._sStockKey === "OUT_OF_STOCK") {
+        aFilters.push(new Filter("stock", FilterOperator.EQ, 0));
+      }
 
-  // Stock filter
-  if (this._sStockKey === "IN_STOCK") {
-    aFilters.push(new Filter("stock", FilterOperator.GT, 0));
-  } else if (this._sStockKey === "OUT_OF_STOCK") {
-    aFilters.push(new Filter("stock", FilterOperator.EQ, 0));
-  }
+      var oTable = this.byId("booksTable");
+      if (!oTable) {
+        return;
+      }
 
-  var oTable = this.byId("booksTable");
-  if (!oTable) {
-    return;
-  }
+      var oBinding = oTable.getBinding("items");
+      if (oBinding) {
+        oBinding.filter(aFilters);
+      }
+    },
 
-  var oBinding = oTable.getBinding("items");
-  if (oBinding) {
-    oBinding.filter(aFilters);
-  }
-},
+    _clearFilters: function () {
+      this._sSearchQuery = "";
+      this._sStockKey = "ALL";
+      this._sAuthorId = "ALL";
+      this._sAuthorName = "";
+
+      var oSearch = this.byId("searchField");
+      if (oSearch) {
+        oSearch.setValue("");
+      }
+
+      var oStock = this.byId("stockFilter");
+      if (oStock) {
+        oStock.setSelectedKey("ALL");
+      }
+
+      var oAuthor = this.byId("authorFilter");
+      if (oAuthor) {
+        oAuthor.setSelectedKey("ALL");
+      }
+
+      var oBinding = this.byId("booksTable") && this.byId("booksTable").getBinding("items");
+      if (oBinding) {
+        oBinding.filter([]);
+      }
+    },
 
     onSort: function () {
       var oBinding = this.byId("booksTable").getBinding("items");
@@ -129,214 +162,245 @@ sap.ui.define([
         bookId: sBookId
       });
     },
+
     onCreateOrder: function () {
-  this.getOwnerComponent().getRouter().navTo("createOrder");
-},
-/* =========================
-   CREATE
-========================= */
-onCreateBook: function () {
-  this._openBookForm({
-    mode: "create",
-    dialogTitle: "Create Book",
-    confirmText: "Create",
-    title: "",
-    description: "",
-    price: 0,
-    stock: 0,
-    author_ID: ""
-  });
-},
+      this.getOwnerComponent().getRouter().navTo("createOrder");
+    },
 
-/* =========================
-   EDIT
-========================= */
-onEditBook: function (oEvent) {
-  var oCtx = oEvent.getSource().getBindingContext();
-  var oBook = oCtx.getObject();
+    /* =========================
+       CREATE / EDIT FORM
+    ========================= */
+    onCreateBook: function () {
+      this._oEditContext = null;
+      this._openBookForm({
+        mode: "create",
+        dialogTitle: "Create Book",
+        confirmText: "Create",
+        title: "",
+        description: "",
+        price: 0,
+        stock: 0,
+        author_ID: ""
+      });
+    },
 
-  // IMPORTANT for OData V4 edit
-  this._oEditContext = oCtx;
+    onEditBook: function (oEvent) {
+      var oCtx = oEvent.getSource().getBindingContext();
+      var oBook = oCtx.getObject();
 
-  this._openBookForm({
-    mode: "edit",
-    dialogTitle: "Edit Book",
-    confirmText: "Save",
-    id: oBook.ID,
-    title: oBook.title,
-    description: oBook.description || "",
-    price: oBook.price,
-    stock: oBook.stock,
-    author_ID: oBook.author_ID || (oBook.author && oBook.author.ID) || ""
-  });
-},
+      this._oEditContext = oCtx;
 
-/* =========================
-   OPEN FORM FRAGMENT
-========================= */
-_openBookForm: function (oFormData) {
-  var oView = this.getView();
+      this._openBookForm({
+        mode: "edit",
+        dialogTitle: "Edit Book",
+        confirmText: "Save",
+        id: oBook.ID,
+        title: oBook.title,
+        description: oBook.description || "",
+        price: oBook.price,
+        stock: oBook.stock,
+        author_ID: oBook.author_ID || (oBook.author && oBook.author.ID) || ""
+      });
+    },
 
-  // local model for the dialog fields
-  oView.setModel(new JSONModel(oFormData), "form");
+    _openBookForm: function (oFormData) {
+      var oView = this.getView();
+      oView.setModel(new JSONModel(oFormData), "form");
 
-  if (!this._pBookFormDialog) {
-    this._pBookFormDialog = Fragment.load({
-      id: oView.getId(),
-      name: "ns.bookshopfiori.view.BookFormDialog",
-      controller: this
-    }).then(function (oDialog) {
-      oView.addDependent(oDialog);
-      return oDialog;
-    });
-  }
-
-  this._pBookFormDialog.then(function (oDialog) {
-    oDialog.open();
-  });
-},
-
-onCloseBookForm: function () {
-  this.byId("bookFormDialog").close();
-},
-
-/* =========================
-   SAVE (Create or Edit)
-========================= */
-onSaveBook: function () {
-  var oView = this.getView();
-  var oForm = oView.getModel("form").getData();
-  var oModel = oView.getModel();
-  var that = this;
-
-  if (!oForm.title || oForm.title.trim() === "") {
-    MessageBox.error("Title is required.");
-    return;
-  }
-
-  var iPrice = parseFloat(oForm.price);
-  var iStock = parseInt(oForm.stock, 10);
-
-  if (isNaN(iPrice) || iPrice < 0) {
-    MessageBox.error("Please enter a valid price.");
-    return;
-  }
-  if (isNaN(iStock) || iStock < 0) {
-    MessageBox.error("Please enter a valid stock.");
-    return;
-  }
-
-  var oPayload = {
-    title: oForm.title,
-    description: oForm.description || "",
-    price: iPrice,
-    stock: iStock
-  };
-
-  if (oForm.author_ID) {
-    oPayload.author_ID = oForm.author_ID;
-  }
-
-  /* ========== CREATE ========== */
-  if (oForm.mode === "create") {
-    var oListBinding = oModel.bindList("/Books");
-    var oContext = oListBinding.create(oPayload);
-
-    oContext.created().then(function () {
-      MessageToast.show("Book created");
-      that.byId("bookFormDialog").close();
-
-      // refresh the table binding so the new book appears
-      var oTableBinding = that.byId("booksTable").getBinding("items");
-      if (oTableBinding) {
-        oTableBinding.refresh();
-      } else {
-        oModel.refresh();
+      if (!this._pBookFormDialog) {
+        this._pBookFormDialog = Fragment.load({
+          id: oView.getId(),
+          name: "ns.bookshopfiori.view.BookFormDialog",
+          controller: this
+        }).then(function (oDialog) {
+          oView.addDependent(oDialog);
+          return oDialog;
+        });
       }
-    }).catch(function (oError) {
-      console.error(oError);
-      MessageBox.error("Create failed. Check console / CAP logs.");
-    });
 
-    return;
-  }
+      this._pBookFormDialog.then(function (oDialog) {
+        oDialog.open();
+      });
+    },
 
-  /* ========== EDIT ========== */
-  // Use the context stored when opening Edit
-  var oEditContext = this._oEditContext;
-  if (!oEditContext) {
-    MessageBox.error("No book context found for edit.");
-    return;
-  }
+    onCloseBookForm: function () {
+      this.byId("bookFormDialog").close();
+    },
 
-  oEditContext.setProperty("title", oPayload.title);
-  oEditContext.setProperty("description", oPayload.description);
-  oEditContext.setProperty("price", oPayload.price);
-  oEditContext.setProperty("stock", oPayload.stock);
-  if (oPayload.author_ID) {
-    oEditContext.setProperty("author_ID", oPayload.author_ID);
-  }
+    onSaveBook: function () {
+      var oForm = this.getView().getModel("form").getData();
+      var oModel = this.getView().getModel();
+      var that = this;
 
-  oModel.submitBatch("$auto").then(function () {
-    MessageToast.show("Book updated");
+      if (!oForm.title || oForm.title.trim() === "") {
+        MessageBox.error("Title is required.");
+        return;
+      }
+
+      var iPrice = parseFloat(oForm.price);
+      var iStock = parseInt(oForm.stock, 10);
+
+      if (isNaN(iPrice) || iPrice < 0) {
+        MessageBox.error("Please enter a valid price.");
+        return;
+      }
+      if (isNaN(iStock) || iStock < 0) {
+        MessageBox.error("Please enter a valid stock.");
+        return;
+      }
+
+      var oPayload = {
+        title: oForm.title,
+        description: oForm.description || "",
+        price: iPrice,
+        stock: iStock
+      };
+
+      if (oForm.author_ID) {
+        oPayload.author_ID = oForm.author_ID;
+      }
+
+      /* ===== CREATE on the TABLE binding ===== */
+      /* ===== CREATE ===== */
+if (oForm.mode === "create") {
+  // Direct CAP create (reliable with OData V4)
+  fetch("/odata/v4/catalog/Books", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify(oPayload)
+  })
+  .then(function (oResponse) {
+    if (!oResponse.ok) {
+      return oResponse.text().then(function (sText) {
+        throw new Error(sText || ("HTTP " + oResponse.status));
+      });
+    }
+    return oResponse.json();
+  })
+  .then(function (oCreated) {
+    console.log("Created book:", oCreated);
+    MessageToast.show("Book created");
     that.byId("bookFormDialog").close();
 
+    // Clear filters so the new book is visible
+    that._clearFilters();
+
+    // Refresh table data from server
     var oTableBinding = that.byId("booksTable").getBinding("items");
     if (oTableBinding) {
       oTableBinding.refresh();
+    } else {
+      oModel.refresh();
     }
-  }).catch(function (oError) {
-    console.error(oError);
-    MessageBox.error("Update failed. Check console / CAP logs.");
+  })
+  .catch(function (oError) {
+    console.error("Create failed:", oError);
+    MessageBox.error("Create failed. Check console.");
   });
+
+  return;
+}
+
+      /* ===== EDIT ===== */
+      if (!this._oEditContext) {
+        MessageBox.error("No book context found for edit.");
+        return;
+      }
+
+      this._oEditContext.setProperty("title", oPayload.title);
+      this._oEditContext.setProperty("description", oPayload.description);
+      this._oEditContext.setProperty("price", oPayload.price);
+      this._oEditContext.setProperty("stock", oPayload.stock);
+      if (oPayload.author_ID) {
+        this._oEditContext.setProperty("author_ID", oPayload.author_ID);
+      }
+
+      oModel.submitBatch("$auto").then(function () {
+        MessageToast.show("Book updated");
+        that.byId("bookFormDialog").close();
+        that.byId("booksTable").getBinding("items").refresh();
+      }).catch(function (oError) {
+        console.error(oError);
+        MessageBox.error("Update failed. Check console / CAP logs.");
+      });
+    },
+
+    /* =========================
+       DELETE
+    ========================= */
+    onDeleteBook: function (oEvent) {
+      var oCtx = oEvent.getSource().getBindingContext();
+      var oBook = oCtx.getObject();
+      var oView = this.getView();
+
+      oView.setModel(new JSONModel({
+        title: oBook.title,
+        context: oCtx
+      }), "delete");
+
+      if (!this._pDeleteDialog) {
+        this._pDeleteDialog = Fragment.load({
+          id: oView.getId(),
+          name: "ns.bookshopfiori.view.ConfirmDeleteDialog",
+          controller: this
+        }).then(function (oDialog) {
+          oView.addDependent(oDialog);
+          return oDialog;
+        });
+      }
+
+      this._pDeleteDialog.then(function (oDialog) {
+        oDialog.open();
+      });
+    },
+
+    onCloseDeleteDialog: function () {
+      this.byId("confirmDeleteDialog").close();
+    },
+
+    onConfirmDelete: function () {
+      var oDeleteData = this.getView().getModel("delete").getData();
+      var that = this;
+
+      oDeleteData.context.delete("$auto").then(function () {
+        MessageToast.show("Book deleted");
+        that.byId("confirmDeleteDialog").close();
+      }).catch(function (oError) {
+        console.error(oError);
+        MessageBox.error("Delete failed");
+      });
+    },
+
+    onTableSelectionChange: function () {
+  var oTable = this.byId("booksTable");
+  var aSelected = oTable.getSelectedItems();
+  var oBtn = this.byId("btnViewSelected");
+
+  // Enable View only when exactly 1 book is selected
+  if (oBtn) {
+    oBtn.setEnabled(aSelected.length === 1);
+  }
 },
-/* =========================
-   DELETE
-========================= */
-onDeleteBook: function (oEvent) {
-  var oCtx = oEvent.getSource().getBindingContext();
-  var oBook = oCtx.getObject();
-  var oView = this.getView();
 
-  oView.setModel(new JSONModel({
-    title: oBook.title,
-    path: oCtx.getPath(),
-    context: oCtx
-  }), "delete");
+onViewSelected: function () {
+  var oTable = this.byId("booksTable");
+  var aSelected = oTable.getSelectedItems();
 
-  if (!this._pDeleteDialog) {
-    this._pDeleteDialog = Fragment.load({
-      id: oView.getId(),
-      name: "ns.bookshopfiori.view.ConfirmDeleteDialog",
-      controller: this
-    }).then(function (oDialog) {
-      oView.addDependent(oDialog);
-      return oDialog;
-    });
+  if (aSelected.length !== 1) {
+    MessageBox.information("Please select exactly one book to view.");
+    return;
   }
 
-  this._pDeleteDialog.then(function (oDialog) {
-    oDialog.open();
+  var oContext = aSelected[0].getBindingContext();
+  var sBookId = oContext.getProperty("ID");
+
+  this.getOwnerComponent().getRouter().navTo("bookDetail", {
+    bookId: sBookId
   });
 },
-
-onCloseDeleteDialog: function () {
-  this.byId("confirmDeleteDialog").close();
-},
-
-onConfirmDelete: function () {
-  var oDeleteData = this.getView().getModel("delete").getData();
-  var oContext = oDeleteData.context;
-  var that = this;
-
-  oContext.delete("$auto").then(function () {
-    MessageToast.show("Book deleted");
-    that.byId("confirmDeleteDialog").close();
-  }).catch(function (oError) {
-    MessageBox.error("Delete failed");
-    console.error(oError);
-  });
-}
 
   });
 });

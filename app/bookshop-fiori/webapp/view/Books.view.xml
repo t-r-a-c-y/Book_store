@@ -8,22 +8,20 @@
   <Page title="{i18n>booksPageTitle}">
 
     <!-- ========== FILTER AREA (important for List Report) ========== -->
-   <subHeader>
+  <subHeader>
   <Toolbar>
     <SearchField
       id="searchField"
-      width="30%"
+      width="25%"
       placeholder="Search by title..."
       liveChange=".onSearch" />
 
-    <ToolbarSpacer />
-
-    <Label text="Author:" labelFor="authorFilter" />
+    <Label text="Author:" labelFor="authorFilter" class="sapUiTinyMarginBegin" />
     <Select
       id="authorFilter"
       selectedKey="ALL"
       change=".onFilterAuthor"
-      width="12rem"
+      width="11rem"
       items="{path: 'authors>/'}">
       <core:Item key="{authors>key}" text="{authors>text}" />
     </Select>
@@ -33,28 +31,33 @@
       id="stockFilter"
       selectedKey="ALL"
       change=".onFilterStock"
-      width="10rem">
+      width="9rem">
       <core:Item key="ALL" text="All" />
       <core:Item key="IN_STOCK" text="In Stock" />
       <core:Item key="OUT_OF_STOCK" text="Out of Stock" />
     </Select>
+
+    <ToolbarSpacer />
+
+    <Button
+      icon="sap-icon://add"
+      text="Create Book"
+      press=".onCreateBook"
+      type="Emphasized" />
+
+    <Button
+      icon="sap-icon://add-document"
+      text="Create Order"
+      press=".onCreateOrder"
+      class="sapUiTinyMarginBegin" />
   </Toolbar>
 </subHeader>
 
     <!-- ========== ACTIONS ========== -->
   <headerContent>
-  <Button
-    icon="sap-icon://add"
-    text="Create Book"
-    press=".onCreateBook"
-    tooltip="Create Book" />
-  <Button
-    icon="sap-icon://add-document"
-    text="Create Order"
-    press=".onCreateOrder"
-    tooltip="Create Order" />
-  <Button icon="sap-icon://sort" press=".onSort" tooltip="Sort by Title" />
-  <Button icon="sap-icon://refresh" press=".onRefresh" tooltip="Refresh" />
+  
+  <Button icon="sap-icon://sort" press=".onSort" />
+  <Button icon="sap-icon://refresh" press=".onRefresh" />
 </headerContent>
 
     <!-- ========== TABLE ========== -->
@@ -64,11 +67,17 @@
         class="sapUiResponsiveMargin myBooksPanel">
 
         <Table
-          id="booksTable"
-          items="{/Books}"
-          mode="None"
-          growing="true"
-          growingThreshold="20">
+  id="booksTable"
+  items="{
+    path: '/Books',
+    parameters: {
+      $expand: 'author'
+    }
+  }"
+  mode="MultiSelect"
+  growing="true"
+  growingThreshold="20"
+  selectionChange=".onTableSelectionChange">
 
           <columns>
             <Column width="35%">
