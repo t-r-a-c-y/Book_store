@@ -11,42 +11,62 @@
     <content>
       <VBox class="sapUiSmallMargin">
 
-        <Label text="Title" labelFor="inTitle" required="true" />
+        <!-- TITLE (required text) -->
+        <Label text="{i18n>Title}" labelFor="inTitle" required="true" />
         <Input
           id="inTitle"
           value="{form>/title}"
+          valueState="{form>/titleState}"
+          valueStateText="{form>/titleStateText}"
+          liveChange=".onBookFieldChange"
           width="100%"
-          placeholder="Enter book title" />
+          placeholder="{i18n>titlePlaceholder}" />
 
-        <Label text="Description" labelFor="inDescription" class="sapUiSmallMarginTop" />
+        <!-- DESCRIPTION -->
+        <Label text="{i18n>Description}" labelFor="inDescription" class="sapUiSmallMarginTop" />
         <TextArea
           id="inDescription"
           value="{form>/description}"
+          valueState="{form>/descriptionState}"
+          valueStateText="{form>/descriptionStateText}"
+          liveChange=".onBookFieldChange"
           rows="3"
           width="100%"
-          placeholder="Enter description" />
+          placeholder="{i18n>descriptionPlaceholder}" />
 
-        <Label text="Price (EUR)" labelFor="inPrice" class="sapUiSmallMarginTop" required="true" />
+        <!-- PRICE (required number) -->
+        <Label text="{i18n>Price}" labelFor="inPrice" class="sapUiSmallMarginTop" required="true" />
         <Input
           id="inPrice"
           type="Number"
           value="{form>/price}"
+          valueState="{form>/priceState}"
+          valueStateText="{form>/priceStateText}"
+          liveChange=".onBookFieldChange"
           width="100%"
           placeholder="0.00" />
 
-        <Label text="Stock" labelFor="inStock" class="sapUiSmallMarginTop" required="true" />
+        <!-- STOCK (required integer) -->
+        <Label text="{i18n>Stock}" labelFor="inStock" class="sapUiSmallMarginTop" required="true" />
         <Input
           id="inStock"
           type="Number"
           value="{form>/stock}"
+          valueState="{form>/stockState}"
+          valueStateText="{form>/stockStateText}"
+          liveChange=".onBookFieldChange"
           width="100%"
           placeholder="0" />
 
-        <Label text="Author" labelFor="inAuthor" class="sapUiSmallMarginTop" />
+        <!-- AUTHOR (required select) -->
+        <Label text="{i18n>Author}" labelFor="inAuthor" class="sapUiSmallMarginTop" required="true" />
         <Select
           id="inAuthor"
           forceSelection="false"
           selectedKey="{form>/author_ID}"
+          valueState="{form>/authorState}"
+          valueStateText="{form>/authorStateText}"
+          change=".onBookFieldChange"
           width="100%"
           items="{
             path: '/Authors',
@@ -68,7 +88,7 @@
 
     <endButton>
       <Button
-        text="Cancel"
+        text="{i18n>Cancel}"
         icon="sap-icon://decline"
         press=".onCloseBookForm" />
     </endButton>

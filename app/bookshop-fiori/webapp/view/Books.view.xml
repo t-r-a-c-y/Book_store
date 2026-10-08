@@ -106,8 +106,8 @@
                 <Text text="{author/name}" />
                 <ObjectNumber number="{price}" unit="EUR" />
                 <ObjectStatus
-                  text="{= ${stock} > 0 ? 'In Stock (' + ${stock} + ')' : 'Out of Stock' }"
-                  state="{= ${stock} > 0 ? 'Success' : 'Error' }" /> 
+  text="{ path: 'stock', formatter: '.formatter.stockStatusText' }"
+  state="{ path: 'stock', formatter: '.formatter.stockStatusState' }" />
                   <HBox justifyContent="Center">
   <Button
     icon="sap-icon://edit"
