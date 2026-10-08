@@ -170,16 +170,45 @@ _disableWizardProgressClick: function () {
     },
 
     _finishWizard: function () {
-      var oData = this.getView().getModel("wizard").getData();
+  var oData = this.getView().getModel("wizard").getData();
+  var that = this;
 
-      MessageToast.show(
-        "Order created: " + oData.customerName +
-        " / " + oData.bookTitle +
-        " x " + oData.quantity
-      );
+  var oPayload = {
+    user_ID: oData.customerId,
+    orderDate: new Date().toISOString().split("T")[0],
+    items: [
+      {
+        book_ID: oData.bookId,
+        quantity: oData.quantity
+      }
+    ]
+  };
 
-      this.getOwnerComponent().getRouter().navTo("books");
+  fetch("/odata/v4/catalog/Orders", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
     },
+    body: JSON.stringify(oPayload)
+  })
+  .then(function (oResponse) {
+    if (!oResponse.ok) {
+      return oResponse.text().then(function (sText) {
+        throw new Error(sText || ("HTTP " + oResponse.status));
+      });
+    }
+    return oResponse.text();
+  })
+  .then(function () {
+    MessageToast.show("Order created successfully");
+    that.getOwnerComponent().getRouter().navTo("books");
+  })
+  .catch(function (oError) {
+    console.error(oError);
+    MessageBox.error("Order create failed. Check stock/budget and CAP logs.");
+  });
+},
 
     onWizardComplete: function () {
       // Called if Wizard internal complete is triggered

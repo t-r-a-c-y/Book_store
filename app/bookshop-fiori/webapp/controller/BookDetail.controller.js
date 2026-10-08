@@ -39,44 +39,52 @@ sap.ui.define([
 
     /* ===== EDIT ===== */
     onEditBook: function () {
-      var oView = this.getView();
-      var oCtx = oView.getBindingContext();
+  var oCtx = this.getView().getBindingContext();
+  if (!oCtx) {
+    return;
+  }
+  var oBook = oCtx.getObject();
+  this._oEditContext = oCtx;
 
-      if (!oCtx) {
-        MessageBox.error("No book loaded.");
-        return;
-      }
+  BookDialogHelper.openForm(this, {
+    mode: "edit",
+    dialogTitle: "Edit Book",
+    confirmText: "Save",
+    title: oBook.title,
+    description: oBook.description || "",
+    price: oBook.price,
+    stock: oBook.stock,
+    author_ID: oBook.author_ID || (oBook.author && oBook.author.ID) || ""
+  });
+},
 
-      var oBook = oCtx.getObject();
-      this._oEditContext = oCtx;
+onCloseBookForm: function () {
+  BookDialogHelper.closeForm(this);
+},
 
-      oView.setModel(new JSONModel({
-        mode: "edit",
-        dialogTitle: "Edit Book",
-        confirmText: "Save",
-        id: oBook.ID,
-        title: oBook.title,
-        description: oBook.description || "",
-        price: oBook.price,
-        stock: oBook.stock,
-        author_ID: oBook.author_ID || (oBook.author && oBook.author.ID) || ""
-      }), "form");
+onSaveBook: function () {
+  BookDialogHelper.saveBook(this);
+},
 
-      if (!this._pBookFormDialog) {
-        this._pBookFormDialog = Fragment.load({
-          id: oView.getId(),
-          name: "ns.bookshopfiori.view.BookFormDialog",
-          controller: this
-        }).then(function (oDialog) {
-          oView.addDependent(oDialog);
-          return oDialog;
-        });
-      }
+onDeleteBook: function () {
+  var oCtx = this.getView().getBindingContext();
+  if (oCtx) {
+    BookDialogHelper.openDelete(this, oCtx);
+  }
+},
 
-      this._pBookFormDialog.then(function (oDialog) {
-        oDialog.open();
-      });
-    },
+onCloseDeleteDialog: function () {
+  BookDialogHelper.closeDelete(this);
+},
+
+onConfirmDelete: function () {
+  var that = this;
+  BookDialogHelper.confirmDelete(this, {
+    afterDelete: function () {
+      that.getOwnerComponent().getRouter().navTo("books");
+    }
+  });
+},
 
     onCloseBookForm: function () {
       this.byId("bookFormDialog").close();
