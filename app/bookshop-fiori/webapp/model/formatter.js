@@ -10,11 +10,19 @@ sap.ui.define([], function () {
     },
 
     stockStatusText: function (iStock) {
-      return iStock > 0 ? "In Stock (" + iStock + ")" : "Out of Stock";
+      var iValue = parseInt(iStock, 10);
+      if (isNaN(iValue)) {
+        return "";
+      }
+      return iValue > 0 ? "In Stock (" + iValue + ")" : "Out of Stock";
     },
 
     stockStatusState: function (iStock) {
-      return iStock > 0 ? "Success" : "Error";
+      var iValue = parseInt(iStock, 10);
+      if (isNaN(iValue)) {
+        return "None";
+      }
+      return iValue > 0 ? "Success" : "Error";
     }
   };
 });

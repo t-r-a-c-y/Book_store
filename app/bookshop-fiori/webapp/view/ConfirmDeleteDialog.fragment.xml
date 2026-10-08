@@ -4,20 +4,20 @@
 
   <Dialog
     id="confirmDeleteDialog"
-    title="Delete Book"
+    title="{i18n>deleteBook}"
     type="Message"
     state="Warning"
     icon="sap-icon://delete">
 
     <content>
       <Text
-        text="Do you really want to delete the book '{delete>/title}'?"
+        text="{i18n>deleteBookConfirm} '{delete>/title}'?"
         class="sapUiSmallMargin" />
     </content>
 
     <beginButton>
       <Button
-        text="Delete"
+        text="{i18n>delete}"
         type="Reject"
         icon="sap-icon://delete"
         press=".onConfirmDelete" />
@@ -25,7 +25,7 @@
 
     <endButton>
       <Button
-        text="Cancel"
+        text="{i18n>Cancel}"
         press=".onCloseDeleteDialog" />
     </endButton>
 
