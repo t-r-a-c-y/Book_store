@@ -287,18 +287,48 @@ sap.ui.define([
     },
 
     onConfirmDelete: function () {
-      var oDelete = this.getView().getModel("delete").getData();
-      var that = this;
+  var oView = this.getView();
+  var oCtx = oView.getBindingContext();
+  var that = this;
 
-      oDelete.context.delete("$auto").then(function () {
-        MessageToast.show(that._text("bookDeleted"));
-        that.onCloseDeleteDialog();
-        that.getOwnerComponent().getRouter().navTo("books");
-      }).catch(function (oError) {
-        console.error(oError);
-        MessageBox.error(that._text("deleteFailed"));
-      });
+  if (!oCtx) {
+    MessageBox.error(this._text("deleteFailed"));
+    return;
+  }
+
+  var sBookId = oCtx.getProperty("ID");
+  if (!sBookId) {
+    MessageBox.error(this._text("deleteFailed"));
+    return;
+  }
+
+  // Direct CAP delete (reliable)
+  fetch("/odata/v4/catalog/Books(" + sBookId + ")", {
+    method: "DELETE",
+    headers: {
+      "Accept": "application/json"
     }
+  })
+    .then(function (oResponse) {
+      // 204 No Content is normal for DELETE
+      if (!oResponse.ok && oResponse.status !== 204) {
+        return oResponse.text().then(function (sText) {
+          throw new Error(sText || ("HTTP " + oResponse.status));
+        });
+      }
+    })
+    .then(function () {
+      MessageToast.show(that._text("bookDeleted"));
+      that.onCloseDeleteDialog();
+
+      // Go back to list after delete
+      that.getOwnerComponent().getRouter().navTo("books");
+    })
+    .catch(function (oError) {
+      console.error("Delete failed:", oError);
+      MessageBox.error(that._text("deleteFailed"));
+    });
+},
 
   });
 });
