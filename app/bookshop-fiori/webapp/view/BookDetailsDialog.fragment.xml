@@ -3,33 +3,73 @@
   xmlns:core="sap.ui.core">
 
   <Dialog
-    id="bookDetailsDialog"
-    title="Book Details"
+    id="bookFormDialog"
+    title="{form>/dialogTitle}"
     icon="sap-icon://course-book"
     class="sapUiResponsiveContentPadding">
 
     <content>
-      <VBox class="sapUiSmallMargin" alignItems="Start">
-        <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-          <core:Icon src="sap-icon://course-book" class="sapUiTinyMarginEnd" />
-          <Text text="{title}" class="sapUiMediumMarginBegin" />
-        </HBox>
+      <VBox class="sapUiSmallMargin">
 
-        <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-          <core:Icon src="sap-icon://money-bills" class="sapUiTinyMarginEnd" />
-          <Text text="{price} EUR" />
-        </HBox>
+        <Label text="{i18n>Title}" labelFor="inTitle" required="true" />
+        <Input
+          id="inTitle"
+          value="{form>/title}"
+          width="100%"
+          placeholder="{i18n>titlePlaceholder}" />
 
-        <HBox alignItems="Center">
-          <core:Icon src="sap-icon://person-placeholder" class="sapUiTinyMarginEnd" />
-          <Text text="{author/name}" />
-        </HBox>
+        <Label text="{i18n>Description}" labelFor="inDescription" class="sapUiSmallMarginTop" />
+        <TextArea
+          id="inDescription"
+          value="{form>/description}"
+          rows="3"
+          width="100%"
+          placeholder="{i18n>descriptionPlaceholder}" />
+
+        <Label text="{i18n>Price}" labelFor="inPrice" class="sapUiSmallMarginTop" required="true" />
+        <Input
+          id="inPrice"
+          type="Number"
+          value="{form>/price}"
+          width="100%" />
+
+        <Label text="{i18n>Stock}" labelFor="inStock" class="sapUiSmallMarginTop" required="true" />
+        <Input
+          id="inStock"
+          type="Number"
+          value="{form>/stock}"
+          width="100%" />
+
+        <Label text="{i18n>Author}" labelFor="inAuthor" class="sapUiSmallMarginTop" />
+        <Select
+          id="inAuthor"
+          forceSelection="false"
+          selectedKey="{form>/author_ID}"
+          width="100%"
+          items="{
+            path: '/Authors',
+            sorter: { path: 'name' }
+          }">
+          <core:Item key="{ID}" text="{name}" />
+        </Select>
+
       </VBox>
     </content>
 
     <beginButton>
-      <Button text="Close" icon="sap-icon://decline" press=".onCloseDialog" type="Emphasized" />
+      <Button
+        text="{form>/confirmText}"
+        type="Emphasized"
+        icon="sap-icon://save"
+        press=".onSaveBook" />
     </beginButton>
+
+    <endButton>
+      <Button
+        text="{i18n>Cancel}"
+        icon="sap-icon://decline"
+        press=".onCloseBookForm" />
+    </endButton>
 
   </Dialog>
 </core:FragmentDefinition>
