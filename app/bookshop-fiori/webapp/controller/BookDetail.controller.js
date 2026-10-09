@@ -279,14 +279,7 @@ sap.ui.define([
       });
     },
 
-    onCloseDeleteDialog: function () {
-      var oDialog = this.byId("confirmDeleteDialog");
-      if (oDialog) {
-        oDialog.close();
-      }
-    },
-
-    onConfirmDelete: function () {
+  onConfirmDelete: function () {
   var oView = this.getView();
   var oCtx = oView.getBindingContext();
   var that = this;
@@ -297,20 +290,12 @@ sap.ui.define([
   }
 
   var sBookId = oCtx.getProperty("ID");
-  if (!sBookId) {
-    MessageBox.error(this._text("deleteFailed"));
-    return;
-  }
 
-  // Direct CAP delete (reliable)
   fetch("/odata/v4/catalog/Books(" + sBookId + ")", {
     method: "DELETE",
-    headers: {
-      "Accept": "application/json"
-    }
+    headers: { "Accept": "application/json" }
   })
     .then(function (oResponse) {
-      // 204 No Content is normal for DELETE
       if (!oResponse.ok && oResponse.status !== 204) {
         return oResponse.text().then(function (sText) {
           throw new Error(sText || ("HTTP " + oResponse.status));
@@ -320,12 +305,10 @@ sap.ui.define([
     .then(function () {
       MessageToast.show(that._text("bookDeleted"));
       that.onCloseDeleteDialog();
-
-      // Go back to list after delete
       that.getOwnerComponent().getRouter().navTo("books");
     })
     .catch(function (oError) {
-      console.error("Delete failed:", oError);
+      console.error(oError);
       MessageBox.error(that._text("deleteFailed"));
     });
 },

@@ -464,6 +464,7 @@ sap.ui.define([
       }
     },
 
+    
     onConfirmDelete: function () {
       var oDeleteData = this.getView().getModel("delete").getData();
       var that = this;

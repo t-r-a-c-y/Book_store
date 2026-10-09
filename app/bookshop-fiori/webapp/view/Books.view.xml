@@ -64,9 +64,10 @@
 
         <Table
           id="booksTable"
-          mode="None"
+          mode="MulitiSelect"
           growing="true"
           growingThreshold="20"
+          selectionChange=".onSelectionChange"
           items="{
             path: '/Books',
             parameters: {
