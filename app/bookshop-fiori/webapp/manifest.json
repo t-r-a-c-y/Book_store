@@ -41,7 +41,9 @@
         "sap.m": {},
         "sap.ui.core": {},
         "sap.f": {},
-        "sap.ui.layout": {}
+        "sap.ui.layout": {},
+        "sap.ui.unified": {},
+        "sap.uxap": {}
       }
     },
     "contentDensities": {

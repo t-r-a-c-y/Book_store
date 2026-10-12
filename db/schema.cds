@@ -42,7 +42,9 @@ entity Books : cuid, managed {
 
     @assert.range: [0, 5]
     rating : Integer default 0;
-    
+
+    coverUrl:LargeString;
+
     @mandatory
     author : Association to Authors;
 

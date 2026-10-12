@@ -3,99 +3,137 @@
   xmlns:mvc="sap.ui.core.mvc"
   xmlns="sap.m"
   xmlns:core="sap.ui.core"
+  xmlns:uxap="sap.uxap"
   xmlns:custom="ns.bookshopfiori.control"
+  xmlns:layout="sap.ui.layout"
+  height="100%"
   displayBlock="true">
 
-  <Page
-    id="bookDetailPage"
-    title="{title}"
-    showNavButton="true"
-    navButtonPress=".onNavBack"
-    class="sapUiResponsiveContentPadding">
+  <uxap:ObjectPageLayout
+    id="bookObjectPage"
+    upperCaseAnchorBar="false"
+    showTitleInHeaderContent="true">
 
-    <headerContent>
-      <Button
-        icon="sap-icon://edit"
-        text="{i18n>edit}"
-        type="Emphasized"
-        press=".onEditBook" />
-      <Button
-        icon="sap-icon://delete"
-        text="{i18n>delete}"
-        type="Reject"
-        press=".onDeleteBook" />
-    </headerContent>
+    <!-- ================= HEADER TITLE ================= -->
+    <uxap:headerTitle>
+      <uxap:ObjectPageDynamicHeaderTitle>
 
-    <content>
+        <uxap:heading>
+          <Title text="{title}" level="H2" />
+        </uxap:heading>
 
-      <ObjectHeader
-        title="{title}"
-        number="{price}"
-        numberUnit="EUR"
-        backgroundDesign="Solid"
-        class="sapUiSmallMarginBottom">
+        <uxap:snappedHeading>
+          <Title text="{title}" level="H4" />
+        </uxap:snappedHeading>
 
-        <attributes>
-          <ObjectAttribute title="{i18n>Author}" text="{author/name}" />
-          <ObjectAttribute title="{i18n>Stock}" text="{stock}" />
-        </attributes>
+        <uxap:expandedContent>
+          <Text text="{author/name}" />
+        </uxap:expandedContent>
 
-        <statuses>
-          <ObjectStatus
-            text="{ path: 'stock', formatter: '.formatter.stockStatusText' }"
-            state="{ path: 'stock', formatter: '.formatter.stockStatusState' }" />
-        </statuses>
-      </ObjectHeader>
+        <uxap:snappedContent>
+          <Text text="{author/name}" />
+        </uxap:snappedContent>
 
-      <Panel headerText="{i18n>Description}" class="sapUiSmallMarginBottom">
-        <content>
-          <Text
-            text="{= ${description} ? ${description} : 'No description available.' }"
-            class="sapUiSmallMargin" />
-        </content>
-      </Panel>
+        <uxap:actions>
+          <Button
+            text="{i18n>edit}"
+            icon="sap-icon://edit"
+            type="Emphasized"
+            press=".onEditBook" />
+          <Button
+            text="{i18n>delete}"
+            icon="sap-icon://delete"
+            type="Transparent"
+            press=".onDeleteBook" />
+          <Button
+            icon="sap-icon://nav-back"
+            type="Transparent"
+            tooltip="Back"
+            press=".onNavBack" />
+        </uxap:actions>
 
-      <Panel headerText="Additional Information" class="sapUiSmallMarginBottom">
-        <content>
-          <VBox class="sapUiSmallMargin">
+      </uxap:ObjectPageDynamicHeaderTitle>
+    </uxap:headerTitle>
 
-            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-              <core:Icon src="sap-icon://course-book" class="sapUiTinyMarginEnd" />
-              <Label text="{i18n>Title}" class="sapUiTinyMarginEnd" />
-              <Text text="{title}" />
-            </HBox>
+    <!-- ================= HEADER CONTENT ================= -->
+    <uxap:headerContent>
+      <layout:VerticalLayout class="sapUiMediumMarginEnd">
+        <ObjectAttribute title="{i18n>Price}" text="{price} EUR" />
+        <ObjectAttribute title="{i18n>Stock}" text="{stock}" />
+      </layout:VerticalLayout>
 
-            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-              <core:Icon src="sap-icon://money-bills" class="sapUiTinyMarginEnd" />
-              <Label text="{i18n>Price}" class="sapUiTinyMarginEnd" />
-              <Text text="{price} EUR" />
-            </HBox>
+      <layout:VerticalLayout class="sapUiMediumMarginEnd">
+        <ObjectAttribute title="{i18n>Author}" text="{author/name}" />
+        <ObjectStatus
+          text="{ path: 'stock', formatter: '.formatter.stockStatusText' }"
+          state="{ path: 'stock', formatter: '.formatter.stockStatusState' }" />
+      </layout:VerticalLayout>
 
-            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-              <core:Icon src="sap-icon://person-placeholder" class="sapUiTinyMarginEnd" />
-              <Label text="{i18n>Author}" class="sapUiTinyMarginEnd" />
-              <Text text="{author/name}" />
-            </HBox>
+      <layout:VerticalLayout>
+        <Label text="Rating" />
+        <custom:BookRating
+          value="{rating}"
+          editable="true"
+          change=".onRatingChange" />
+      </layout:VerticalLayout>
+    </uxap:headerContent>
 
-            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-              <core:Icon src="sap-icon://favorite" class="sapUiTinyMarginEnd" />
-              <Label text="Rating" class="sapUiTinyMarginEnd" />
+    <!-- ================= SECTION: Description ================= -->
+    <uxap:sections>
+      <uxap:ObjectPageSection title="Description" titleUppercase="false">
+        <uxap:subSections>
+          <uxap:ObjectPageSubSection title="About this book">
+            <VBox class="sapUiSmallMargin">
+              <Text
+                text="{= ${description} ? ${description} : 'No description available.' }" />
+            </VBox>
+          </uxap:ObjectPageSubSection>
+        </uxap:subSections>
+      </uxap:ObjectPageSection>
+
+      <!-- ================= SECTION: Details ================= -->
+      <uxap:ObjectPageSection title="Details" titleUppercase="false">
+        <uxap:subSections>
+          <uxap:ObjectPageSubSection title="Book information">
+            <layout:HorizontalLayout allowWrapping="true" class="sapUiSmallMargin">
+
+              <layout:VerticalLayout class="sapUiLargeMarginEnd">
+                <ObjectAttribute title="{i18n>Title}" text="{title}" />
+                <ObjectAttribute title="{i18n>Author}" text="{author/name}" />
+              </layout:VerticalLayout>
+
+              <layout:VerticalLayout class="sapUiLargeMarginEnd">
+                <ObjectAttribute title="{i18n>Price}" text="{price} EUR" />
+                <ObjectAttribute title="{i18n>Stock}" text="{stock}" />
+              </layout:VerticalLayout>
+
+              <layout:VerticalLayout>
+                <ObjectAttribute title="Availability" />
+                <ObjectStatus
+                  text="{ path: 'stock', formatter: '.formatter.stockStatusText' }"
+                  state="{ path: 'stock', formatter: '.formatter.stockStatusState' }" />
+              </layout:VerticalLayout>
+
+            </layout:HorizontalLayout>
+          </uxap:ObjectPageSubSection>
+        </uxap:subSections>
+      </uxap:ObjectPageSection>
+
+      <!-- ================= SECTION: Rating ================= -->
+      <uxap:ObjectPageSection title="Rating" titleUppercase="false">
+        <uxap:subSections>
+          <uxap:ObjectPageSubSection title="Your rating">
+            <VBox class="sapUiSmallMargin">
+              <Label text="Click stars to rate this book" class="sapUiTinyMarginBottom" />
               <custom:BookRating
                 value="{rating}"
                 editable="true"
                 change=".onRatingChange" />
-            </HBox>
+            </VBox>
+          </uxap:ObjectPageSubSection>
+        </uxap:subSections>
+      </uxap:ObjectPageSection>
+    </uxap:sections>
 
-            <HBox alignItems="Center">
-              <core:Icon src="sap-icon://product" class="sapUiTinyMarginEnd" />
-              <Label text="{i18n>Stock}" class="sapUiTinyMarginEnd" />
-              <Text text="{stock}" />
-            </HBox>
-
-          </VBox>
-        </content>
-      </Panel>
-
-    </content>
-  </Page>
+  </uxap:ObjectPageLayout>
 </mvc:View>
