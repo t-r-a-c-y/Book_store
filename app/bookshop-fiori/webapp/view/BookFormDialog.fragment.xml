@@ -5,13 +5,11 @@
   <Dialog
     id="bookFormDialog"
     title="{form>/dialogTitle}"
-    icon="sap-icon://course-book"
-    class="sapUiResponsiveContentPadding">
+    icon="sap-icon://course-book">
 
     <content>
       <VBox class="sapUiSmallMargin">
 
-        <!-- TITLE (required text) -->
         <Label text="{i18n>Title}" labelFor="inTitle" required="true" />
         <Input
           id="inTitle"
@@ -22,7 +20,6 @@
           width="100%"
           placeholder="{i18n>titlePlaceholder}" />
 
-        <!-- DESCRIPTION -->
         <Label text="{i18n>Description}" labelFor="inDescription" class="sapUiSmallMarginTop" />
         <TextArea
           id="inDescription"
@@ -31,10 +28,8 @@
           valueStateText="{form>/descriptionStateText}"
           liveChange=".onBookFieldChange"
           rows="3"
-          width="100%"
-          placeholder="{i18n>descriptionPlaceholder}" />
+          width="100%" />
 
-        <!-- PRICE (required number) -->
         <Label text="{i18n>Price}" labelFor="inPrice" class="sapUiSmallMarginTop" required="true" />
         <Input
           id="inPrice"
@@ -43,10 +38,8 @@
           valueState="{form>/priceState}"
           valueStateText="{form>/priceStateText}"
           liveChange=".onBookFieldChange"
-          width="100%"
-          placeholder="0.00" />
+          width="100%" />
 
-        <!-- STOCK (required integer) -->
         <Label text="{i18n>Stock}" labelFor="inStock" class="sapUiSmallMarginTop" required="true" />
         <Input
           id="inStock"
@@ -55,23 +48,18 @@
           valueState="{form>/stockState}"
           valueStateText="{form>/stockStateText}"
           liveChange=".onBookFieldChange"
-          width="100%"
-          placeholder="0" />
+          width="100%" />
 
-        <!-- AUTHOR (required select) -->
         <Label text="{i18n>Author}" labelFor="inAuthor" class="sapUiSmallMarginTop" required="true" />
         <Select
           id="inAuthor"
-          forceSelection="false"
           selectedKey="{form>/author_ID}"
           valueState="{form>/authorState}"
           valueStateText="{form>/authorStateText}"
           change=".onBookFieldChange"
           width="100%"
-          items="{
-            path: '/Authors',
-            sorter: { path: 'name' }
-          }">
+          forceSelection="false"
+          items="{ path: '/Authors', sorter: { path: 'name' } }">
           <core:Item key="{ID}" text="{name}" />
         </Select>
 

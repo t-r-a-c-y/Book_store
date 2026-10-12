@@ -14,21 +14,20 @@
     class="sapUiResponsiveContentPadding">
 
     <headerContent>
-  <Button
-    icon="sap-icon://edit"
-    text="Edit"
-    press=".onEditBook"
-    type="Emphasized" />
-  <Button
-    icon="sap-icon://delete"
-    text="Delete"
-    press=".onDeleteBook"
-    type="Reject" />
-</headerContent>
+      <Button
+        icon="sap-icon://edit"
+        text="{i18n>edit}"
+        type="Emphasized"
+        press=".onEditBook" />
+      <Button
+        icon="sap-icon://delete"
+        text="{i18n>delete}"
+        type="Reject"
+        press=".onDeleteBook" />
+    </headerContent>
 
     <content>
 
-      
       <ObjectHeader
         title="{title}"
         number="{price}"
@@ -37,23 +36,18 @@
         class="sapUiSmallMarginBottom">
 
         <attributes>
-          <ObjectAttribute title="Author" text="{author/name}" />
-          <ObjectAttribute title="Stock" text="{stock} pieces" />
+          <ObjectAttribute title="{i18n>Author}" text="{author/name}" />
+          <ObjectAttribute title="{i18n>Stock}" text="{stock}" />
         </attributes>
 
         <statuses>
           <ObjectStatus
-            text="{= ${stock} > 0 ? 'In Stock' : 'Out of Stock' }"
-            state="{= ${stock} > 0 ? 'Success' : 'Error' }"
-            icon="{= ${stock} > 0 ? 'sap-icon://accept' : 'sap-icon://error' }" />
+            text="{ path: 'stock', formatter: '.formatter.stockStatusText' }"
+            state="{ path: 'stock', formatter: '.formatter.stockStatusState' }" />
         </statuses>
       </ObjectHeader>
 
-      
-      <Panel
-        headerText="Description"
-        expandable="false"
-        class="sapUiSmallMarginBottom">
+      <Panel headerText="{i18n>Description}" class="sapUiSmallMarginBottom">
         <content>
           <Text
             text="{= ${description} ? ${description} : 'No description available.' }"
@@ -61,51 +55,42 @@
         </content>
       </Panel>
 
-      
-      <Panel
-        headerText="Additional Information"
-        expandable="false"
-        class="sapUiSmallMarginBottom">
+      <Panel headerText="Additional Information" class="sapUiSmallMarginBottom">
         <content>
           <VBox class="sapUiSmallMargin">
 
             <HBox alignItems="Center" class="sapUiTinyMarginBottom">
               <core:Icon src="sap-icon://course-book" class="sapUiTinyMarginEnd" />
-              <Label text="Title:" class="sapUiTinyMarginEnd" />
+              <Label text="{i18n>Title}" class="sapUiTinyMarginEnd" />
               <Text text="{title}" />
             </HBox>
 
             <HBox alignItems="Center" class="sapUiTinyMarginBottom">
               <core:Icon src="sap-icon://money-bills" class="sapUiTinyMarginEnd" />
-              <Label text="Price:" class="sapUiTinyMarginEnd" />
+              <Label text="{i18n>Price}" class="sapUiTinyMarginEnd" />
               <Text text="{price} EUR" />
             </HBox>
 
             <HBox alignItems="Center" class="sapUiTinyMarginBottom">
               <core:Icon src="sap-icon://person-placeholder" class="sapUiTinyMarginEnd" />
-              <Label text="Author:" class="sapUiTinyMarginEnd" />
+              <Label text="{i18n>Author}" class="sapUiTinyMarginEnd" />
               <Text text="{author/name}" />
             </HBox>
 
             <HBox alignItems="Center" class="sapUiTinyMarginBottom">
               <core:Icon src="sap-icon://favorite" class="sapUiTinyMarginEnd" />
-              <Label text="Rating:" class="sapUiTinyMarginEnd" />
-              <custom:BookRating value="2" />
+              <Label text="Rating" class="sapUiTinyMarginEnd" />
+              <custom:BookRating
+                value="0"
+                editable="true"
+                change=".onRatingChange" />
             </HBox>
 
             <HBox alignItems="Center">
               <core:Icon src="sap-icon://product" class="sapUiTinyMarginEnd" />
-              <Label text="Stock:" class="sapUiTinyMarginEnd" />
+              <Label text="{i18n>Stock}" class="sapUiTinyMarginEnd" />
               <Text text="{stock}" />
             </HBox>
-            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-  <core:Icon src="sap-icon://favorite" class="sapUiTinyMarginEnd" />
-  <Label text="Rating:" class="sapUiTinyMarginEnd" />
-  <custom:BookRating
-    value="0"
-    editable="true"
-    change=".onRatingChange" />
-</HBox>
 
           </VBox>
         </content>
