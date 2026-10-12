@@ -28,7 +28,7 @@
 
     <content>
 
-      <!-- ========== OBJECT HEADER ========== -->
+      
       <ObjectHeader
         title="{title}"
         number="{price}"
@@ -49,7 +49,7 @@
         </statuses>
       </ObjectHeader>
 
-      <!-- ========== SECTION 1: Description ========== -->
+      
       <Panel
         headerText="Description"
         expandable="false"
@@ -61,7 +61,7 @@
         </content>
       </Panel>
 
-      <!-- ========== SECTION 2: Additional Information ========== -->
+      
       <Panel
         headerText="Additional Information"
         expandable="false"
@@ -90,7 +90,7 @@
             <HBox alignItems="Center" class="sapUiTinyMarginBottom">
               <core:Icon src="sap-icon://favorite" class="sapUiTinyMarginEnd" />
               <Label text="Rating:" class="sapUiTinyMarginEnd" />
-              <custom:BookRating value="4" />
+              <custom:BookRating value="2" />
             </HBox>
 
             <HBox alignItems="Center">

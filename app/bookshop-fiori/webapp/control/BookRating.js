@@ -7,7 +7,7 @@ sap.ui.define([
 
     metadata: {
       properties: {
-        value: { type: "float", defaultValue: 0 },   // rating 0–5
+        value: { type: "float", defaultValue: 0 },  
         maxValue: { type: "int", defaultValue: 5 }
       }
     },

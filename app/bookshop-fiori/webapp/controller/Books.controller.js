@@ -156,9 +156,7 @@ sap.ui.define([
       this.getOwnerComponent().getRouter().navTo("createOrder");
     },
 
-    /* =========================
-       FORM OPEN / CLOSE
-    ========================= */
+    
     _emptyFormStates: function () {
       return {
         titleState: "None",
@@ -234,15 +232,13 @@ sap.ui.define([
       this.getView().setModel(new JSONModel({}), "form");
     },
 
-    /* =========================
-       VALIDATION
-    ========================= */
+   
     onBookFieldChange: function (oEvent) {
   var oSource = oEvent.getSource();
   var sId = oSource.getId();
   var oFormModel = this.getView().getModel("form");
 
-  // Keep model in sync during typing
+  
   if (sId.endsWith("inTitle")) {
     oFormModel.setProperty("/title", oEvent.getParameter("value"));
   } else if (sId.endsWith("inDescription")) {
@@ -256,7 +252,7 @@ sap.ui.define([
   }
 
   this._validateBookForm(false, sId);
-},
+},  
 
     _validateBookForm: function (bShowMessage, sSourceId) {
       var oFormModel = this.getView().getModel("form");
@@ -279,7 +275,7 @@ sap.ui.define([
   var sTitle = (oData.title || "").trim();
 
   if (!sTitle) {
-    // While typing: clear error. On submit: show required.
+    
     if (bShowMessage || !sSourceId) {
       setState("title", "Error", "titleRequired");
       bValid = false;
@@ -353,9 +349,7 @@ sap.ui.define([
       return bValid;
     },
 
-    /* =========================
-       SAVE
-    ========================= */
+   
     onSaveBook: function () {
       if (!this._validateBookForm(true)) {
         return;
@@ -429,9 +423,7 @@ sap.ui.define([
       });
     },
 
-    /* =========================
-       DELETE
-    ========================= */
+   
     onDeleteBook: function (oEvent) {
       var oCtx = oEvent.getSource().getBindingContext();
       var oView = this.getView();
