@@ -3,69 +3,136 @@
   xmlns:mvc="sap.ui.core.mvc"
   xmlns="sap.m"
   xmlns:core="sap.ui.core"
+  xmlns:f="sap.f"
+  xmlns:layout="sap.ui.layout"
+  height="100%"
   displayBlock="true">
 
-  <Page title="{i18n>booksPageTitle}">
+  <f:DynamicPage
+    id="booksDynamicPage"
+    toggleHeaderOnTitleClick="true">
 
-    <subHeader>
-      <Toolbar>
-        <SearchField
-          id="searchField"
-          width="25%"
-          placeholder="{i18n>searchPlaceholder}"
-          liveChange=".onSearch" />
+    <f:title>
+      <f:DynamicPageTitle>
 
-        <Label text="{i18n>Author}" labelFor="authorFilter" class="sapUiTinyMarginBegin" />
-        <Select
-          id="authorFilter"
-          selectedKey="ALL"
-          change=".onFilterAuthor"
-          width="11rem"
-          items="{path: 'authors>/'}">
-          <core:Item key="{authors>key}" text="{authors>text}" />
-        </Select>
+        <f:breadcrumbs>
+          <Breadcrumbs>
+            <Link text="Home" press=".onNavHome" />
+            <Link text="{i18n>booksPageTitle}" />
+          </Breadcrumbs>
+        </f:breadcrumbs>
 
-        <Label text="{i18n>Stock}" labelFor="stockFilter" class="sapUiTinyMarginBegin" />
-        <Select
-          id="stockFilter"
-          selectedKey="ALL"
-          change=".onFilterStock"
-          width="9rem">
-          <core:Item key="ALL" text="{i18n>all}" />
-          <core:Item key="IN_STOCK" text="{i18n>inStock}" />
-          <core:Item key="OUT_OF_STOCK" text="{i18n>outOfStock}" />
-        </Select>
+        <!-- Main title -->
+        <f:heading>
+          <Title text="{i18n>booksPageTitle}" level="H2" />
+        </f:heading>
 
-        <ToolbarSpacer />
+        <!-- Subtitle when expanded -->
+        <f:expandedContent>
+          <Label text="{i18n>booksListHeader}" />
+        </f:expandedContent>
 
-        <Button
-          icon="sap-icon://add"
-          text="{i18n>createBook}"
-          type="Emphasized"
-          press=".onCreateBook" />
+        <!-- Subtitle when collapsed -->
+        <f:snappedContent>
+          <Label text="{i18n>booksListHeader}" />
+        </f:snappedContent>
 
-        <Button
-          icon="sap-icon://add-document"
-          text="{i18n>createOrder}"
-          class="sapUiTinyMarginBegin"
-          press=".onCreateOrder" />
-      </Toolbar>
-    </subHeader>
+        <!-- Actions: Create + Edit/Delete/Refresh -->
+        <f:actions>
+          <Button
+            icon="sap-icon://add"
+            text="{i18n>createBook}"
+            type="Emphasized"
+            press=".onCreateBook" />
 
-    <headerContent>
-      <Button
-        icon="sap-icon://refresh"
-        tooltip="{i18n>refresh}"
-        press=".onRefresh" />
-    </headerContent>
+          <Button
+            icon="sap-icon://add-document"
+            text="{i18n>createOrder}"
+            type="Transparent"
+            press=".onCreateOrder" />
 
-    <content>
+          <Button
+            id="btnEditSelected"
+            icon="sap-icon://edit"
+            text="{i18n>edit}"
+            type="Transparent"
+            enabled="false"
+            press=".onEditSelected" />
+
+          <Button
+            id="btnDeleteSelected"
+            icon="sap-icon://delete"
+            text="{i18n>delete}"
+            type="Transparent"
+            enabled="false"
+            press=".onDeleteSelected" />
+
+          <Button
+            icon="sap-icon://refresh"
+            tooltip="{i18n>refresh}"
+            type="Transparent"
+            press=".onRefresh" />
+        </f:actions>
+
+      </f:DynamicPageTitle>
+    </f:title>
+
+    <!-- ================= HEADER = filters ================= -->
+    <f:header>
+      <f:DynamicPageHeader pinnable="true">
+        <layout:HorizontalLayout allowWrapping="true" class="sapUiSmallMargin">
+
+          <!-- Search -->
+          <layout:VerticalLayout class="sapUiMediumMarginEnd">
+            <Label text="{i18n>searchPlaceholder}" />
+            <SearchField
+              id="searchField"
+              width="16rem"
+              liveChange=".onSearch" />
+          </layout:VerticalLayout>
+
+          <!-- Author filter -->
+          <layout:VerticalLayout class="sapUiMediumMarginEnd">
+            <Label text="{i18n>Author}" labelFor="authorFilter" />
+            <Select
+              id="authorFilter"
+              selectedKey="ALL"
+              change=".onFilterAuthor"
+              width="12rem"
+              items="{path: 'authors>/'}">
+              <core:Item key="{authors>key}" text="{authors>text}" />
+            </Select>
+          </layout:VerticalLayout>
+
+          <!-- Stock filter -->
+          <layout:VerticalLayout>
+            <Label text="{i18n>Stock}" labelFor="stockFilter" />
+            <Select
+              id="stockFilter"
+              selectedKey="ALL"
+              change=".onFilterStock"
+              width="10rem">
+              <core:Item key="ALL" text="{i18n>all}" />
+              <core:Item key="IN_STOCK" text="{i18n>inStock}" />
+              <core:Item key="OUT_OF_STOCK" text="{i18n>outOfStock}" />
+            </Select>
+          </layout:VerticalLayout>
+
+        </layout:HorizontalLayout>
+      </f:DynamicPageHeader>
+    </f:header>
+
+    <!-- ================= CONTENT = table ================= -->
+    <f:content>
       <Table
         id="booksTable"
         mode="MultiSelect"
         growing="true"
         growingThreshold="20"
-        class="sapUiResponsiveMargin"
+        sticky="ColumnHeaders,HeaderToolbar"
+        selectionChange=".onTableSelectionChange"
+        class="sapFDynamicPageAlignContent"
+        width="auto"
         items="{
           path: '/Books',
           parameters: {
@@ -73,8 +140,14 @@
           }
         }">
 
+        <headerToolbar>
+          <Toolbar>
+            <Title text="{i18n>booksListHeader}" level="H2" />
+          </Toolbar>
+        </headerToolbar>
+
         <columns>
-          <Column width="30%">
+          <Column width="35%">
             <HBox alignItems="Center">
               <Text text="{i18n>columnTitle}" class="sapUiTinyMarginEnd" />
               <Button
@@ -84,21 +157,14 @@
                 press=".onSort" />
             </HBox>
           </Column>
-
-          <Column width="25%">
+          <Column width="30%">
             <Text text="{i18n>columnAuthor}" />
           </Column>
-
           <Column width="15%" hAlign="End">
             <Text text="{i18n>columnPrice}" />
           </Column>
-
-          <Column width="15%" hAlign="Center">
+          <Column width="20%" hAlign="Center">
             <Text text="{i18n>Stock}" />
-          </Column>
-
-          <Column width="10rem" hAlign="Center">
-            <Text text="{i18n>actions}" />
           </Column>
         </columns>
 
@@ -111,22 +177,11 @@
               <ObjectStatus
                 text="{ path: 'stock', formatter: '.formatter.stockStatusText' }"
                 state="{ path: 'stock', formatter: '.formatter.stockStatusState' }" />
-              <HBox justifyContent="Center">
-                <Button
-                  icon="sap-icon://edit"
-                  type="Transparent"
-                  tooltip="{i18n>edit}"
-                  press=".onEditBook" />
-                <Button
-                  icon="sap-icon://delete"
-                  type="Transparent"
-                  tooltip="{i18n>delete}"
-                  press=".onDeleteBook" />
-              </HBox>
             </cells>
           </ColumnListItem>
         </items>
       </Table>
-    </content>
-  </Page>
+    </f:content>
+
+  </f:DynamicPage>
 </mvc:View>

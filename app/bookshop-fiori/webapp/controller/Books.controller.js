@@ -183,7 +183,109 @@ sap.ui.define([
           that.onRefresh();
         }
       });
+    },
+    onTableSelectionChange: function () {
+  var aSelected = this.byId("booksTable").getSelectedItems();
+  var iCount = aSelected.length;
+
+  var oEditBtn = this.byId("btnEditSelected");
+  var oDeleteBtn = this.byId("btnDeleteSelected");
+
+  // 0 selected → both disabled
+  // 1 selected → both enabled
+  // 2+ selected → only delete enabled
+  if (oEditBtn) {
+    oEditBtn.setEnabled(iCount === 1);
+  }
+  if (oDeleteBtn) {
+    oDeleteBtn.setEnabled(iCount >= 1);
+  }
+},
+
+onEditSelected: function () {
+  var aSelected = this.byId("booksTable").getSelectedItems();
+  if (aSelected.length !== 1) {
+    return;
+  }
+
+  // reuse same edit flow as before
+  var oCtx = aSelected[0].getBindingContext();
+  var oBook = oCtx.getObject();
+  this._oEditContext = oCtx;
+
+  BookDialogHelper.openForm(this, {
+    mode: "edit",
+    dialogTitle: this._text("editBook"),
+    confirmText: this._text("save"),
+    title: oBook.title,
+    description: oBook.description || "",
+    price: oBook.price,
+    stock: oBook.stock,
+    author_ID: oBook.author_ID || (oBook.author && oBook.author.ID) || ""
+  });
+},
+
+onDeleteSelected: function () {
+  var aSelected = this.byId("booksTable").getSelectedItems();
+  if (!aSelected.length) {
+    return;
+  }
+
+  // one selected → existing single delete dialog
+  if (aSelected.length === 1) {
+    BookDialogHelper.openDelete(this, aSelected[0].getBindingContext());
+    return;
+  }
+
+  // many selected → confirm then delete all
+  var that = this;
+  sap.m.MessageBox.confirm(
+    "Delete " + aSelected.length + " selected books?",
+    {
+      title: this._text("deleteBook"),
+      actions: [sap.m.MessageBox.Action.DELETE, sap.m.MessageBox.Action.CANCEL],
+      emphasizedAction: sap.m.MessageBox.Action.DELETE,
+      onClose: function (sAction) {
+        if (sAction !== sap.m.MessageBox.Action.DELETE) {
+          return;
+        }
+        that._deleteSelectedBooks(aSelected);
+      }
     }
+  );
+},
+
+_deleteSelectedBooks: function (aSelected) {
+  var that = this;
+  var aPromises = aSelected.map(function (oItem) {
+    var sId = oItem.getBindingContext().getProperty("ID");
+    return fetch("/odata/v4/catalog/Books(" + sId + ")", {
+      method: "DELETE",
+      headers: { "Accept": "application/json" }
+    }).then(function (oResponse) {
+      if (oResponse.status === 404) {
+        return;
+      }
+      if (!oResponse.ok && oResponse.status !== 204) {
+        return oResponse.text().then(function (sText) {
+          throw new Error(sText || ("HTTP " + oResponse.status));
+        });
+      }
+    });
+  });
+
+  Promise.all(aPromises)
+    .then(function () {
+      sap.m.MessageToast.show(that._text("bookDeleted"));
+      that.byId("booksTable").removeSelections(true);
+      that.onTableSelectionChange();
+      that.onRefresh();
+    })
+    .catch(function (oError) {
+      console.error(oError);
+      sap.m.MessageBox.error(that._text("deleteFailed"));
+    });
+},
 
   });
 });
