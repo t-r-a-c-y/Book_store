@@ -98,6 +98,14 @@
               <Label text="Stock:" class="sapUiTinyMarginEnd" />
               <Text text="{stock}" />
             </HBox>
+            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+  <core:Icon src="sap-icon://favorite" class="sapUiTinyMarginEnd" />
+  <Label text="Rating:" class="sapUiTinyMarginEnd" />
+  <custom:BookRating
+    value="0"
+    editable="true"
+    change=".onRatingChange" />
+</HBox>
 
           </VBox>
         </content>
