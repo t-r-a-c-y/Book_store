@@ -90,46 +90,6 @@ sap.ui.define([
         }
       });
     },
-    
-
-    onNavHome: function () {
-  this.getOwnerComponent().getRouter().navTo("books");
-},
-
-onCoverChange: function (oEvent) {
-  var aFiles = oEvent.getParameter("files");
-  if (!aFiles || !aFiles.length) {
-    return;
-  }
-
-  var oCtx = this.getView().getBindingContext();
-  var oAvatar = this.byId("bookCoverAvatar");
-  var oModel = this.getView().getModel();
-
-  if (!oCtx) {
-    return;
-  }
-
-  var oReader = new FileReader();
-  oReader.onload = function (e) {
-    var sDataUrl = e.target.result;
-
-    oCtx.setProperty("coverUrl", sDataUrl);
-    if (oAvatar) {
-      oAvatar.setSrc(sDataUrl);
-    }
-
-    oModel.submitBatch("$auto")
-      .then(function () {
-        sap.m.MessageToast.show("Cover uploaded");
-      })
-      .catch(function (err) {
-        console.error(err);
-        sap.m.MessageToast.show("Cover shown in UI");
-      });
-  };
-  oReader.readAsDataURL(aFiles[0]);
-},
 
     onRatingChange: function (oEvent) {
       var iValue = oEvent.getParameter("value");

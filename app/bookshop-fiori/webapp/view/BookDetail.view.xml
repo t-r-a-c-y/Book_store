@@ -9,8 +9,10 @@
   height="100%"
   displayBlock="true">
 
+  <!-- Added useIconTabBar="true" to switch sections into side-by-side tabs -->
   <uxap:ObjectPageLayout
     id="bookObjectPage"
+    useIconTabBar="true"
     upperCaseAnchorBar="false"
     showTitleInHeaderContent="true">
 
@@ -87,7 +89,7 @@
       </layout:VerticalLayout>
     </uxap:headerContent>
 
-    <!-- ================= SECTION: Description ================= -->
+    <!-- ================= SECTIONS (NOW SWAPPING AS TABS) ================= -->
     <uxap:sections>
       <uxap:ObjectPageSection title="Description" titleUppercase="false">
         <uxap:subSections>
