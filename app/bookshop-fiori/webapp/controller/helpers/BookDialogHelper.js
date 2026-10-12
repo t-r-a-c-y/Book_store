@@ -1,22 +1,20 @@
 sap.ui.define([
   "sap/ui/core/Fragment",
   "sap/ui/model/json/JSONModel",
+  "sap/m/MessageBox",
   "sap/m/MessageToast",
-  "sap/m/MessageBox"
-], function (Fragment, JSONModel, MessageToast, MessageBox) {
+  "ns/bookshopfiori/controller/helpers/BookFormValidator"
+], function (Fragment, JSONModel, MessageBox, MessageToast, BookFormValidator) {
   "use strict";
 
-  function _getText(oView, sKey, sDefault) {
-    var oI18n = oView.getModel("i18n");
-    if (oI18n) {
-      return oI18n.getResourceBundle().getText(sKey);
-    }
-    return sDefault || sKey;
+  function _text(oController, sKey) {
+    return oController.getView().getModel("i18n").getResourceBundle().getText(sKey);
   }
 
   function openForm(oController, oFormData) {
     var oView = oController.getView();
-    oView.setModel(new JSONModel(oFormData), "form");
+    var oData = Object.assign({}, BookFormValidator.emptyStates(), oFormData);
+    oView.setModel(new JSONModel(oData), "form");
 
     if (!oController._pBookFormDialog) {
       oController._pBookFormDialog = Fragment.load({
@@ -31,7 +29,6 @@ sap.ui.define([
 
     return oController._pBookFormDialog.then(function (oDialog) {
       oDialog.open();
-      return oDialog;
     });
   }
 
@@ -42,87 +39,101 @@ sap.ui.define([
     }
   }
 
+  function onFieldChange(oController, oEvent) {
+    var oSource = oEvent.getSource();
+    var sId = oSource.getId();
+    var oFormModel = oController.getView().getModel("form");
+
+    if (sId.endsWith("inTitle")) {
+      oFormModel.setProperty("/title", oEvent.getParameter("value"));
+    } else if (sId.endsWith("inDescription")) {
+      oFormModel.setProperty("/description", oEvent.getParameter("value"));
+    } else if (sId.endsWith("inPrice")) {
+      oFormModel.setProperty("/price", oEvent.getParameter("value"));
+    } else if (sId.endsWith("inStock")) {
+      oFormModel.setProperty("/stock", oEvent.getParameter("value"));
+    } else if (sId.endsWith("inAuthor")) {
+      oFormModel.setProperty("/author_ID", oSource.getSelectedKey());
+    }
+
+    BookFormValidator.validate(oController, false, sId);
+  }
+
   function saveBook(oController, oOptions) {
     oOptions = oOptions || {};
-    var oView = oController.getView();
-    var oForm = oView.getModel("form").getData();
-    var oModel = oView.getModel();
 
-    if (!oForm.title || !String(oForm.title).trim()) {
-      MessageBox.error(_getText(oView, "titleRequired", "Title is required."));
-      return Promise.resolve();
+    if (!BookFormValidator.validate(oController, true)) {
+      MessageBox.error(_text(oController, "formInvalid"));
+      return Promise.resolve(false);
     }
 
-    var fPrice = parseFloat(oForm.price);
-    var iStock = parseInt(oForm.stock, 10);
-
-    if (isNaN(fPrice) || fPrice < 0) {
-      MessageBox.error(_getText(oView, "invalidPrice", "Please enter a valid price."));
-      return Promise.resolve();
-    }
-    if (isNaN(iStock) || iStock < 0) {
-      MessageBox.error(_getText(oView, "invalidStock", "Please enter a valid stock."));
-      return Promise.resolve();
-    }
-
+    var oForm = oController.getView().getModel("form").getData();
+    var oModel = oController.getView().getModel();
     var oPayload = {
       title: String(oForm.title).trim(),
       description: oForm.description || "",
-      price: fPrice,
-      stock: iStock
+      price: parseFloat(oForm.price),
+      stock: parseInt(oForm.stock, 10),
+      author_ID: oForm.author_ID
     };
-    if (oForm.author_ID) {
-      oPayload.author_ID = oForm.author_ID;
-    }
 
     // CREATE
     if (oForm.mode === "create") {
-      var oListBinding = oOptions.listBinding || oModel.bindList("/Books");
-      var oContext = oListBinding.create(oPayload);
-
-      return oModel.submitBatch("$auto")
-        .then(function () {
-          return oContext.created();
+      return fetch("/odata/v4/catalog/Books", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(oPayload)
+      })
+        .then(function (oResponse) {
+          if (!oResponse.ok) {
+            return oResponse.text().then(function (sText) {
+              throw new Error(sText || ("HTTP " + oResponse.status));
+            });
+          }
         })
         .then(function () {
-          MessageToast.show(_getText(oView, "bookCreated", "Book created"));
+          MessageToast.show(_text(oController, "bookCreated"));
           closeForm(oController);
           if (typeof oOptions.afterChange === "function") {
             oOptions.afterChange();
           }
+          return true;
         })
         .catch(function (oError) {
           console.error(oError);
-          MessageBox.error(_getText(oView, "createFailed", "Create failed."));
+          MessageBox.error(_text(oController, "createFailed"));
+          return false;
         });
     }
 
     // EDIT
-    var oEditContext = oController._oEditContext;
-    if (!oEditContext) {
-      MessageBox.error(_getText(oView, "noBookContext", "No book context found."));
-      return Promise.resolve();
+    if (!oController._oEditContext) {
+      MessageBox.error(_text(oController, "updateFailed"));
+      return Promise.resolve(false);
     }
 
-    oEditContext.setProperty("title", oPayload.title);
-    oEditContext.setProperty("description", oPayload.description);
-    oEditContext.setProperty("price", oPayload.price);
-    oEditContext.setProperty("stock", oPayload.stock);
-    if (oPayload.author_ID) {
-      oEditContext.setProperty("author_ID", oPayload.author_ID);
-    }
+    oController._oEditContext.setProperty("title", oPayload.title);
+    oController._oEditContext.setProperty("description", oPayload.description);
+    oController._oEditContext.setProperty("price", oPayload.price);
+    oController._oEditContext.setProperty("stock", oPayload.stock);
+    oController._oEditContext.setProperty("author_ID", oPayload.author_ID);
 
     return oModel.submitBatch("$auto")
       .then(function () {
-        MessageToast.show(_getText(oView, "bookUpdated", "Book updated"));
+        MessageToast.show(_text(oController, "bookUpdated"));
         closeForm(oController);
         if (typeof oOptions.afterChange === "function") {
           oOptions.afterChange();
         }
+        return true;
       })
       .catch(function (oError) {
         console.error(oError);
-        MessageBox.error(_getText(oView, "updateFailed", "Update failed."));
+        MessageBox.error(_text(oController, "updateFailed"));
+        return false;
       });
   }
 
@@ -130,7 +141,7 @@ sap.ui.define([
     var oView = oController.getView();
     oView.setModel(new JSONModel({
       title: oContext.getProperty("title"),
-      context: oContext
+      id: oContext.getProperty("ID")
     }), "delete");
 
     if (!oController._pDeleteDialog) {
@@ -146,7 +157,6 @@ sap.ui.define([
 
     return oController._pDeleteDialog.then(function (oDialog) {
       oDialog.open();
-      return oDialog;
     });
   }
 
@@ -159,12 +169,24 @@ sap.ui.define([
 
   function confirmDelete(oController, oOptions) {
     oOptions = oOptions || {};
-    var oView = oController.getView();
-    var oDelete = oView.getModel("delete").getData();
+    var sBookId = oController.getView().getModel("delete").getProperty("/id");
 
-    return oDelete.context.delete("$auto")
+    return fetch("/odata/v4/catalog/Books(" + sBookId + ")", {
+      method: "DELETE",
+      headers: { "Accept": "application/json" }
+    })
+      .then(function (oResponse) {
+        if (oResponse.status === 404) {
+          return;
+        }
+        if (!oResponse.ok && oResponse.status !== 204) {
+          return oResponse.text().then(function (sText) {
+            throw new Error(sText || ("HTTP " + oResponse.status));
+          });
+        }
+      })
       .then(function () {
-        MessageToast.show(_getText(oView, "bookDeleted", "Book deleted"));
+        MessageToast.show(_text(oController, "bookDeleted"));
         closeDelete(oController);
         if (typeof oOptions.afterDelete === "function") {
           oOptions.afterDelete();
@@ -172,13 +194,14 @@ sap.ui.define([
       })
       .catch(function (oError) {
         console.error(oError);
-        MessageBox.error(_getText(oView, "deleteFailed", "Delete failed."));
+        MessageBox.error(_text(oController, "deleteFailed"));
       });
   }
 
   return {
     openForm: openForm,
     closeForm: closeForm,
+    onFieldChange: onFieldChange,
     saveBook: saveBook,
     openDelete: openDelete,
     closeDelete: closeDelete,
