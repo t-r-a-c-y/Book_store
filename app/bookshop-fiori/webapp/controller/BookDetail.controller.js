@@ -92,19 +92,21 @@ sap.ui.define([
     },
     
 
-    onCoverChange: function (oEvent) {
+    onNavHome: function () {
+  this.getOwnerComponent().getRouter().navTo("books");
+},
+
+onCoverChange: function (oEvent) {
   var aFiles = oEvent.getParameter("files");
   if (!aFiles || !aFiles.length) {
     return;
   }
 
-  var oFile = aFiles[0];
   var oCtx = this.getView().getBindingContext();
   var oAvatar = this.byId("bookCoverAvatar");
   var oModel = this.getView().getModel();
 
   if (!oCtx) {
-    sap.m.MessageBox.error("No book loaded.");
     return;
   }
 
@@ -112,25 +114,21 @@ sap.ui.define([
   oReader.onload = function (e) {
     var sDataUrl = e.target.result;
 
-    // save on book model
     oCtx.setProperty("coverUrl", sDataUrl);
-
-    // show immediately on profile avatar
     if (oAvatar) {
       oAvatar.setSrc(sDataUrl);
     }
 
-    // persist if CAP has coverUrl
     oModel.submitBatch("$auto")
       .then(function () {
         sap.m.MessageToast.show("Cover uploaded");
       })
       .catch(function (err) {
         console.error(err);
-        sap.m.MessageToast.show("Cover shown (save may need coverUrl field in CAP)");
+        sap.m.MessageToast.show("Cover shown in UI");
       });
   };
-  oReader.readAsDataURL(oFile);
+  oReader.readAsDataURL(aFiles[0]);
 },
 
     onRatingChange: function (oEvent) {

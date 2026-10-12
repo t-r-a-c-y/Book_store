@@ -18,6 +18,15 @@
     <uxap:headerTitle>
       <uxap:ObjectPageDynamicHeaderTitle>
 
+        <!-- Added Breadcrumbs Trail Element -->
+        <uxap:breadcrumbs>
+          <Breadcrumbs>
+            <Link text="Home" press=".onNavHome" />
+            <Link text="Books" press=".onNavBack" />
+            <Link text="{title}" />
+          </Breadcrumbs>
+        </uxap:breadcrumbs>
+
         <uxap:heading>
           <Title text="{title}" level="H2" />
         </uxap:heading>
