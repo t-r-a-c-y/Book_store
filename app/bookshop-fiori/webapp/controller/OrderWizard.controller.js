@@ -3,80 +3,32 @@ sap.ui.define([
   "sap/ui/core/routing/History",
   "sap/ui/model/json/JSONModel",
   "sap/m/MessageToast",
-  "sap/m/MessageBox"
-], function (Controller, History, JSONModel, MessageToast, MessageBox) {
+  "sap/m/MessageBox",
+  "ns/bookshopfiori/controller/helpers/WizardStepHelper"
+], function (Controller, History, JSONModel, MessageToast, MessageBox, WizardStepHelper) {
   "use strict";
 
   return Controller.extend("ns.bookshopfiori.controller.OrderWizard", {
 
     onInit: function () {
-  var oWizardModel = new JSONModel({
-    customerId: "",
-    customerName: "",
-    bookId: "",
-    bookTitle: "",
-    quantity: 1,
-    step: 1,
-    backEnabled: false,
-    nextText: "Next",
-    nextIcon: "sap-icon://navigation-right-arrow"
-  });
-  this.getView().setModel(oWizardModel, "wizard");
+      this.getView().setModel(new JSONModel(WizardStepHelper.getInitialData()), "wizard");
 
-  var oRouter = this.getOwnerComponent().getRouter();
-  oRouter.getRoute("createOrder").attachPatternMatched(this._onRouteMatched, this);
-
-  // After the view is rendered, disable progress-bar clicks
-  this.getView().addEventDelegate({
-    onAfterRendering: function () {
-      this._disableWizardProgressClick();
-    }.bind(this)
-  });
-},
-
-_disableWizardProgressClick: function () {
-  var oWizard = this.byId("orderWizard");
-  if (!oWizard) {
-    return;
-  }
-
-  // Private API, but commonly used to block step-bar navigation
-  try {
-    var oNav = oWizard._getProgressNavigator && oWizard._getProgressNavigator();
-    if (oNav) {
-      oNav.ontap = function () {};
-      oNav.onclick = function () {};
-    }
-  } catch (e) {
-    // ignore if API not available
-  }
-},
+      this.getOwnerComponent()
+        .getRouter()
+        .getRoute("createOrder")
+        .attachPatternMatched(this._onRouteMatched, this);
+    },
 
     _onRouteMatched: function () {
-  this.getView().getModel("wizard").setData({
-    customerId: "",
-    customerName: "",
-    bookId: "",
-    bookTitle: "",
-    quantity: 1,
-    step: 1,
-    backEnabled: false,
-    nextText: "Next",
-    nextIcon: "sap-icon://navigation-right-arrow"
-  });
+      this.getView().getModel("wizard").setData(WizardStepHelper.getInitialData());
 
-  var oWizard = this.byId("orderWizard");
-  if (oWizard) {
-    var oFirstStep = this.byId("stepCustomer");
-    oWizard.discardProgress(oFirstStep);
-    oWizard.setCurrentStep(oFirstStep);
-  }
-
-  // Re-apply disable after reset
-  setTimeout(function () {
-    this._disableWizardProgressClick();
-  }.bind(this), 0);
-},
+      var oWizard = this.byId("orderWizard");
+      var oFirstStep = this.byId("stepCustomer");
+      if (oWizard && oFirstStep) {
+        oWizard.discardProgress(oFirstStep);
+        oWizard.setCurrentStep(oFirstStep);
+      }
+    },
 
     onCustomerChange: function (oEvent) {
       var oItem = oEvent.getSource().getSelectedItem();
@@ -104,122 +56,78 @@ _disableWizardProgressClick: function () {
       this.getView().getModel("wizard").setProperty("/quantity", iQty);
     },
 
-    /* ========== NEXT ========== */
     onWizardNext: function () {
       var oModel = this.getView().getModel("wizard");
       var iStep = oModel.getProperty("/step");
       var oWizard = this.byId("orderWizard");
 
-      // Validate current step
-      if (iStep === 1 && !oModel.getProperty("/customerId")) {
-        MessageBox.error("Please select a customer before continuing.");
+      if (!WizardStepHelper.validateStep(oModel, iStep)) {
         return;
       }
-      if (iStep === 2) {
-        if (!oModel.getProperty("/bookId")) {
-          MessageBox.error("Please select a book before continuing.");
-          return;
-        }
-        if (!oModel.getProperty("/quantity") || oModel.getProperty("/quantity") < 1) {
-          MessageBox.error("Quantity must be at least 1.");
-          return;
-        }
-      }
 
-      // Last step → Finish
       if (iStep === 3) {
         this._finishWizard();
         return;
       }
 
-      // Go to next step
       oWizard.nextStep();
-      iStep = iStep + 1;
-      oModel.setProperty("/step", iStep);
-      this._updateButtons(iStep);
+      WizardStepHelper.updateButtons(oModel, iStep + 1);
     },
 
-    /* ========== BACK ========== */
     onWizardBack: function () {
       var oModel = this.getView().getModel("wizard");
       var iStep = oModel.getProperty("/step");
-      var oWizard = this.byId("orderWizard");
-
       if (iStep <= 1) {
         return;
       }
-
-      oWizard.previousStep();
-      iStep = iStep - 1;
-      oModel.setProperty("/step", iStep);
-      this._updateButtons(iStep);
-    },
-
-    _updateButtons: function (iStep) {
-      var oModel = this.getView().getModel("wizard");
-
-      oModel.setProperty("/backEnabled", iStep > 1);
-
-      if (iStep === 3) {
-        oModel.setProperty("/nextText", "Finish");
-        oModel.setProperty("/nextIcon", "sap-icon://accept");
-      } else {
-        oModel.setProperty("/nextText", "Next");
-        oModel.setProperty("/nextIcon", "sap-icon://navigation-right-arrow");
-      }
+      this.byId("orderWizard").previousStep();
+      WizardStepHelper.updateButtons(oModel, iStep - 1);
     },
 
     _finishWizard: function () {
-  var oData = this.getView().getModel("wizard").getData();
-  var that = this;
+      var oData = this.getView().getModel("wizard").getData();
+      var that = this;
 
-  var oPayload = {
-    user_ID: oData.customerId,
-    orderDate: new Date().toISOString().split("T")[0],
-    items: [
-      {
-        book_ID: oData.bookId,
-        quantity: oData.quantity
-      }
-    ]
-  };
+      var oPayload = {
+        user_ID: oData.customerId,
+        orderDate: new Date().toISOString().split("T")[0],
+        items: [{
+          book_ID: oData.bookId,
+          quantity: oData.quantity
+        }]
+      };
 
-  fetch("/odata/v4/catalog/Orders", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Accept": "application/json"
+      fetch("/odata/v4/catalog/Orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(oPayload)
+      })
+        .then(function (oResponse) {
+          if (!oResponse.ok) {
+            return oResponse.text().then(function (sText) {
+              throw new Error(sText || ("HTTP " + oResponse.status));
+            });
+          }
+        })
+        .then(function () {
+          MessageToast.show("Order created successfully");
+          that.getOwnerComponent().getRouter().navTo("books");
+        })
+        .catch(function (oError) {
+          console.error(oError);
+          MessageBox.error("Order create failed. Check stock/budget.");
+        });
     },
-    body: JSON.stringify(oPayload)
-  })
-  .then(function (oResponse) {
-    if (!oResponse.ok) {
-      return oResponse.text().then(function (sText) {
-        throw new Error(sText || ("HTTP " + oResponse.status));
-      });
-    }
-    return oResponse.text();
-  })
-  .then(function () {
-    MessageToast.show("Order created successfully");
-    that.getOwnerComponent().getRouter().navTo("books");
-  })
-  .catch(function (oError) {
-    console.error(oError);
-    MessageBox.error("Order create failed. Check stock/budget and CAP logs.");
-  });
-},
 
     onWizardComplete: function () {
-      // Called if Wizard internal complete is triggered
       this._finishWizard();
     },
 
     onNavBack: function () {
-      var oHistory = History.getInstance();
-      var sPreviousHash = oHistory.getPreviousHash();
-
-      if (sPreviousHash !== undefined) {
+      if (History.getInstance().getPreviousHash() !== undefined) {
         window.history.go(-1);
       } else {
         this.getOwnerComponent().getRouter().navTo("books", {}, true);
