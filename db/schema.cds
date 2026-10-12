@@ -26,7 +26,7 @@ entity Authors : cuid, managed {
 }
 
 
-//Books
+
 entity Books : cuid, managed {
     @mandatory
     title : localized String(100);
@@ -40,6 +40,9 @@ entity Books : cuid, managed {
     @assert.range: [0, 10000]
     stock : Integer default 10;
 
+    @assert.range: [0, 5]
+    rating : Integer default 0;
+    
     @mandatory
     author : Association to Authors;
 

@@ -81,7 +81,7 @@
               <core:Icon src="sap-icon://favorite" class="sapUiTinyMarginEnd" />
               <Label text="Rating" class="sapUiTinyMarginEnd" />
               <custom:BookRating
-                value="0"
+                value="{rating}"
                 editable="true"
                 change=".onRatingChange" />
             </HBox>
