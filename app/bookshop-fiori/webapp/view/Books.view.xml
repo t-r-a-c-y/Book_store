@@ -11,7 +11,7 @@
       <Toolbar>
         <SearchField
           id="searchField"
-          width="50%"
+          width="25%"
           placeholder="{i18n>searchPlaceholder}"
           liveChange=".onSearch" />
 
@@ -41,89 +41,92 @@
         <Button
           icon="sap-icon://add"
           text="{i18n>createBook}"
-          press=".onCreateBook"
-          type="Emphasized" />
+          type="Emphasized"
+          press=".onCreateBook" />
 
         <Button
           icon="sap-icon://add-document"
           text="{i18n>createOrder}"
-          press=".onCreateOrder"
-          class="sapUiTinyMarginBegin" />
+          class="sapUiTinyMarginBegin"
+          press=".onCreateOrder" />
       </Toolbar>
     </subHeader>
 
     <headerContent>
-      <Button icon="sap-icon://refresh" press=".onRefresh" tooltip="{i18n>refresh}" />
+      <Button
+        icon="sap-icon://refresh"
+        tooltip="{i18n>refresh}"
+        press=".onRefresh" />
     </headerContent>
 
     <content>
-      <Panel
-        headerText="{i18n>booksListHeader}"
-        class="sapUiResponsiveMargin myBooksPanel">
+      <Table
+        id="booksTable"
+        mode="MultiSelect"
+        growing="true"
+        growingThreshold="20"
+        class="sapUiResponsiveMargin"
+        items="{
+          path: '/Books',
+          parameters: {
+            $expand: 'author'
+          }
+        }">
 
-        <Table
-  id="booksTable"
-  mode="MultiSelect"
-  growing="true"
-  growingThreshold="20"
-  items="{
-    path: '/Books',
-    parameters: {
-      $expand: 'author'
-    }
-  }">
+        <columns>
+          <Column width="30%">
+            <HBox alignItems="Center">
+              <Text text="{i18n>columnTitle}" class="sapUiTinyMarginEnd" />
+              <Button
+                icon="sap-icon://sort"
+                type="Transparent"
+                tooltip="{i18n>sort}"
+                press=".onSort" />
+            </HBox>
+          </Column>
 
-          <columns>
-            <Column width="30%">
-  <HBox alignItems="Center" justifyContent="Start">
-    <Text text="{i18n>columnTitle}" class="sapUiTinyMarginEnd" />
-    <Button
-      icon="sap-icon://sort"
-      type="Transparent"
-      tooltip="{i18n>sort}"
-      press=".onSort" />
-  </HBox>
-</Column>
-            <Column width="25%">
-              <Text text="{i18n>columnAuthor}" />
-            </Column>
-            <Column width="15%" hAlign="End">
-              <Text text="{i18n>columnPrice}" />
-            </Column>
-            <Column width="20%" hAlign="Center">
-              <Text text="{i18n>Stock}" />
-            </Column>
-            <Column width="10rem" hAlign="Center">
-              <Text text="{i18n>actions}" />
-            </Column>
-          </columns>
+          <Column width="25%">
+            <Text text="{i18n>columnAuthor}" />
+          </Column>
 
-          <items>
-            <ColumnListItem type="Navigation" press=".onBookPress">
-              <cells>
-                <ObjectIdentifier title="{title}" />
-                <Text text="{author/name}" />
-                <ObjectNumber number="{price}" unit="EUR" />
-                <ObjectStatus
-                  text="{ path: 'stock', formatter: '.formatter.stockStatusText' }"
-                  state="{ path: 'stock', formatter: '.formatter.stockStatusState' }" />
-                <HBox justifyContent="Center">
-                  <Button
-                    icon="sap-icon://edit"
-                    type="Transparent"
-                    tooltip="{i18n>edit}"
-                    press=".onEditBook" />
-                  <Button
-                    icon="sap-icon://delete"
-                    type="Transparent"
-                    tooltip="{i18n>delete}"
-                    press=".onDeleteBook" />
-                </HBox>
-              </cells>
-            </ColumnListItem>
-          </items>
-        </Table>
-      </Panel>
+          <Column width="15%" hAlign="End">
+            <Text text="{i18n>columnPrice}" />
+          </Column>
+
+          <Column width="15%" hAlign="Center">
+            <Text text="{i18n>Stock}" />
+          </Column>
+
+          <Column width="10rem" hAlign="Center">
+            <Text text="{i18n>actions}" />
+          </Column>
+        </columns>
+
+        <items>
+          <ColumnListItem type="Navigation" press=".onBookPress">
+            <cells>
+              <ObjectIdentifier title="{title}" />
+              <Text text="{author/name}" />
+              <ObjectNumber number="{price}" unit="EUR" />
+              <ObjectStatus
+                text="{ path: 'stock', formatter: '.formatter.stockStatusText' }"
+                state="{ path: 'stock', formatter: '.formatter.stockStatusState' }" />
+              <HBox justifyContent="Center">
+                <Button
+                  icon="sap-icon://edit"
+                  type="Transparent"
+                  tooltip="{i18n>edit}"
+                  press=".onEditBook" />
+                <Button
+                  icon="sap-icon://delete"
+                  type="Transparent"
+                  tooltip="{i18n>delete}"
+                  press=".onDeleteBook" />
+              </HBox>
+            </cells>
+          </ColumnListItem>
+        </items>
+      </Table>
     </content>
   </Page>
 </mvc:View>
