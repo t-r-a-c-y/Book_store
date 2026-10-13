@@ -1,11 +1,65 @@
 ID,title,description,price,stock,author_ID
 book-1,Clean Code,A practical guide to writing clean software,35.00,10,author-1
 book-2,Things Fall Apart,A classic African novel,20.00,5,author-1
-book-3,Harry Potter,The beginning of a magical adventure,25.00,3,author-2
+book-3,Harry Potter and the Philosopher's Stone,The beginning of a magical adventure,25.00,3,author-2
 book-4,1984,A dystopian novel about surveillance,18.00,0,author-3
 book-5,Animal Farm,A political satire,15.00,8,author-3
-book-6,Romeo and Juliet,A classic Shakespearean play,12.00,2,11111111-1111-1111-1111-111111111111
+book-6,Romeo and Juliet,A classic Shakespearean play,12.00,2,author-4
 book-7,Macbeth,A tragedy by William Shakespeare,14.00,0,author-4
-book-8,The River Between,A novel about tradition and change,22.00,6,11111111-1111-1111-1111-111111111111
+book-8,The River Between,A novel about tradition and change,22.00,6,author-5
 book-9,Weep Not Child,A novel about colonial Kenya,19.00,4,author-5
-book-10,The Hobbit,A fantasy adventure novel,28.00,7,author-2
+book-10,The Hobbit,A fantasy adventure novel,28.00,7,author-14
+book-11,Pride and Prejudice,A story of manners love and misunderstanding,16.50,12,author-6
+book-12,Sense and Sensibility,Two sisters navigate love and society,15.00,9,author-6
+book-13,Emma,A clever young woman learns about love,14.50,6,author-6
+book-14,Adventures of Huckleberry Finn,A journey on the Mississippi River,13.00,11,author-7
+book-15,The Adventures of Tom Sawyer,Boyhood adventures in Missouri,12.50,8,author-7
+book-16,Beloved,A powerful story of memory and slavery,21.00,5,author-8
+book-17,Song of Solomon,A young man's search for identity,19.50,7,author-8
+book-18,Kafka on the Shore,A surreal journey of two characters,24.00,4,author-9
+book-19,Norwegian Wood,A nostalgic story of love and loss,22.00,10,author-9
+book-20,1Q84,A complex parallel-world narrative,29.00,3,author-9
+book-21,Half of a Yellow Sun,A story of the Biafran war,23.00,6,author-10
+book-22,Americanah,Identity race and migration,20.50,9,author-10
+book-23,Purple Hibiscus,A coming-of-age story in Nigeria,17.00,8,author-10
+book-24,The Shining,A haunted hotel and a troubled family,18.00,5,author-11
+book-25,It,A small town faces an ancient evil,22.50,4,author-11
+book-26,Carrie,A telekinetic teenager seeks revenge,14.00,7,author-11
+book-27,Misery,An author held captive by a fan,16.00,6,author-11
+book-28,Murder on the Orient Express,A famous detective solves a train mystery,15.50,14,author-12
+book-29,Death on the Nile,Murder during a river cruise,15.00,11,author-12
+book-30,And Then There Were None,Ten strangers on an island,14.50,13,author-12
+book-31,The Alchemist,A shepherd follows his personal legend,12.00,20,author-13
+book-32,Brida,A young woman explores magic and love,13.50,8,author-13
+book-33,The Fellowship of the Ring,The start of the ring quest,26.00,9,author-14
+book-34,The Two Towers,The journey continues,26.00,7,author-14
+book-35,The Return of the King,The final battle for Middle-earth,26.00,5,author-14
+book-36,I Know Why the Caged Bird Sings,A memoir of childhood and strength,18.50,10,author-15
+book-37,No Longer at Ease,A young man returns to Nigeria,17.50,6,author-1
+book-38,Arrow of God,Conflict between tradition and change,18.00,4,author-1
+book-39,Harry Potter and the Chamber of Secrets,The second year at Hogwarts,25.00,8,author-2
+book-40,Harry Potter and the Prisoner of Azkaban,A dangerous prisoner escapes,25.00,7,author-2
+book-41,Homage to Catalonia,Orwell's account of the Spanish Civil War,16.00,3,author-3
+book-42,Down and Out in Paris and London,Poverty in two cities,14.00,5,author-3
+book-43,Hamlet,A prince seeks revenge,13.00,9,author-4
+book-44,Othello,Jealousy destroys a marriage,13.00,6,author-4
+book-45,A Grain of Wheat,Kenya on the eve of independence,19.00,5,author-5
+book-46,Petals of Blood,Corruption in post-colonial Kenya,20.00,4,author-5
+book-47,Persuasion,Second chances in love,15.50,7,author-6
+book-48,Mansfield Park,Morality family and society,15.00,5,author-6
+book-49,The Prince and the Pauper,Two boys switch places,11.50,10,author-7
+book-50,Life on the Mississippi,Memoir of river life,12.00,8,author-7
+book-51,Jazz,Love and violence in 1920s Harlem,18.00,6,author-8
+book-52,Sula,Friendship and freedom,17.00,7,author-8
+book-53,The Wind-Up Bird Chronicle,A man searches for his missing wife,27.00,3,author-9
+book-54,After Dark,One night in Tokyo,16.50,9,author-9
+book-55,The Thing Around Your Neck,Short stories of Nigerian lives,18.00,8,author-10
+book-56,The Stand,A post-apocalyptic struggle,24.00,4,author-11
+book-57,The Murder of Roger Ackroyd,A shocking detective classic,14.50,12,author-12
+book-58,Eleven Minutes,A story about love and destiny,13.00,7,author-13
+book-59,The Silmarillion,Myths of Middle-earth,27.50,5,author-14
+book-60,Gather Together in My Name,Continuing memoir of growth,17.50,6,author-15
+book-61,Romeo and Juliet,A classic Shakespearean play,12.00,2,11111111-1111-1111-1111-111111111111
+book-62,Macbeth,A tragedy by William Shakespeare,14.00,0,author-4
+book-63,The River Between,A novel about tradition and change,22.00,6,11111111-1111-1111-1111-111111111111
+
