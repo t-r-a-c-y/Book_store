@@ -6,6 +6,7 @@
   xmlns:uxap="sap.uxap"
   xmlns:custom="ns.bookshopfiori.control"
   xmlns:layout="sap.ui.layout"
+  xmlns:u="sap.ui.unified"
   height="100%"
   displayBlock="true">
 
@@ -29,33 +30,74 @@
           </Breadcrumbs>
         </uxap:breadcrumbs>
 
+        <!-- Main Title Zone: Formatted horizontally to show Image -> Title -> Subtitle (Author) -->
         <uxap:heading>
-          <Title text="{title}" level="H2" />
+          <HBox alignItems="Center">
+            <!-- 1. The Image is displayed first -->
+            <Avatar
+              id="bookCoverExpanded"
+              src="{coverUrl}"
+              displaySize="M"
+              displayShape="Square"
+              fallbackIcon="sap-icon://document-text"
+              class="sapUiSmallMarginEnd" />
+            
+            <!-- 2. Followed by a vertical container housing Title and Subtitle -->
+            <VBox>
+              <Title text="{title}" level="H2" />
+              <Text text="{author/name}" class="sapUiTinyMarginTop sapUiMutedText" />
+            </VBox>
+          </HBox>
         </uxap:heading>
 
+        <!-- Snapped Heading layout when the page scrolls up -->
         <uxap:snappedHeading>
-          <Title text="{title}" level="H4" />
+          <HBox alignItems="Center">
+            <Avatar
+              id="bookCoverSnapped"
+              src="{coverUrl}"
+              displaySize="S"
+              displayShape="Square"
+              fallbackIcon="sap-icon://document-text"
+              class="sapUiTinyMarginEnd" />
+            <VBox>
+              <Title text="{title}" level="H4" />
+              <Text text="{author/name}" class="sapUiTinyMarginTop sapUiMutedText" />
+            </VBox>
+          </HBox>
         </uxap:snappedHeading>
 
-        <uxap:expandedContent>
-          <Text text="{author/name}" />
-        </uxap:expandedContent>
+        <!-- Cleared original separate content locations to avoid text redundancy in layout -->
+        <uxap:expandedContent />
+        <uxap:snappedContent />
 
-        <uxap:snappedContent>
-          <Text text="{author/name}" />
-        </uxap:snappedContent>
-
+        <!-- Actions Toolbar Panel -->
         <uxap:actions>
           <Button
             text="{i18n>edit}"
             icon="sap-icon://edit"
             type="Emphasized"
             press=".onEditBook" />
+            
           <Button
             text="{i18n>delete}"
             icon="sap-icon://delete"
             type="Transparent"
             press=".onDeleteBook" />
+
+          <!-- New File Uploader element added directly to the same action toolbar row -->
+          <u:FileUploader
+            id="coverUploader"
+            name="cover"
+            fileType="jpg,jpeg,png,gif,webp"
+            maximumFileSize="5"
+            fileSizeExceed =".onFileSizeExceed"
+            buttonOnly="true"
+            buttonText="Upload Cover"
+            icon="sap-icon://upload"
+            style="Transparent"
+            change=".onCoverChange" />
+
           <Button
             icon="sap-icon://nav-back"
             type="Transparent"

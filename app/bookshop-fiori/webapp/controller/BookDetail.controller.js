@@ -16,14 +16,20 @@ sap.ui.define([
       this.getOwnerComponent()
         .getRouter()
         .getRoute("bookDetail")
-        .attachPatternMatched(this._onObjectMatched, this);
+        .attachPatternMatched(this.onObjectMatched, this); // Removed underscore
     },
 
-    _text: function (sKey) {
+    /**
+     * Helper function to fetch translation text from i18n properties bundle.
+     */
+    fetchText: function (sKey) { // Renamed from _text to fetchText
       return this.getView().getModel("i18n").getResourceBundle().getText(sKey);
     },
 
-    _onObjectMatched: function (oEvent) {
+    /**
+     * Binds the specific book data instance to the layout view template context.
+     */
+    onObjectMatched: function (oEvent) { // Renamed from _onObjectMatched
       var sBookId = oEvent.getParameter("arguments").bookId;
       this.getView().bindElement({
         path: "/Books(" + sBookId + ")",
@@ -32,14 +38,14 @@ sap.ui.define([
     },
 
     onNavBack: function () {
-  this.getOwnerComponent().setFclLayout("OneColumn");
-  this.getOwnerComponent().getRouter().navTo("books");
-},
+      this.getOwnerComponent().setFclLayout("OneColumn");
+      this.getOwnerComponent().getRouter().navTo("books");
+    },
 
-onNavHome: function () {
-  this.getOwnerComponent().setFclLayout("OneColumn");
-  this.getOwnerComponent().getRouter().navTo("books");
-},
+    onNavHome: function () {
+      this.getOwnerComponent().setFclLayout("OneColumn");
+      this.getOwnerComponent().getRouter().navTo("books");
+    },
 
     onEditBook: function () {
       var oCtx = this.getView().getBindingContext();
@@ -47,12 +53,12 @@ onNavHome: function () {
         return;
       }
       var oBook = oCtx.getObject();
-      this._oEditContext = oCtx;
+      this.oEditContext = oCtx; // Renamed from _oEditContext
 
       BookDialogHelper.openForm(this, {
         mode: "edit",
-        dialogTitle: this._text("editBook"),
-        confirmText: this._text("save"),
+        dialogTitle: this.fetchText("editBook"), // Updated function call
+        confirmText: this.fetchText("save"),     // Updated function call
         title: oBook.title,
         description: oBook.description || "",
         price: oBook.price,
@@ -100,10 +106,6 @@ onNavHome: function () {
         return;
       }
 
-      // UI-only if no backend field yet:
-      // oCtx.setProperty("rating", iValue);
-
-      // If Books.rating exists in CAP:
       oCtx.setProperty("rating", iValue);
       this.getView().getModel().submitBatch("$auto")
         .then(function () {
@@ -113,6 +115,82 @@ onNavHome: function () {
           console.error(oError);
           MessageBox.error("Could not save rating");
         });
+    },
+
+    onFileSizeExceed: function (oEvent) {
+      var sFileName = oEvent.getParameter("fileName");
+      var fFileSize = oEvent.getParameter("fileSize");
+      
+      var iMaxAllowedKB = Math.round(this.getView().byId("coverUploader").getMaximumFileSize() * 1024);
+      var iCurrentSizeKB = Math.round(fFileSize * 1024);
+
+      MessageBox.error(
+        "The file '" + sFileName + "' is too large (" + iCurrentSizeKB + " KB).\n" +
+        "Please select an image smaller than " + iMaxAllowedKB + " KB."
+      );
+    },
+
+    onCoverChange: function (oEvent) {
+      var oFileUploader = oEvent.getSource();
+      var aFiles = oEvent.getParameter("files");
+      var oCtx = this.getView().getBindingContext();
+
+      if (!oCtx || !aFiles || aFiles.length === 0) {
+        return;
+      }
+
+      var oFile = aFiles[0];
+      var oFileReader = new FileReader();
+      var that = this;
+
+      oFileReader.onload = function (e) {
+        var sOriginalBase64 = e.target.result;
+        var oImage = new Image();
+        oImage.src = sOriginalBase64;
+        
+        oImage.onload = function () {
+          var oCanvas = document.createElement("canvas");
+          var oCtxElement = oCanvas.getContext("2d");
+
+          var iMaxWidth = 800; 
+          var iMaxHeight = 800;
+          var iWidth = oImage.width;
+          var iHeight = oImage.height;
+
+          if (iWidth > iMaxWidth || iHeight > iMaxHeight) {
+            if (iWidth > iHeight) {
+              iHeight *= iMaxWidth / iWidth;
+              iWidth = iMaxWidth;
+            } else {
+              iWidth *= iMaxHeight / iHeight;
+              iHeight = iMaxHeight;
+            }
+          }
+
+          oCanvas.width = iWidth;
+          oCanvas.height = iHeight;
+          oCtxElement.drawImage(oImage, 0, 0, iWidth, iHeight);
+
+          var sCompressedBase64 = oCanvas.toDataURL("image/jpeg", 0.6);
+
+          oCtx.setProperty("coverUrl", sCompressedBase64);
+          oFileUploader.setValue("");
+
+          var oModel = that.getView().getModel();
+          if (oModel && typeof oModel.submitBatch === "function") {
+            oModel.submitBatch("$auto")
+              .then(function () {
+                MessageToast.show("Cover compressed and updated successfully!");
+              })
+              .catch(function (oError) {
+                console.error(oError);
+                MessageBox.error("Could not sync the compressed cover back to the database.");
+              });
+          }
+        };
+      };
+
+      oFileReader.readAsDataURL(oFile);
     }
 
   });
