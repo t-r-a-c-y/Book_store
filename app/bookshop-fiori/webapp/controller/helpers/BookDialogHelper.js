@@ -7,7 +7,8 @@ sap.ui.define([
 ], function (Fragment, JSONModel, MessageBox, MessageToast, BookFormValidator) {
   "use strict";
 
-  function _text(oController, sKey) {
+  // Renamed from _text to fetchText to match the pattern in your main controller
+  function fetchText(oController, sKey) {
     return oController.getView().getModel("i18n").getResourceBundle().getText(sKey);
   }
 
@@ -16,8 +17,9 @@ sap.ui.define([
     var oData = Object.assign({}, BookFormValidator.emptyStates(), oFormData);
     oView.setModel(new JSONModel(oData), "form");
 
-    if (!oController._pBookFormDialog) {
-      oController._pBookFormDialog = Fragment.load({
+    // Renamed internal promise container from _pBookFormDialog to pBookFormDialog
+    if (!oController.pBookFormDialog) {
+      oController.pBookFormDialog = Fragment.load({
         id: oView.getId(),
         name: "ns.bookshopfiori.view.BookFormDialog",
         controller: oController
@@ -27,7 +29,7 @@ sap.ui.define([
       });
     }
 
-    return oController._pBookFormDialog.then(function (oDialog) {
+    return oController.pBookFormDialog.then(function (oDialog) {
       oDialog.open();
     });
   }
@@ -63,7 +65,7 @@ sap.ui.define([
     oOptions = oOptions || {};
 
     if (!BookFormValidator.validate(oController, true)) {
-      MessageBox.error(_text(oController, "formInvalid"));
+      MessageBox.error(fetchText(oController, "formInvalid"));
       return Promise.resolve(false);
     }
 
@@ -95,7 +97,7 @@ sap.ui.define([
           }
         })
         .then(function () {
-          MessageToast.show(_text(oController, "bookCreated"));
+          MessageToast.show(fetchText(oController, "bookCreated"));
           closeForm(oController);
           if (typeof oOptions.afterChange === "function") {
             oOptions.afterChange();
@@ -104,26 +106,26 @@ sap.ui.define([
         })
         .catch(function (oError) {
           console.error(oError);
-          MessageBox.error(_text(oController, "createFailed"));
+          MessageBox.error(fetchText(oController, "createFailed"));
           return false;
         });
     }
 
-    // EDIT
-    if (!oController._oEditContext) {
-      MessageBox.error(_text(oController, "updateFailed"));
+    // EDIT - Renamed context reference from _oEditContext to oEditContext
+    if (!oController.oEditContext) {
+      MessageBox.error(fetchText(oController, "updateFailed"));
       return Promise.resolve(false);
     }
 
-    oController._oEditContext.setProperty("title", oPayload.title);
-    oController._oEditContext.setProperty("description", oPayload.description);
-    oController._oEditContext.setProperty("price", oPayload.price);
-    oController._oEditContext.setProperty("stock", oPayload.stock);
-    oController._oEditContext.setProperty("author_ID", oPayload.author_ID);
+    oController.oEditContext.setProperty("title", oPayload.title);
+    oController.oEditContext.setProperty("description", oPayload.description);
+    oController.oEditContext.setProperty("price", oPayload.price);
+    oController.oEditContext.setProperty("stock", oPayload.stock);
+    oController.oEditContext.setProperty("author_ID", oPayload.author_ID);
 
     return oModel.submitBatch("$auto")
       .then(function () {
-        MessageToast.show(_text(oController, "bookUpdated"));
+        MessageToast.show(fetchText(oController, "bookUpdated"));
         closeForm(oController);
         if (typeof oOptions.afterChange === "function") {
           oOptions.afterChange();
@@ -132,7 +134,7 @@ sap.ui.define([
       })
       .catch(function (oError) {
         console.error(oError);
-        MessageBox.error(_text(oController, "updateFailed"));
+        MessageBox.error(fetchText(oController, "updateFailed"));
         return false;
       });
   }
@@ -144,8 +146,9 @@ sap.ui.define([
       id: oContext.getProperty("ID")
     }), "delete");
 
-    if (!oController._pDeleteDialog) {
-      oController._pDeleteDialog = Fragment.load({
+    // Renamed internal promise dialog checker from _pDeleteDialog to pDeleteDialog
+    if (!oController.pDeleteDialog) {
+      oController.pDeleteDialog = Fragment.load({
         id: oView.getId(),
         name: "ns.bookshopfiori.view.ConfirmDeleteDialog",
         controller: oController
@@ -155,7 +158,7 @@ sap.ui.define([
       });
     }
 
-    return oController._pDeleteDialog.then(function (oDialog) {
+    return oController.pDeleteDialog.then(function (oDialog) {
       oDialog.open();
     });
   }
@@ -186,7 +189,7 @@ sap.ui.define([
         }
       })
       .then(function () {
-        MessageToast.show(_text(oController, "bookDeleted"));
+        MessageToast.show(fetchText(oController, "bookDeleted"));
         closeDelete(oController);
         if (typeof oOptions.afterDelete === "function") {
           oOptions.afterDelete();
@@ -194,7 +197,7 @@ sap.ui.define([
       })
       .catch(function (oError) {
         console.error(oError);
-        MessageBox.error(_text(oController, "deleteFailed"));
+        MessageBox.error(fetchText(oController, "deleteFailed"));
       });
   }
 
