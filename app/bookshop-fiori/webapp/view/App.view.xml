@@ -1,13 +1,13 @@
 <mvc:View
   controllerName="ns.bookshopfiori.controller.App"
   xmlns:mvc="sap.ui.core.mvc"
-  xmlns="sap.m"
   xmlns:f="sap.f"
-  displayBlock="true">
+  displayBlock="true"
+  height="100%">
 
   <f:FlexibleColumnLayout
-  id="flexibleColumnLayout"
-  layout="{fcl>/layout}"
-  backgroundDesign="Solid" />
+    id="flexibleColumnLayout"
+    layout="{fcl>/layout}"
+    backgroundDesign="Solid" />
 
 </mvc:View>

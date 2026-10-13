@@ -1,18 +1,7 @@
 sap.ui.define([
-  "sap/ui/core/mvc/Controller",
-  "sap/ui/model/json/JSONModel"
-], function (Controller, JSONModel) {
+  "sap/ui/core/mvc/Controller"
+], function (Controller) {
   "use strict";
 
-  return Controller.extend("ns.bookshopfiori.controller.App", {
-
-    onInit: function () {
-      // OneColumn = list only
-      // TwoColumnsMidExpanded = list + detail
-      this.getView().setModel(new JSONModel({
-        layout: "OneColumn"
-      }));
-    }
-
-  });
+  return Controller.extend("ns.bookshopfiori.controller.App", {});
 });
