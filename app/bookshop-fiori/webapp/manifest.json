@@ -72,46 +72,46 @@
     },
 "routing": {
   "config": {
-    "routerClass": "sap.f.routing.Router",
+    "routerClass": "sap.m.routing.Router",
     "viewType": "XML",
     "viewPath": "ns.bookshopfiori.view",
-    "controlId": "flexibleColumnLayout",
-    "transition": "slide",
+    "controlId": "app",
+    "controlAggregation": "pages",
     "async": true
   },
   "routes": [
     {
       "pattern": "",
       "name": "books",
-      "target": ["books"]
+      "target": "books"
     },
     {
       "pattern": "Books/{bookId}",
       "name": "bookDetail",
-      "target": ["books", "bookDetail"]
+      "target": "bookDetail"
     },
     {
-      "pattern": "create-order",
-      "name": "createOrder",
-      "target": ["createOrder"]
-    }
+  "pattern": "create-order",
+  "name": "createOrder",
+  "target": "createOrder"
+  }
   ],
   "targets": {
     "books": {
+      "viewId": "books",
       "viewName": "Books",
-      "controlAggregation": "beginColumnPages",
       "viewLevel": 1
     },
     "bookDetail": {
+      "viewId": "bookDetail",
       "viewName": "BookDetail",
-      "controlAggregation": "midColumnPages",
       "viewLevel": 2
     },
     "createOrder": {
-      "viewName": "OrderWizard",
-      "controlAggregation": "beginColumnPages",
-      "viewLevel": 1
-    }
+  "viewId": "createOrder",
+  "viewName": "OrderWizard",
+  "viewLevel": 2
+  }
   }
 }
   }

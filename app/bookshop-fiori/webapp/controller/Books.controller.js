@@ -110,10 +110,19 @@ sap.ui.define([
       this._loadAuthors();
     },
 
+    // onBookPress: function (oEvent) {
+    //   var sBookId = oEvent.getSource().getBindingContext().getProperty("ID");
+    //   this.getOwnerComponent().getRouter().navTo("bookDetail", { bookId: sBookId });
+    // },
+
     onBookPress: function (oEvent) {
-      var sBookId = oEvent.getSource().getBindingContext().getProperty("ID");
-      this.getOwnerComponent().getRouter().navTo("bookDetail", { bookId: sBookId });
-    },
+  var sBookId = oEvent.getSource().getBindingContext().getProperty("ID");
+
+  this.getOwnerComponent().setFclLayout("TwoColumnsMidExpanded");
+  this.getOwnerComponent().getRouter().navTo("bookDetail", {
+    bookId: sBookId
+  });
+},
 
     onCreateOrder: function () {
       this.getOwnerComponent().getRouter().navTo("createOrder");

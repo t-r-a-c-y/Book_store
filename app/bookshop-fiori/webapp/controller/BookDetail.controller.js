@@ -32,12 +32,14 @@ sap.ui.define([
     },
 
     onNavBack: function () {
-      if (History.getInstance().getPreviousHash() !== undefined) {
-        window.history.go(-1);
-      } else {
-        this.getOwnerComponent().getRouter().navTo("books", {}, true);
-      }
-    },
+  this.getOwnerComponent().setFclLayout("OneColumn");
+  this.getOwnerComponent().getRouter().navTo("books");
+},
+
+onNavHome: function () {
+  this.getOwnerComponent().setFclLayout("OneColumn");
+  this.getOwnerComponent().getRouter().navTo("books");
+},
 
     onEditBook: function () {
       var oCtx = this.getView().getBindingContext();

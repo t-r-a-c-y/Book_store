@@ -6,8 +6,8 @@
   displayBlock="true">
 
   <f:FlexibleColumnLayout
-    id="flexibleColumnLayout"
-    layout="{/layout}"
-    backgroundDesign="Solid" />
+  id="flexibleColumnLayout"
+  layout="{fcl>/layout}"
+  backgroundDesign="Solid" />
 
 </mvc:View>
