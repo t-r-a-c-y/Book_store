@@ -4,5 +4,6 @@
   displayBlock="true">
 
   <App id="app" />
+  
 
 </mvc:View>
