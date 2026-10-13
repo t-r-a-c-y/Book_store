@@ -8,9 +8,13 @@
   height="100%"
   displayBlock="true">
 
+
   <f:DynamicPage
     id="booksDynamicPage"
-    toggleHeaderOnTitleClick="true">
+    fitContent="true"
+    toggleHeaderOnTitleClick="true"
+    preserveHeaderStateOnScroll="true"
+    class="sapUIViewFullScreen">
 
     <f:title>
       <f:DynamicPageTitle>
@@ -119,6 +123,7 @@
         growing="true"
         growingThreshold="20"
         sticky="ColumnHeaders,HeaderToolbar"
+        fixedLayout="true"
         selectionChange=".onTableSelectionChange"
         class="sapFDynamicPageAlignContent"
         width="auto"

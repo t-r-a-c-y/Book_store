@@ -5,6 +5,7 @@
   displayBlock="true"
   height="100%">
 
+
   <f:FlexibleColumnLayout
     id="flexibleColumnLayout"
     layout="{fcl>/layout}"
