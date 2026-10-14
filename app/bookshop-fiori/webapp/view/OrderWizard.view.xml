@@ -8,8 +8,20 @@
   <Page
     id="orderWizardPage"
     title="Create Order"
-    showNavButton="true"
+    showNavButton="false"
     navButtonPress=".onNavBack">
+
+    <customHeader>
+    <Bar>
+      <contentLeft>
+        <Breadcrumbs class="sapUiSmallMarginBegin">
+          <Link text="Home" press=".onNavHome" />
+          <Link text="Books" press=".onNavBooks" />
+          <Link text="Create Order" />
+        </Breadcrumbs>
+      </contentLeft>
+    </Bar>
+  </customHeader>
 
     <content>
       <Wizard

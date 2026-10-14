@@ -4,8 +4,9 @@ sap.ui.define([
   "sap/ui/model/json/JSONModel",
   "sap/m/MessageToast",
   "sap/m/MessageBox",
-  "ns/bookshopfiori/controller/helpers/WizardStepHelper"
-], function (Controller, History, JSONModel, MessageToast, MessageBox, WizardStepHelper) {
+  "ns/bookshopfiori/controller/helpers/WizardStepHelper",
+  "ns/bookshopfiori/controller/helpers/NavHelper"
+], function (Controller, History, JSONModel, MessageToast, MessageBox, WizardStepHelper, NavHelper) {
   "use strict";
 
   return Controller.extend("ns.bookshopfiori.controller.OrderWizard", {
@@ -132,13 +133,13 @@ sap.ui.define([
       this.submitWizardOrder(); // Updated reference call
     },
 
-    onNavBack: function () {
-      if (History.getInstance().getPreviousHash() !== undefined) {
-        window.history.go(-1);
-      } else {
-        this.getOwnerComponent().getRouter().navTo("books", {}, true);
-      }
-    }
+    onNavHome: function () {
+  NavHelper.toBooks(this);
+},
+
+onNavBooks: function () {
+  NavHelper.toBooks(this);
+},
 
   });
 });

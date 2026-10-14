@@ -21,8 +21,11 @@ sap.ui.define([
     },
 
     setFclLayout: function (sLayout) {
-      this.getModel("fcl").setProperty("/layout", sLayout);
-    }
+  var oModel = this.getModel("fcl");
+  if (oModel) {
+    oModel.setProperty("/layout", sLayout);
+  }
+},
 
   });
 });

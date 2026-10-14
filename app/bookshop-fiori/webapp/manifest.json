@@ -133,10 +133,11 @@
           "viewLevel": 2
         },
         "createOrder": {
-          "viewName": "OrderWizard",
-          "controlAggregation": "beginColumnPages",
-          "viewLevel": 1
-        },
+  "viewId": "createOrder",
+  "viewName": "OrderWizard",
+  "controlAggregation": "beginColumnPages",
+  "viewLevel": 1
+},
         "smartBooks": {
           "viewName": "SmartBooks",
           "controlAggregation": "beginColumnPages",

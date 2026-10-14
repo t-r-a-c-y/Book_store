@@ -10,16 +10,21 @@
   <Page
     id="smartBooksPage"
     title="Smart Books"
-    showNavButton="true"
+    showNavButton="fasle"
     navButtonPress=".onNavBack"
     enableScrolling="false">
 
-    <headerContent>
-      <Button
-        text="Preview PDF"
-        icon="sap-icon://pdf-attachment"
-        press=".onOpenPdf" />
-    </headerContent>
+    <customHeader>
+      <Bar>
+        <contentLeft>
+          <Breadcrumbs id="smartBooksBreadcrumbs" class="sapUiSmallMarginBegin">
+            <Link text="Home" press=".onNavHome" />
+            <Link text="Books" press=".onNavBooks" />
+            <Link text="Smart Books" />
+          </Breadcrumbs>
+        </contentLeft>
+      </Bar>
+    </customHeader>
 
     <content>
       <VBox height="100%" fitContainer="true" width="100%">
@@ -35,7 +40,7 @@
           id="smartBooksTable"
           entitySet="Books"
           smartFilterId="smartFilterBar"
-          tableType="ResponsiveTable"
+          tableType="Table"
           header="Books"
           showRowCount="true"
           enableAutoBinding="true"

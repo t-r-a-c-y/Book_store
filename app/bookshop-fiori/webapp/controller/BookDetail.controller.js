@@ -4,8 +4,9 @@ sap.ui.define([
   "sap/m/MessageToast",
   "sap/m/MessageBox",
   "ns/bookshopfiori/model/formatter",
-  "ns/bookshopfiori/controller/helpers/BookDialogHelper"
-], function (Controller, History, MessageToast, MessageBox, formatter, BookDialogHelper) {
+  "ns/bookshopfiori/controller/helpers/BookDialogHelper",
+  "ns/bookshopfiori/controller/helpers/NavHelper"
+], function (Controller, History, MessageToast, MessageBox, formatter, BookDialogHelper, NavHelper) {
   "use strict";
 
   return Controller.extend("ns.bookshopfiori.controller.BookDetail", {
@@ -37,15 +38,13 @@ sap.ui.define([
       });
     },
 
-    onNavBack: function () {
-      this.getOwnerComponent().setFclLayout("OneColumn");
-      this.getOwnerComponent().getRouter().navTo("books");
-    },
-
     onNavHome: function () {
-      this.getOwnerComponent().setFclLayout("OneColumn");
-      this.getOwnerComponent().getRouter().navTo("books");
-    },
+  NavHelper.toBooks(this);
+},
+
+onNavBooks: function () {
+  NavHelper.toBooks(this);
+},
 
     onEditBook: function () {
       var oCtx = this.getView().getBindingContext();
