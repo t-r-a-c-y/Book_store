@@ -16,6 +16,10 @@
 
     <content>
       <VBox fitContainer="true" height="100%" class="sapUiNoContentPadding">
+      <Button
+  text="Preview PDF"
+  icon="sap-icon://pdf-attachment"
+  press=".onOpenPdf" />
 
         <smartFilterBar:SmartFilterBar
           id="smartFilterBar"

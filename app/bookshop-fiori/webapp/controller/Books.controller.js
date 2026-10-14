@@ -20,6 +20,8 @@ sap.ui.define([
       this.sAuthorId = "ALL";
       this.sAuthorName = "";
       this.bSortDesc = false;
+      var oMessageManager = sap.ui.getCore().getMessageManager();
+this.getView().setModel(oMessageManager.getMessageModel(), "message");
 
       this.getView().setModel(new JSONModel([
         { key: "ALL", text: "All Authors" }
@@ -28,6 +30,7 @@ sap.ui.define([
       this.loadAuthors(); // Updated call without underscore
     },
 
+    
     /**
      * Helper function to fetch translation text from i18n bundle.
      */
@@ -118,10 +121,16 @@ sap.ui.define([
     },
 
     onRefresh: function () {
-      var oBinding = this.byId("booksTable").getBinding("items");
-      if (oBinding) { oBinding.refresh(); }
-      this.loadAuthors(); // Updated call without underscore
-    },
+  var that = this;
+  this._runWithBusy(function () {
+    var oBinding = that.byId("booksTable").getBinding("items");
+    if (oBinding) {
+      return Promise.resolve(oBinding.refresh());
+    }
+  }).then(function () {
+    that.loadAuthors && that.loadAuthors();
+  });
+},
 
     onBookPress: function (oEvent) {
       var sBookId = oEvent.getSource().getBindingContext().getProperty("ID");
@@ -265,6 +274,53 @@ sap.ui.define([
   }
   this.getOwnerComponent().getRouter().navTo("smartBooks");
 },
+
+  onMessagePopoverPress: function (oEvent) {
+  var oButton = oEvent.getSource();
+  var that = this;
+
+  if (!this._pMessagePopover) {
+    this._pMessagePopover = sap.ui.core.Fragment.load({
+      id: this.getView().getId(),
+      name: "ns.bookshopfiori.view.MessagePopover",
+      controller: this
+    }).then(function (oPopover) {
+      that.getView().addDependent(oPopover);
+      return oPopover;
+    });
+  }
+
+  this._pMessagePopover.then(function (oPopover) {
+    oPopover.openBy(oButton);
+  });
+},
+
+addMessage: function (sText, sType) {
+  sap.ui.getCore().getMessageManager().addMessages(
+    new sap.ui.core.message.Message({
+      message: sText,
+      type: sType || sap.ui.core.MessageType.Error,
+      processor: this.getView().getModel()
+    })
+  );
+},
+
+runWithBusy: function (fnJob) {
+  var oView = this.getView();
+  oView.setBusyIndicatorDelay(0);
+  oView.setBusy(true);
+
+  return Promise.resolve()
+    .then(fnJob)
+    .catch(function (oError) {
+      console.error(oError);
+      sap.m.MessageBox.error("Request failed");
+      throw oError;
+    })
+    .finally(function () {
+      oView.setBusy(false);
+    });
+},
     /**
      * Loops through all checked records to execute batch deletion requests against the CAP server.
      */
@@ -287,15 +343,14 @@ sap.ui.define([
         });
       });
 
-      Promise.all(aPromises)
-        .then(function () {
-          // Replaced _text call with clean fetchText method
-          sap.m.MessageToast.show(that.fetchText("bookDeleted"));
-          that.byId("booksTable").removeSelections(true);
-          that.onTableSelectionChange();
-          that.onRefresh();
-        })
-        .catch(function (oError) {
+      this._runWithBusy(function () {
+  return Promise.all(aPromises);
+}).then(function () {
+  sap.m.MessageToast.show(that.fetchText("bookDeleted"));
+  that.byId("booksTable").removeSelections(true);
+  that.onTableSelectionChange();
+  that.onRefresh();
+}).catch(function (oError) {
           console.error(oError);
           // Replaced _text call with clean fetchText method
           sap.m.MessageBox.error(that.fetchText("deleteFailed"));

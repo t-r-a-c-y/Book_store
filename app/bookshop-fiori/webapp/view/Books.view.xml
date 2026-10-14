@@ -8,17 +8,15 @@
   height="100%"
   displayBlock="true">
 
-
   <f:DynamicPage
     id="booksDynamicPage"
     fitContent="true"
     toggleHeaderOnTitleClick="true"
-    preserveHeaderStateOnScroll="true"
-    class="sapUIViewFullScreen">
+    preserveHeaderStateOnScroll="true">
 
     <f:title>
       <f:DynamicPageTitle>
-       
+
         <f:heading>
           <Title text="{i18n>booksPageTitle}" level="H2" />
         </f:heading>
@@ -60,39 +58,47 @@
             enabled="false"
             press=".onDeleteSelected" />
 
-            <Button
-  text="Smart Books"
-  icon="sap-icon://table-view"
-  type="Transparent"
-  press=".onOpenSmartBooks" />
+          <Button
+            id="msgButton"
+            icon="sap-icon://message-popup"
+            text="Messages"
+            type="Transparent"
+            press=".onMessagePopoverPress" />
+
+          <Button
+            text="Smart Books"
+            icon="sap-icon://table-view"
+            type="Transparent"
+            press=".onOpenSmartBooks" />
+
+          <Button
+            text="Preview PDF"
+            icon="sap-icon://pdf-attachment"
+            type="Transparent"
+            press=".onOpenPdf" />
 
           <Button
             icon="sap-icon://refresh"
             tooltip="{i18n>refresh}"
             type="Transparent"
             press=".onRefresh" />
-
-            
         </f:actions>
 
       </f:DynamicPageTitle>
     </f:title>
 
-  
     <f:header>
       <f:DynamicPageHeader pinnable="true">
         <layout:HorizontalLayout allowWrapping="true" class="sapUiSmallMargin">
 
-          <!-- Search -->
           <layout:VerticalLayout class="sapUiMediumMarginEnd">
             <Label text="{i18n>searchPlaceholder}" />
             <SearchField
               id="searchField"
-              width="30rem"
+              width="20rem"
               liveChange=".onSearch" />
           </layout:VerticalLayout>
 
-          <!-- Author filter -->
           <layout:VerticalLayout class="sapUiMediumMarginEnd">
             <Label text="{i18n>Author}" labelFor="authorFilter" />
             <Select
@@ -105,7 +111,6 @@
             </Select>
           </layout:VerticalLayout>
 
-          <!-- Stock filter -->
           <layout:VerticalLayout>
             <Label text="{i18n>Stock}" labelFor="stockFilter" />
             <Select
@@ -122,7 +127,6 @@
         </layout:HorizontalLayout>
       </f:DynamicPageHeader>
     </f:header>
-
 
     <f:content>
       <Table

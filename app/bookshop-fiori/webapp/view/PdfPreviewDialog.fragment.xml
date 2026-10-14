@@ -1,0 +1,27 @@
+<core:FragmentDefinition
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core">
+
+  <Dialog
+    id="pdfDialog"
+    title="{pdf>/title}"
+    contentWidth="80%"
+    contentHeight="80%"
+    verticalScrolling="false"
+    horizontalScrolling="false">
+
+    <PDFViewer
+      id="pdfViewer"
+      source="{pdf>/source}"
+      title="{pdf>/title}"
+      height="100%"
+      width="100%"
+      isTrustedSource="true"
+      missingPDF=".onPdfError" />
+
+    <endButton>
+      <Button text="Close" press=".onClosePdf" icon="sap-icon://decline" />
+    </endButton>
+
+  </Dialog>
+</core:FragmentDefinition>

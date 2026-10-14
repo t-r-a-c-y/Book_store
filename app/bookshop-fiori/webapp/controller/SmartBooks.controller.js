@@ -37,7 +37,39 @@ sap.ui.define([
 
     onBeforeRebindTable: function (oEvent) {
       // optional extra filters
-    }
+    },
+    onOpenPdf: function () {
+  var oView = this.getView();
+
+  oView.setModel(new sap.ui.model.json.JSONModel({
+    // public sample PDF for demo
+    source: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    title: "Book Catalog Sample"
+  }), "pdf");
+
+  if (!this._pPdfDialog) {
+    this._pPdfDialog = sap.ui.core.Fragment.load({
+      id: oView.getId(),
+      name: "ns.bookshopfiori.view.PdfPreviewDialog",
+      controller: this
+    }).then(function (oDialog) {
+      oView.addDependent(oDialog);
+      return oDialog;
+    });
+  }
+
+  this._pPdfDialog.then(function (oDialog) {
+    oDialog.open();
+  });
+},
+
+onPdfError: function () {
+  sap.m.MessageBox.error("Could not load the PDF document.");
+},
+
+onClosePdf: function () {
+  this.byId("pdfDialog").close();
+},
 
   });
 });
