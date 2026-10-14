@@ -65,6 +65,12 @@
             tooltip="{i18n>refresh}"
             type="Transparent"
             press=".onRefresh" />
+
+            <Button
+  text="Smart Books"
+  icon="sap-icon://table-view"
+  type="Transparent"
+  press=".onOpenSmartBooks" />
         </f:actions>
 
       </f:DynamicPageTitle>

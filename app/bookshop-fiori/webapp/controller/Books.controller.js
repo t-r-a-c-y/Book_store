@@ -131,13 +131,13 @@ sap.ui.define([
       });
     },
 
-        onCreateOrder: function () {
-      // 1. Force the FCL layout model to take over the whole screen instantly
-      this.getOwnerComponent().setFclLayout("OneColumn");
-
-      // 2. Instruct the router to change the URL pattern path
-      this.getOwnerComponent().getRouter().navTo("createOrder");
-    },
+     onCreateOrder: function () {
+  // if using FCL, show one column for this page
+  if (this.getOwnerComponent().setFclLayout) {
+    this.getOwnerComponent().setFclLayout("OneColumn");
+  }
+  this.getOwnerComponent().getRouter().navTo("createOrder");
+},
 
 
     onCreateBook: function () {
@@ -259,6 +259,13 @@ sap.ui.define([
         }
       );
     },
+    onOpenSmartBooks: function () {
+  // if using FCL, show one column for this page
+  if (this.getOwnerComponent().setFclLayout) {
+    this.getOwnerComponent().setFclLayout("OneColumn");
+  }
+  this.getOwnerComponent().getRouter().navTo("smartBooks");
+},
     /**
      * Loops through all checked records to execute batch deletion requests against the CAP server.
      */
