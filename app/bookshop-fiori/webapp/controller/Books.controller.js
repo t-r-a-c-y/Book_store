@@ -260,7 +260,6 @@ sap.ui.define([
       );
     },
     onOpenSmartBooks: function () {
-  // if using FCL, show one column for this page
   if (this.getOwnerComponent().setFclLayout) {
     this.getOwnerComponent().setFclLayout("OneColumn");
   }

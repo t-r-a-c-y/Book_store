@@ -11,37 +11,18 @@
     id="smartBooksPage"
     title="Smart Books"
     showNavButton="true"
-    navButtonPress=".onNavBack">
+    navButtonPress=".onNavBack"
+    enableScrolling="false">
 
     <content>
-      <VBox fitContainer="true" class="sapUiResponsiveMargin">
+      <VBox fitContainer="true" height="100%" class="sapUiNoContentPadding">
 
-        <!-- FILTER BAR -->
         <smartFilterBar:SmartFilterBar
           id="smartFilterBar"
           entitySet="Books"
           persistencyKey="SmartBooksFilterBar"
-          enableBasicSearch="true"
-          search=".onSmartFilterSearch">
+          enableBasicSearch="true" />
 
-          <smartFilterBar:controlConfiguration>
-            <smartFilterBar:ControlConfiguration
-              key="title"
-              label="Title"
-              visibleInAdvancedArea="true" />
-            <smartFilterBar:ControlConfiguration
-              key="price"
-              label="Price"
-              visibleInAdvancedArea="true" />
-            <smartFilterBar:ControlConfiguration
-              key="stock"
-              label="Stock"
-              visibleInAdvancedArea="true" />
-          </smartFilterBar:controlConfiguration>
-
-        </smartFilterBar:SmartFilterBar>
-
-        <!-- SMART TABLE -->
         <smartTable:SmartTable
           id="smartBooksTable"
           entitySet="Books"
@@ -51,21 +32,20 @@
           showRowCount="true"
           enableAutoBinding="true"
           enableAutoColumnWidth="true"
-          beforeRebindTable=".onBeforeRebindTable"
-          class="sapUiTinyMarginTop">
+          fitContainer="true"
+          class="sapUiTinyMarginTop"
+          width="100%"
+          beforeRebindTable=".onBeforeRebindTable">
 
-          <!-- inner table -->
           <Table
-            id="innerBooksTable"
             growing="true"
             growingThreshold="20"
-            mode="None"
-            sticky="ColumnHeaders,HeaderToolbar" />
+            sticky="ColumnHeaders,HeaderToolbar"
+            width="100%" />
 
         </smartTable:SmartTable>
 
       </VBox>
     </content>
-
   </Page>
 </mvc:View>

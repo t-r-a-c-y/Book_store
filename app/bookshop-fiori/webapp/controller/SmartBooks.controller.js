@@ -8,6 +8,7 @@ sap.ui.define([
 
     onInit: function () {
       var oV2Model = this.getOwnerComponent().getModel("v2");
+      this.getView().setModel(oV2Model);
       var oView = this.getView();
 
       // This view uses V2 only (Smart controls need it)
