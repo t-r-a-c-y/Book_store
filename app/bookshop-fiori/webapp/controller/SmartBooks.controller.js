@@ -7,41 +7,35 @@ sap.ui.define([
   return Controller.extend("ns.bookshopfiori.controller.SmartBooks", {
 
     onInit: function () {
-      // SmartTable uses the default OData model from manifest (mainService)
+      var oV2Model = this.getOwnerComponent().getModel("v2");
+      var oView = this.getView();
+
+      // This view uses V2 only (Smart controls need it)
+      oView.setModel(oV2Model);
+
+      // Also set explicitly on the smart controls when they exist
+      this.getView().attachEventOnce("afterRendering", function () {
+        var oFilter = this.byId("smartFilterBar");
+        var oTable = this.byId("smartBooksTable");
+        if (oFilter && oV2Model) {
+          oFilter.setModel(oV2Model);
+        }
+        if (oTable && oV2Model) {
+          oTable.setModel(oV2Model);
+        }
+      }.bind(this));
     },
 
     onNavBack: function () {
-      var oHistory = History.getInstance();
-      if (oHistory.getPreviousHash() !== undefined) {
+      if (History.getInstance().getPreviousHash() !== undefined) {
         window.history.go(-1);
       } else {
         this.getOwnerComponent().getRouter().navTo("books", {}, true);
       }
     },
 
-    onSmartFilterSearch: function () {
-      // SmartFilterBar triggers table rebind via smartFilterId link
-      // Optional extra logic can go here
-    },
-
-    /**
-     * Called before SmartTable binds to OData.
-     * You can add fixed filters (e.g. only in-stock) here.
-     */
     onBeforeRebindTable: function (oEvent) {
-      var oBindingParams = oEvent.getParameter("bindingParams");
-
-      // Example: always expand author if your service supports it
-      // For V4 SmartTable support varies; keep simple first.
-      if (!oBindingParams.parameters) {
-        oBindingParams.parameters = {};
-      }
-
-      // Optional fixed filter example (uncomment if needed):
-      // oBindingParams.filters = oBindingParams.filters || [];
-      // oBindingParams.filters.push(
-      //   new sap.ui.model.Filter("stock", "GT", 0)
-      // );
+      // optional extra filters
     }
 
   });

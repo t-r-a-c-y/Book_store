@@ -60,17 +60,19 @@
             enabled="false"
             press=".onDeleteSelected" />
 
+            <Button
+  text="Smart Books"
+  icon="sap-icon://table-view"
+  type="Transparent"
+  press=".onOpenSmartBooks" />
+
           <Button
             icon="sap-icon://refresh"
             tooltip="{i18n>refresh}"
             type="Transparent"
             press=".onRefresh" />
 
-            <Button
-  text="Smart Books"
-  icon="sap-icon://table-view"
-  type="Transparent"
-  press=".onOpenSmartBooks" />
+            
         </f:actions>
 
       </f:DynamicPageTitle>
