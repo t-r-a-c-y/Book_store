@@ -1,0 +1,71 @@
+<mvc:View
+  controllerName="ns.bookshopfiori.controller.SmartBooks"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+  xmlns:smartTable="sap.ui.comp.smarttable"
+  height="100%"
+  displayBlock="true">
+
+  <Page
+    id="smartBooksPage"
+    title="Smart Books"
+    showNavButton="true"
+    navButtonPress=".onNavBack">
+
+    <content>
+      <VBox fitContainer="true" class="sapUiResponsiveMargin">
+
+        <!-- FILTER BAR -->
+        <smartFilterBar:SmartFilterBar
+          id="smartFilterBar"
+          entitySet="Books"
+          persistencyKey="SmartBooksFilterBar"
+          enableBasicSearch="true"
+          search=".onSmartFilterSearch">
+
+          <smartFilterBar:controlConfiguration>
+            <smartFilterBar:ControlConfiguration
+              key="title"
+              label="Title"
+              visibleInAdvancedArea="true" />
+            <smartFilterBar:ControlConfiguration
+              key="price"
+              label="Price"
+              visibleInAdvancedArea="true" />
+            <smartFilterBar:ControlConfiguration
+              key="stock"
+              label="Stock"
+              visibleInAdvancedArea="true" />
+          </smartFilterBar:controlConfiguration>
+
+        </smartFilterBar:SmartFilterBar>
+
+        <!-- SMART TABLE -->
+        <smartTable:SmartTable
+          id="smartBooksTable"
+          entitySet="Books"
+          smartFilterId="smartFilterBar"
+          tableType="ResponsiveTable"
+          header="Books"
+          showRowCount="true"
+          enableAutoBinding="true"
+          enableAutoColumnWidth="true"
+          beforeRebindTable=".onBeforeRebindTable"
+          class="sapUiTinyMarginTop">
+
+          <!-- inner table -->
+          <Table
+            id="innerBooksTable"
+            growing="true"
+            growingThreshold="20"
+            mode="None"
+            sticky="ColumnHeaders,HeaderToolbar" />
+
+        </smartTable:SmartTable>
+
+      </VBox>
+    </content>
+
+  </Page>
+</mvc:View>
