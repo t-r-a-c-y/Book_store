@@ -16,10 +16,13 @@ sap.ui.define([
       this.getOwnerComponent()
         .getRouter()
         .getRoute("createOrder")
-        .attachPatternMatched(this._onRouteMatched, this);
+        .attachPatternMatched(this.onRouteMatched, this); // Removed underscore from function reference
     },
 
-    _onRouteMatched: function () {
+    /**
+     * Resets the wizard parameters and progress state on route navigation matches.
+     */
+    onRouteMatched: function () { // Renamed from _onRouteMatched
       this.getView().getModel("wizard").setData(WizardStepHelper.getInitialData());
 
       var oWizard = this.byId("orderWizard");
@@ -66,7 +69,7 @@ sap.ui.define([
       }
 
       if (iStep === 3) {
-        this._finishWizard();
+        this.submitWizardOrder(); // Updated reference call
         return;
       }
 
@@ -84,7 +87,10 @@ sap.ui.define([
       WizardStepHelper.updateButtons(oModel, iStep - 1);
     },
 
-    _finishWizard: function () {
+    /**
+     * Submits the final wizard payload details directly to the backend CAP server instance.
+     */
+    submitWizardOrder: function () { // Renamed from _finishWizard
       var oData = this.getView().getModel("wizard").getData();
       var that = this;
 
@@ -123,7 +129,7 @@ sap.ui.define([
     },
 
     onWizardComplete: function () {
-      this._finishWizard();
+      this.submitWizardOrder(); // Updated reference call
     },
 
     onNavBack: function () {

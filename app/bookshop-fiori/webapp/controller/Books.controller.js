@@ -14,24 +14,31 @@ sap.ui.define([
     formatter: formatter,
 
     onInit: function () {
-      this._sSearchQuery = "";
-      this._sStockKey = "ALL";
-      this._sAuthorId = "ALL";
-      this._sAuthorName = "";
-      this._bSortDesc = false;
+      // Clean naming convention (Hungarian Notation) properties - removed all underscores
+      this.sSearchQuery = "";
+      this.sStockKey = "ALL";
+      this.sAuthorId = "ALL";
+      this.sAuthorName = "";
+      this.bSortDesc = false;
 
       this.getView().setModel(new JSONModel([
         { key: "ALL", text: "All Authors" }
       ]), "authors");
 
-      this._loadAuthors();
+      this.loadAuthors(); // Updated call without underscore
     },
 
-    _text: function (sKey) {
+    /**
+     * Helper function to fetch translation text from i18n bundle.
+     */
+    fetchText: function (sKey) { // Renamed from _text
       return this.getView().getModel("i18n").getResourceBundle().getText(sKey);
     },
 
-    _loadAuthors: function () {
+    /**
+     * Loads author metadata items from the server backend.
+     */
+    loadAuthors: function () { // Renamed from _loadAuthors
       var oModel = this.getOwnerComponent().getModel();
       var that = this;
       if (!oModel) {
@@ -49,33 +56,36 @@ sap.ui.define([
     },
 
     onSearch: function (oEvent) {
-      this._sSearchQuery = oEvent.getParameter("newValue") || "";
-      this._applyFilters();
+      this.sSearchQuery = oEvent.getParameter("newValue") || "";
+      this.applyFilters(); // Updated call without underscore
     },
 
     onFilterStock: function (oEvent) {
-      this._sStockKey = oEvent.getSource().getSelectedKey() || "ALL";
-      this._applyFilters();
+      this.sStockKey = oEvent.getSource().getSelectedKey() || "ALL";
+      this.applyFilters(); // Updated call without underscore
     },
 
     onFilterAuthor: function (oEvent) {
       var oItem = oEvent.getSource().getSelectedItem();
-      this._sAuthorId = oEvent.getSource().getSelectedKey() || "ALL";
-      this._sAuthorName = oItem ? oItem.getText() : "";
-      this._applyFilters();
+      this.sAuthorId = oEvent.getSource().getSelectedKey() || "ALL";
+      this.sAuthorName = oItem ? oItem.getText() : "";
+      this.applyFilters(); // Updated call without underscore
     },
 
-    _applyFilters: function () {
+    /**
+     * Builds and aggregates operational query filters onto the books table dataset.
+     */
+    applyFilters: function () { // Renamed from _applyFilters
       var aFilters = [];
-      if (this._sSearchQuery) {
-        aFilters.push(new Filter("title", FilterOperator.Contains, this._sSearchQuery));
+      if (this.sSearchQuery) {
+        aFilters.push(new Filter("title", FilterOperator.Contains, this.sSearchQuery));
       }
-      if (this._sAuthorId !== "ALL" && this._sAuthorName && this._sAuthorName !== "All Authors") {
-        aFilters.push(new Filter("author/name", FilterOperator.EQ, this._sAuthorName));
+      if (this.sAuthorId !== "ALL" && this.sAuthorName && this.sAuthorName !== "All Authors") {
+        aFilters.push(new Filter("author/name", FilterOperator.EQ, this.sAuthorName));
       }
-      if (this._sStockKey === "IN_STOCK") {
+      if (this.sStockKey === "IN_STOCK") {
         aFilters.push(new Filter("stock", FilterOperator.GT, 0));
-      } else if (this._sStockKey === "OUT_OF_STOCK") {
+      } else if (this.sStockKey === "OUT_OF_STOCK") {
         aFilters.push(new Filter("stock", FilterOperator.EQ, 0));
       }
       var oBinding = this.byId("booksTable").getBinding("items");
@@ -84,11 +94,14 @@ sap.ui.define([
       }
     },
 
-    _clearFilters: function () {
-      this._sSearchQuery = "";
-      this._sStockKey = "ALL";
-      this._sAuthorId = "ALL";
-      this._sAuthorName = "";
+    /**
+     * Resets layout filter elements back to default criteria states.
+     */
+    clearFilters: function () { // Renamed from _clearFilters
+      this.sSearchQuery = "";
+      this.sStockKey = "ALL";
+      this.sAuthorId = "ALL";
+      this.sAuthorName = "";
       if (this.byId("searchField")) { this.byId("searchField").setValue(""); }
       if (this.byId("stockFilter")) { this.byId("stockFilter").setSelectedKey("ALL"); }
       if (this.byId("authorFilter")) { this.byId("authorFilter").setSelectedKey("ALL"); }
@@ -97,44 +110,42 @@ sap.ui.define([
     },
 
     onSort: function () {
-      this._bSortDesc = !this._bSortDesc;
+      this.bSortDesc = !this.bSortDesc;
       var oBinding = this.byId("booksTable").getBinding("items");
       if (oBinding) {
-        oBinding.sort([new Sorter("title", this._bSortDesc)]);
+        oBinding.sort([new Sorter("title", this.bSortDesc)]);
       }
     },
 
     onRefresh: function () {
       var oBinding = this.byId("booksTable").getBinding("items");
       if (oBinding) { oBinding.refresh(); }
-      this._loadAuthors();
+      this.loadAuthors(); // Updated call without underscore
     },
 
-    // onBookPress: function (oEvent) {
-    //   var sBookId = oEvent.getSource().getBindingContext().getProperty("ID");
-    //   this.getOwnerComponent().getRouter().navTo("bookDetail", { bookId: sBookId });
-    // },
-
     onBookPress: function (oEvent) {
-  var sBookId = oEvent.getSource().getBindingContext().getProperty("ID");
+      var sBookId = oEvent.getSource().getBindingContext().getProperty("ID");
+      this.getOwnerComponent().setFclLayout("TwoColumnsMidExpanded");
+      this.getOwnerComponent().getRouter().navTo("bookDetail", {
+        bookId: sBookId
+      });
+    },
 
-  this.getOwnerComponent().setFclLayout("TwoColumnsMidExpanded");
-  this.getOwnerComponent().getRouter().navTo("bookDetail", {
-    bookId: sBookId
-  });
-},
+        onCreateOrder: function () {
+      // 1. Force the FCL layout model to take over the whole screen instantly
+      this.getOwnerComponent().setFclLayout("OneColumn");
 
-    onCreateOrder: function () {
+      // 2. Instruct the router to change the URL pattern path
       this.getOwnerComponent().getRouter().navTo("createOrder");
     },
 
-    /* ===== dialogs via helper ===== */
+
     onCreateBook: function () {
-      this._oEditContext = null;
+      this.oEditContext = null; // Renamed from _oEditContext
       BookDialogHelper.openForm(this, {
         mode: "create",
-        dialogTitle: this._text("createBook"),
-        confirmText: this._text("create"),
+        dialogTitle: this.fetchText("createBook"), // Updated function call
+        confirmText: this.fetchText("create"),    // Updated function call
         title: "",
         description: "",
         price: "",
@@ -144,13 +155,16 @@ sap.ui.define([
     },
 
     onEditBook: function (oEvent) {
-      var oCtx = oEvent.getSource().getBindingContext();
+      // Accepts direct event source or mock event objects seamlessly
+      var oSource = oEvent.getSource ? oEvent.getSource() : oEvent;
+      var oCtx = oSource.getBindingContext();
       var oBook = oCtx.getObject();
-      this._oEditContext = oCtx;
+      this.oEditContext = oCtx; // Renamed from _oEditContext
+      
       BookDialogHelper.openForm(this, {
         mode: "edit",
-        dialogTitle: this._text("editBook"),
-        confirmText: this._text("save"),
+        dialogTitle: this.fetchText("editBook"), // Updated function call
+        confirmText: this.fetchText("save"),     // Updated function call
         title: oBook.title,
         description: oBook.description || "",
         price: oBook.price,
@@ -171,7 +185,7 @@ sap.ui.define([
       var that = this;
       BookDialogHelper.saveBook(this, {
         afterChange: function () {
-          that._clearFilters();
+          that.clearFilters(); // Updated call without underscore
           that.onRefresh();
         }
       });
@@ -193,108 +207,94 @@ sap.ui.define([
         }
       });
     },
+
     onTableSelectionChange: function () {
-  var aSelected = this.byId("booksTable").getSelectedItems();
-  var iCount = aSelected.length;
+      var aSelected = this.byId("booksTable").getSelectedItems();
+      var iCount = aSelected.length;
 
-  var oEditBtn = this.byId("btnEditSelected");
-  var oDeleteBtn = this.byId("btnDeleteSelected");
+      var oEditBtn = this.byId("btnEditSelected");
+      var oDeleteBtn = this.byId("btnDeleteSelected");
 
-  // 0 selected → both disabled
-  // 1 selected → both enabled
-  // 2+ selected → only delete enabled
-  if (oEditBtn) {
-    oEditBtn.setEnabled(iCount === 1);
-  }
-  if (oDeleteBtn) {
-    oDeleteBtn.setEnabled(iCount >= 1);
-  }
-},
-
-onEditSelected: function () {
-  var aSelected = this.byId("booksTable").getSelectedItems();
-  if (aSelected.length !== 1) {
-    return;
-  }
-
-  // reuse same edit flow as before
-  var oCtx = aSelected[0].getBindingContext();
-  var oBook = oCtx.getObject();
-  this._oEditContext = oCtx;
-
-  BookDialogHelper.openForm(this, {
-    mode: "edit",
-    dialogTitle: this._text("editBook"),
-    confirmText: this._text("save"),
-    title: oBook.title,
-    description: oBook.description || "",
-    price: oBook.price,
-    stock: oBook.stock,
-    author_ID: oBook.author_ID || (oBook.author && oBook.author.ID) || ""
-  });
-},
-
-onDeleteSelected: function () {
-  var aSelected = this.byId("booksTable").getSelectedItems();
-  if (!aSelected.length) {
-    return;
-  }
-
-  // one selected → existing single delete dialog
-  if (aSelected.length === 1) {
-    BookDialogHelper.openDelete(this, aSelected[0].getBindingContext());
-    return;
-  }
-
-  // many selected → confirm then delete all
-  var that = this;
-  sap.m.MessageBox.confirm(
-    "Delete " + aSelected.length + " selected books?",
-    {
-      title: this._text("deleteBook"),
-      actions: [sap.m.MessageBox.Action.DELETE, sap.m.MessageBox.Action.CANCEL],
-      emphasizedAction: sap.m.MessageBox.Action.DELETE,
-      onClose: function (sAction) {
-        if (sAction !== sap.m.MessageBox.Action.DELETE) {
-          return;
-        }
-        that._deleteSelectedBooks(aSelected);
+      if (oEditBtn) {
+        oEditBtn.setEnabled(iCount === 1);
       }
-    }
-  );
-},
+      if (oDeleteBtn) {
+        oDeleteBtn.setEnabled(iCount >= 1);
+      }
+    },
 
-_deleteSelectedBooks: function (aSelected) {
-  var that = this;
-  var aPromises = aSelected.map(function (oItem) {
-    var sId = oItem.getBindingContext().getProperty("ID");
-    return fetch("/odata/v4/catalog/Books(" + sId + ")", {
-      method: "DELETE",
-      headers: { "Accept": "application/json" }
-    }).then(function (oResponse) {
-      if (oResponse.status === 404) {
+    onEditSelected: function () {
+      var aSelected = this.byId("booksTable").getSelectedItems();
+      if (aSelected.length !== 1) {
         return;
       }
-      if (!oResponse.ok && oResponse.status !== 204) {
-        return oResponse.text().then(function (sText) {
-          throw new Error(sText || ("HTTP " + oResponse.status));
-        });
-      }
-    });
-  });
+      // REUSE OPTIMIZATION: Calls clean onEditBook logic passing row source directly
+      this.onEditBook(aSelected[0]);
+    },
 
-  Promise.all(aPromises)
-    .then(function () {
-      sap.m.MessageToast.show(that._text("bookDeleted"));
-      that.byId("booksTable").removeSelections(true);
-      that.onTableSelectionChange();
-      that.onRefresh();
-    })
-    .catch(function (oError) {
-      console.error(oError);
-      sap.m.MessageBox.error(that._text("deleteFailed"));
-    });
-},
+    onDeleteSelected: function () {
+      var aSelected = this.byId("booksTable").getSelectedItems();
+      if (!aSelected.length) {
+        return;
+      }
+
+      if (aSelected.length === 1) {
+        BookDialogHelper.openDelete(this, aSelected[0].getBindingContext());
+        return;
+      }
+
+      var that = this;
+      sap.m.MessageBox.confirm(
+        "Delete " + aSelected.length + " selected books?",
+        {
+          title: this.fetchText("deleteBook"), // Updated function call
+          actions: [sap.m.MessageBox.Action.DELETE, sap.m.MessageBox.Action.CANCEL],
+          emphasizedAction: sap.m.MessageBox.Action.DELETE,
+          onClose: function (sAction) {
+            if (sAction !== sap.m.MessageBox.Action.DELETE) {
+              return;
+            }
+            that.deleteSelectedBooks(aSelected); // Updated call without underscore
+          }
+        }
+      );
+    },
+    /**
+     * Loops through all checked records to execute batch deletion requests against the CAP server.
+     */
+    deleteSelectedBooks: function (aSelected) { // Renamed from _deleteSelectedBooks to remove underscore
+      var that = this;
+      var aPromises = aSelected.map(function (oItem) {
+        var sId = oItem.getBindingContext().getProperty("ID");
+        return fetch("/odata/v4/catalog/Books(" + sId + ")", {
+          method: "DELETE",
+          headers: { "Accept": "application/json" }
+        }).then(function (oResponse) {
+          if (oResponse.status === 404) {
+            return;
+          }
+          if (!oResponse.ok && oResponse.status !== 204) {
+            return oResponse.text().then(function (sText) {
+              throw new Error(sText || ("HTTP " + oResponse.status));
+            });
+          }
+        });
+      });
+
+      Promise.all(aPromises)
+        .then(function () {
+          // Replaced _text call with clean fetchText method
+          sap.m.MessageToast.show(that.fetchText("bookDeleted"));
+          that.byId("booksTable").removeSelections(true);
+          that.onTableSelectionChange();
+          that.onRefresh();
+        })
+        .catch(function (oError) {
+          console.error(oError);
+          // Replaced _text call with clean fetchText method
+          sap.m.MessageBox.error(that.fetchText("deleteFailed"));
+        });
+    }
 
   });
 });
