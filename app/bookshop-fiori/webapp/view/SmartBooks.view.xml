@@ -14,18 +14,22 @@
     navButtonPress=".onNavBack"
     enableScrolling="false">
 
-    <content>
-      <VBox fitContainer="true" height="100%" class="sapUiNoContentPadding">
+    <headerContent>
       <Button
-  text="Preview PDF"
-  icon="sap-icon://pdf-attachment"
-  press=".onOpenPdf" />
+        text="Preview PDF"
+        icon="sap-icon://pdf-attachment"
+        press=".onOpenPdf" />
+    </headerContent>
+
+    <content>
+      <VBox height="100%" fitContainer="true" width="100%">
 
         <smartFilterBar:SmartFilterBar
           id="smartFilterBar"
           entitySet="Books"
           persistencyKey="SmartBooksFilterBar"
-          enableBasicSearch="true" />
+          enableBasicSearch="true"
+          width="100%" />
 
         <smartTable:SmartTable
           id="smartBooksTable"
@@ -37,7 +41,6 @@
           enableAutoBinding="true"
           enableAutoColumnWidth="true"
           fitContainer="true"
-          class="sapUiTinyMarginTop"
           width="100%"
           beforeRebindTable=".onBeforeRebindTable">
 
