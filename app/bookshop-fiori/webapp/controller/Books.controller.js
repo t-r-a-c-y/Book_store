@@ -4,9 +4,27 @@ sap.ui.define([
   "sap/ui/model/FilterOperator",
   "sap/ui/model/Sorter",
   "sap/ui/model/json/JSONModel",
+  "sap/ui/core/Fragment",
+  "sap/m/MessageToast",
+  "sap/m/MessageBox",
+  "sap/ui/core/message/Message",
+  "sap/ui/core/MessageType",
   "ns/bookshopfiori/model/formatter",
   "ns/bookshopfiori/controller/helpers/BookDialogHelper"
-], function (Controller, Filter, FilterOperator, Sorter, JSONModel, formatter, BookDialogHelper) {
+], function (
+  Controller,
+  Filter,
+  FilterOperator,
+  Sorter,
+  JSONModel,
+  Fragment,
+  MessageToast,
+  MessageBox,
+  Message,
+  MessageType,
+  formatter,
+  BookDialogHelper
+) {
   "use strict";
 
   return Controller.extend("ns.bookshopfiori.controller.Books", {
@@ -14,34 +32,28 @@ sap.ui.define([
     formatter: formatter,
 
     onInit: function () {
-      // Clean naming convention (Hungarian Notation) properties - removed all underscores
       this.sSearchQuery = "";
       this.sStockKey = "ALL";
       this.sAuthorId = "ALL";
       this.sAuthorName = "";
       this.bSortDesc = false;
+      this.oEditContext = null;
+
       var oMessageManager = sap.ui.getCore().getMessageManager();
-this.getView().setModel(oMessageManager.getMessageModel(), "message");
+      this.getView().setModel(oMessageManager.getMessageModel(), "message");
 
       this.getView().setModel(new JSONModel([
         { key: "ALL", text: "All Authors" }
       ]), "authors");
 
-      this.loadAuthors(); // Updated call without underscore
+      this.loadAuthors();
     },
 
-    
-    /**
-     * Helper function to fetch translation text from i18n bundle.
-     */
-    fetchText: function (sKey) { // Renamed from _text
+    fetchText: function (sKey) {
       return this.getView().getModel("i18n").getResourceBundle().getText(sKey);
     },
 
-    /**
-     * Loads author metadata items from the server backend.
-     */
-    loadAuthors: function () { // Renamed from _loadAuthors
+    loadAuthors: function () {
       var oModel = this.getOwnerComponent().getModel();
       var that = this;
       if (!oModel) {
@@ -60,26 +72,24 @@ this.getView().setModel(oMessageManager.getMessageModel(), "message");
 
     onSearch: function (oEvent) {
       this.sSearchQuery = oEvent.getParameter("newValue") || "";
-      this.applyFilters(); // Updated call without underscore
+      this.applyFilters();
     },
 
     onFilterStock: function (oEvent) {
       this.sStockKey = oEvent.getSource().getSelectedKey() || "ALL";
-      this.applyFilters(); // Updated call without underscore
+      this.applyFilters();
     },
 
     onFilterAuthor: function (oEvent) {
       var oItem = oEvent.getSource().getSelectedItem();
       this.sAuthorId = oEvent.getSource().getSelectedKey() || "ALL";
       this.sAuthorName = oItem ? oItem.getText() : "";
-      this.applyFilters(); // Updated call without underscore
+      this.applyFilters();
     },
 
-    /**
-     * Builds and aggregates operational query filters onto the books table dataset.
-     */
-    applyFilters: function () { // Renamed from _applyFilters
+    applyFilters: function () {
       var aFilters = [];
+
       if (this.sSearchQuery) {
         aFilters.push(new Filter("title", FilterOperator.Contains, this.sSearchQuery));
       }
@@ -91,25 +101,33 @@ this.getView().setModel(oMessageManager.getMessageModel(), "message");
       } else if (this.sStockKey === "OUT_OF_STOCK") {
         aFilters.push(new Filter("stock", FilterOperator.EQ, 0));
       }
+
       var oBinding = this.byId("booksTable").getBinding("items");
       if (oBinding) {
         oBinding.filter(aFilters);
       }
     },
 
-    /**
-     * Resets layout filter elements back to default criteria states.
-     */
-    clearFilters: function () { // Renamed from _clearFilters
+    clearFilters: function () {
       this.sSearchQuery = "";
       this.sStockKey = "ALL";
       this.sAuthorId = "ALL";
       this.sAuthorName = "";
-      if (this.byId("searchField")) { this.byId("searchField").setValue(""); }
-      if (this.byId("stockFilter")) { this.byId("stockFilter").setSelectedKey("ALL"); }
-      if (this.byId("authorFilter")) { this.byId("authorFilter").setSelectedKey("ALL"); }
+
+      if (this.byId("searchField")) {
+        this.byId("searchField").setValue("");
+      }
+      if (this.byId("stockFilter")) {
+        this.byId("stockFilter").setSelectedKey("ALL");
+      }
+      if (this.byId("authorFilter")) {
+        this.byId("authorFilter").setSelectedKey("ALL");
+      }
+
       var oBinding = this.byId("booksTable").getBinding("items");
-      if (oBinding) { oBinding.filter([]); }
+      if (oBinding) {
+        oBinding.filter([]);
+      }
     },
 
     onSort: function () {
@@ -120,17 +138,34 @@ this.getView().setModel(oMessageManager.getMessageModel(), "message");
       }
     },
 
+    runWithBusy: function (fnJob) {
+      var oView = this.getView();
+      oView.setBusyIndicatorDelay(0);
+      oView.setBusy(true);
+
+      return Promise.resolve()
+        .then(fnJob)
+        .catch(function (oError) {
+          console.error(oError);
+          MessageBox.error("Request failed");
+          throw oError;
+        })
+        .finally(function () {
+          oView.setBusy(false);
+        });
+    },
+
     onRefresh: function () {
-  var that = this;
-  this._runWithBusy(function () {
-    var oBinding = that.byId("booksTable").getBinding("items");
-    if (oBinding) {
-      return Promise.resolve(oBinding.refresh());
-    }
-  }).then(function () {
-    that.loadAuthors && that.loadAuthors();
-  });
-},
+      var that = this;
+      this.runWithBusy(function () {
+        var oBinding = that.byId("booksTable").getBinding("items");
+        if (oBinding) {
+          return Promise.resolve(oBinding.refresh());
+        }
+      }).then(function () {
+        that.loadAuthors();
+      });
+    },
 
     onBookPress: function (oEvent) {
       var sBookId = oEvent.getSource().getBindingContext().getProperty("ID");
@@ -140,21 +175,22 @@ this.getView().setModel(oMessageManager.getMessageModel(), "message");
       });
     },
 
-     onCreateOrder: function () {
-  // if using FCL, show one column for this page
-  if (this.getOwnerComponent().setFclLayout) {
-    this.getOwnerComponent().setFclLayout("OneColumn");
-  }
-  this.getOwnerComponent().getRouter().navTo("createOrder");
-},
+    onCreateOrder: function () {
+      this.getOwnerComponent().setFclLayout("OneColumn");
+      this.getOwnerComponent().getRouter().navTo("createOrder");
+    },
 
+    onOpenSmartBooks: function () {
+      this.getOwnerComponent().setFclLayout("OneColumn");
+      this.getOwnerComponent().getRouter().navTo("smartBooks");
+    },
 
     onCreateBook: function () {
-      this.oEditContext = null; // Renamed from _oEditContext
+      this.oEditContext = null;
       BookDialogHelper.openForm(this, {
         mode: "create",
-        dialogTitle: this.fetchText("createBook"), // Updated function call
-        confirmText: this.fetchText("create"),    // Updated function call
+        dialogTitle: this.fetchText("createBook"),
+        confirmText: this.fetchText("create"),
         title: "",
         description: "",
         price: "",
@@ -163,23 +199,35 @@ this.getView().setModel(oMessageManager.getMessageModel(), "message");
       });
     },
 
-    onEditBook: function (oEvent) {
-      // Accepts direct event source or mock event objects seamlessly
-      var oSource = oEvent.getSource ? oEvent.getSource() : oEvent;
-      var oCtx = oSource.getBindingContext();
+    openEditFromContext: function (oCtx) {
+      if (!oCtx) {
+        return;
+      }
       var oBook = oCtx.getObject();
-      this.oEditContext = oCtx; // Renamed from _oEditContext
-      
+      this.oEditContext = oCtx;
+
       BookDialogHelper.openForm(this, {
         mode: "edit",
-        dialogTitle: this.fetchText("editBook"), // Updated function call
-        confirmText: this.fetchText("save"),     // Updated function call
+        dialogTitle: this.fetchText("editBook"),
+        confirmText: this.fetchText("save"),
         title: oBook.title,
         description: oBook.description || "",
         price: oBook.price,
         stock: oBook.stock,
         author_ID: oBook.author_ID || (oBook.author && oBook.author.ID) || ""
       });
+    },
+
+    onEditBook: function (oEvent) {
+      var oSource = oEvent.getSource ? oEvent.getSource() : oEvent;
+      this.openEditFromContext(oSource.getBindingContext());
+    },
+
+    onEditSelected: function () {
+      var aSelected = this.byId("booksTable").getSelectedItems();
+      if (aSelected.length === 1) {
+        this.openEditFromContext(aSelected[0].getBindingContext());
+      }
     },
 
     onBookFieldChange: function (oEvent) {
@@ -194,7 +242,7 @@ this.getView().setModel(oMessageManager.getMessageModel(), "message");
       var that = this;
       BookDialogHelper.saveBook(this, {
         afterChange: function () {
-          that.clearFilters(); // Updated call without underscore
+          that.clearFilters();
           that.onRefresh();
         }
       });
@@ -218,9 +266,7 @@ this.getView().setModel(oMessageManager.getMessageModel(), "message");
     },
 
     onTableSelectionChange: function () {
-      var aSelected = this.byId("booksTable").getSelectedItems();
-      var iCount = aSelected.length;
-
+      var iCount = this.byId("booksTable").getSelectedItems().length;
       var oEditBtn = this.byId("btnEditSelected");
       var oDeleteBtn = this.byId("btnDeleteSelected");
 
@@ -230,15 +276,6 @@ this.getView().setModel(oMessageManager.getMessageModel(), "message");
       if (oDeleteBtn) {
         oDeleteBtn.setEnabled(iCount >= 1);
       }
-    },
-
-    onEditSelected: function () {
-      var aSelected = this.byId("booksTable").getSelectedItems();
-      if (aSelected.length !== 1) {
-        return;
-      }
-      // REUSE OPTIMIZATION: Calls clean onEditBook logic passing row source directly
-      this.onEditBook(aSelected[0]);
     },
 
     onDeleteSelected: function () {
@@ -253,78 +290,19 @@ this.getView().setModel(oMessageManager.getMessageModel(), "message");
       }
 
       var that = this;
-      sap.m.MessageBox.confirm(
-        "Delete " + aSelected.length + " selected books?",
-        {
-          title: this.fetchText("deleteBook"), // Updated function call
-          actions: [sap.m.MessageBox.Action.DELETE, sap.m.MessageBox.Action.CANCEL],
-          emphasizedAction: sap.m.MessageBox.Action.DELETE,
-          onClose: function (sAction) {
-            if (sAction !== sap.m.MessageBox.Action.DELETE) {
-              return;
-            }
-            that.deleteSelectedBooks(aSelected); // Updated call without underscore
+      MessageBox.confirm("Delete " + aSelected.length + " selected books?", {
+        title: this.fetchText("deleteBook"),
+        actions: [MessageBox.Action.DELETE, MessageBox.Action.CANCEL],
+        emphasizedAction: MessageBox.Action.DELETE,
+        onClose: function (sAction) {
+          if (sAction === MessageBox.Action.DELETE) {
+            that.deleteSelectedBooks(aSelected);
           }
         }
-      );
+      });
     },
-    onOpenSmartBooks: function () {
-  if (this.getOwnerComponent().setFclLayout) {
-    this.getOwnerComponent().setFclLayout("OneColumn");
-  }
-  this.getOwnerComponent().getRouter().navTo("smartBooks");
-},
 
-  onMessagePopoverPress: function (oEvent) {
-  var oButton = oEvent.getSource();
-  var that = this;
-
-  if (!this._pMessagePopover) {
-    this._pMessagePopover = sap.ui.core.Fragment.load({
-      id: this.getView().getId(),
-      name: "ns.bookshopfiori.view.MessagePopover",
-      controller: this
-    }).then(function (oPopover) {
-      that.getView().addDependent(oPopover);
-      return oPopover;
-    });
-  }
-
-  this._pMessagePopover.then(function (oPopover) {
-    oPopover.openBy(oButton);
-  });
-},
-
-addMessage: function (sText, sType) {
-  sap.ui.getCore().getMessageManager().addMessages(
-    new sap.ui.core.message.Message({
-      message: sText,
-      type: sType || sap.ui.core.MessageType.Error,
-      processor: this.getView().getModel()
-    })
-  );
-},
-
-runWithBusy: function (fnJob) {
-  var oView = this.getView();
-  oView.setBusyIndicatorDelay(0);
-  oView.setBusy(true);
-
-  return Promise.resolve()
-    .then(fnJob)
-    .catch(function (oError) {
-      console.error(oError);
-      sap.m.MessageBox.error("Request failed");
-      throw oError;
-    })
-    .finally(function () {
-      oView.setBusy(false);
-    });
-},
-    /**
-     * Loops through all checked records to execute batch deletion requests against the CAP server.
-     */
-    deleteSelectedBooks: function (aSelected) { // Renamed from _deleteSelectedBooks to remove underscore
+    deleteSelectedBooks: function (aSelected) {
       var that = this;
       var aPromises = aSelected.map(function (oItem) {
         var sId = oItem.getBindingContext().getProperty("ID");
@@ -343,18 +321,80 @@ runWithBusy: function (fnJob) {
         });
       });
 
-      this._runWithBusy(function () {
-  return Promise.all(aPromises);
-}).then(function () {
-  sap.m.MessageToast.show(that.fetchText("bookDeleted"));
-  that.byId("booksTable").removeSelections(true);
-  that.onTableSelectionChange();
-  that.onRefresh();
-}).catch(function (oError) {
-          console.error(oError);
-          // Replaced _text call with clean fetchText method
-          sap.m.MessageBox.error(that.fetchText("deleteFailed"));
+      this.runWithBusy(function () {
+        return Promise.all(aPromises);
+      }).then(function () {
+        MessageToast.show(that.fetchText("bookDeleted"));
+        that.addMessage(that.fetchText("bookDeleted"), MessageType.Success);
+        that.byId("booksTable").removeSelections(true);
+        that.onTableSelectionChange();
+        that.onRefresh();
+      }).catch(function (oError) {
+        console.error(oError);
+        MessageBox.error(that.fetchText("deleteFailed"));
+        that.addMessage(that.fetchText("deleteFailed"), MessageType.Error);
+      });
+    },
+
+    onMessagePopoverPress: function (oEvent) {
+      var oButton = oEvent.getSource();
+      var that = this;
+
+      if (!this.pMessagePopover) {
+        this.pMessagePopover = Fragment.load({
+          id: this.getView().getId(),
+          name: "ns.bookshopfiori.view.MessagePopover",
+          controller: this
+        }).then(function (oPopover) {
+          that.getView().addDependent(oPopover);
+          return oPopover;
         });
+      }
+
+      this.pMessagePopover.then(function (oPopover) {
+        oPopover.openBy(oButton);
+      });
+    },
+
+    addMessage: function (sText, sType) {
+      sap.ui.getCore().getMessageManager().addMessages(
+        new Message({
+          message: sText,
+          type: sType || MessageType.Error,
+          processor: this.getView().getModel()
+        })
+      );
+    },
+
+    onOpenPdf: function () {
+      var oView = this.getView();
+      oView.setModel(new JSONModel({
+        source: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        title: "Book Catalog Sample"
+      }), "pdf");
+
+      if (!this.pPdfDialog) {
+        this.pPdfDialog = Fragment.load({
+          id: oView.getId(),
+          name: "ns.bookshopfiori.view.PdfPreviewDialog",
+          controller: this
+        }).then(function (oDialog) {
+          oView.addDependent(oDialog);
+          return oDialog;
+        });
+      }
+
+      this.pPdfDialog.then(function (oDialog) {
+        oDialog.open();
+      });
+    },
+
+    onPdfError: function () {
+      MessageBox.error("Could not load the PDF document.");
+    },
+
+    onClosePdf: function () {
+      this.byId("pdfDialog").close();
     }
 
   });
