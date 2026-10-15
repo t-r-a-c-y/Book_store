@@ -10,18 +10,15 @@
   height="100%"
   displayBlock="true">
 
-  <!-- Added useIconTabBar="true" to switch sections into side-by-side tabs -->
   <uxap:ObjectPageLayout
     id="bookObjectPage"
     useIconTabBar="true"
     upperCaseAnchorBar="false"
     showTitleInHeaderContent="true">
 
-    <!-- ================= HEADER TITLE ================= -->
     <uxap:headerTitle>
       <uxap:ObjectPageDynamicHeaderTitle>
 
-        <!-- Added Breadcrumbs Trail Element -->
         <uxap:breadcrumbs>
           <Breadcrumbs>
             <Link text="Home" press=".onNavHome" />
@@ -30,10 +27,8 @@
           </Breadcrumbs>
         </uxap:breadcrumbs>
 
-        <!-- Main Title Zone: Formatted horizontally to show Image -> Title -> Subtitle (Author) -->
         <uxap:heading>
           <HBox alignItems="Center">
-            <!-- 1. The Image is displayed first -->
             <Avatar
               id="bookCoverExpanded"
               src="{coverUrl}"
@@ -41,16 +36,21 @@
               displayShape="Square"
               fallbackIcon="sap-icon://document-text"
               class="sapUiSmallMarginEnd" />
-            
-            <!-- 2. Followed by a vertical container housing Title and Subtitle -->
             <VBox>
-              <Title text="{title}" level="H2" />
-              <Text text="{author/name}" class="sapUiTinyMarginTop sapUiMutedText" />
+              <!-- VIEW -->
+              <Title text="{title}" level="H2" visible="{= !${ui>/editMode} }" />
+              <!-- EDIT -->
+              <Input
+                value="{title}"
+                visible="{= ${ui>/editMode} }"
+                valueState="{ui>/titleState}"
+                valueStateText="{ui>/titleStateText}"
+                width="20rem" />
+              <Text text="{author/name}" class="sapUiTinyMarginTop sapUiMutedText" visible="{= !${ui>/editMode} }" />
             </VBox>
           </HBox>
         </uxap:heading>
 
-        <!-- Snapped Heading layout when the page scrolls up -->
         <uxap:snappedHeading>
           <HBox alignItems="Center">
             <Avatar
@@ -67,59 +67,105 @@
           </HBox>
         </uxap:snappedHeading>
 
-        <!-- Cleared original separate content locations to avoid text redundancy in layout -->
         <uxap:expandedContent />
         <uxap:snappedContent />
 
-        <!-- Actions Toolbar Panel -->
         <uxap:actions>
+          <!-- VIEW -->
           <Button
             text="{i18n>edit}"
             icon="sap-icon://edit"
             type="Emphasized"
-            press=".onEditBook" />
-            
+            press=".onEditBook"
+            visible="{= !${ui>/editMode} }" />
           <Button
             text="{i18n>delete}"
             icon="sap-icon://delete"
             type="Transparent"
-            press=".onDeleteBook" />
+            press=".onDeleteBook"
+            visible="{= !${ui>/editMode} }" />
 
-          <!-- New File Uploader element added directly to the same action toolbar row -->
+          <!-- EDIT -->
+          <Button
+            text="{i18n>save}"
+            icon="sap-icon://save"
+            type="Emphasized"
+            press=".onSaveEdit"
+            visible="{= ${ui>/editMode} }" />
+          <Button
+            text="{i18n>Cancel}"
+            type="Transparent"
+            press=".onCancelEdit"
+            visible="{= ${ui>/editMode} }" />
+
           <u:FileUploader
             id="coverUploader"
             name="cover"
             fileType="jpg,jpeg,png,gif,webp"
             maximumFileSize="5"
-            fileSizeExceed =".onFileSizeExceed"
+            fileSizeExceed=".onFileSizeExceed"
             buttonOnly="true"
             buttonText="Upload Cover"
             icon="sap-icon://upload"
             style="Transparent"
-            change=".onCoverChange" />
+            change=".onCoverChange"
+            visible="{= !${ui>/editMode} }" />
 
           <Button
             icon="sap-icon://nav-back"
             type="Transparent"
             tooltip="Back"
-            press=".onNavBack" />
+            press=".onNavBack"
+            visible="{= !${ui>/editMode} }" />
         </uxap:actions>
 
       </uxap:ObjectPageDynamicHeaderTitle>
     </uxap:headerTitle>
 
-    <!-- ================= HEADER CONTENT ================= -->
     <uxap:headerContent>
       <layout:VerticalLayout class="sapUiMediumMarginEnd">
-        <ObjectAttribute title="{i18n>Price}" text="{price} EUR" />
-        <ObjectAttribute title="{i18n>Stock}" text="{stock}" />
+        <ObjectAttribute title="{i18n>Price}" text="{price} EUR" visible="{= !${ui>/editMode} }" />
+        <Label text="{i18n>Price}" visible="{= ${ui>/editMode} }" />
+        <Input
+          type="Number"
+          value="{price}"
+          visible="{= ${ui>/editMode} }"
+          valueState="{ui>/priceState}"
+          valueStateText="{ui>/priceStateText}"
+          width="8rem" />
+
+        <ObjectAttribute title="{i18n>Stock}" text="{stock}" visible="{= !${ui>/editMode} }" />
+        <Label text="{i18n>Stock}" visible="{= ${ui>/editMode} }" class="sapUiTinyMarginTop" />
+        <Input
+          type="Number"
+          value="{stock}"
+          visible="{= ${ui>/editMode} }"
+          valueState="{ui>/stockState}"
+          valueStateText="{ui>/stockStateText}"
+          width="8rem" />
       </layout:VerticalLayout>
 
       <layout:VerticalLayout class="sapUiMediumMarginEnd">
-        <ObjectAttribute title="{i18n>Author}" text="{author/name}" />
+        <ObjectAttribute title="{i18n>Author}" text="{author/name}" visible="{= !${ui>/editMode} }" />
+        <Label text="{i18n>Author}" visible="{= ${ui>/editMode} }" />
+        <Select
+          forceSelection="false"
+          selectedKey="{author_ID}"
+          visible="{= ${ui>/editMode} }"
+          valueState="{ui>/authorState}"
+          valueStateText="{ui>/authorStateText}"
+          width="12rem"
+          items="{
+            path: '/Authors',
+            sorter: { path: 'name' }
+          }">
+          <core:Item key="{ID}" text="{name}" />
+        </Select>
+
         <ObjectStatus
           text="{ path: 'stock', formatter: '.formatter.stockStatusText' }"
-          state="{ path: 'stock', formatter: '.formatter.stockStatusState' }" />
+          state="{ path: 'stock', formatter: '.formatter.stockStatusState' }"
+          visible="{= !${ui>/editMode} }" />
       </layout:VerticalLayout>
 
       <layout:VerticalLayout>
@@ -131,48 +177,49 @@
       </layout:VerticalLayout>
     </uxap:headerContent>
 
-    <!-- ================= SECTIONS (NOW SWAPPING AS TABS) ================= -->
     <uxap:sections>
       <uxap:ObjectPageSection title="Description" titleUppercase="false">
         <uxap:subSections>
           <uxap:ObjectPageSubSection title="About this book">
             <VBox class="sapUiSmallMargin">
               <Text
-                text="{= ${description} ? ${description} : 'No description available.' }" />
+                text="{= ${description} ? ${description} : 'No description available.' }"
+                visible="{= !${ui>/editMode} }" />
+              <TextArea
+                value="{description}"
+                rows="5"
+                width="100%"
+                visible="{= ${ui>/editMode} }"
+                valueState="{ui>/descriptionState}"
+                valueStateText="{ui>/descriptionStateText}" />
             </VBox>
           </uxap:ObjectPageSubSection>
         </uxap:subSections>
       </uxap:ObjectPageSection>
 
-      <!-- ================= SECTION: Details ================= -->
       <uxap:ObjectPageSection title="Details" titleUppercase="false">
         <uxap:subSections>
           <uxap:ObjectPageSubSection title="Book information">
             <layout:HorizontalLayout allowWrapping="true" class="sapUiSmallMargin">
-
               <layout:VerticalLayout class="sapUiLargeMarginEnd">
                 <ObjectAttribute title="{i18n>Title}" text="{title}" />
                 <ObjectAttribute title="{i18n>Author}" text="{author/name}" />
               </layout:VerticalLayout>
-
               <layout:VerticalLayout class="sapUiLargeMarginEnd">
                 <ObjectAttribute title="{i18n>Price}" text="{price} EUR" />
                 <ObjectAttribute title="{i18n>Stock}" text="{stock}" />
               </layout:VerticalLayout>
-
               <layout:VerticalLayout>
                 <ObjectAttribute title="Availability" />
                 <ObjectStatus
                   text="{ path: 'stock', formatter: '.formatter.stockStatusText' }"
                   state="{ path: 'stock', formatter: '.formatter.stockStatusState' }" />
               </layout:VerticalLayout>
-
             </layout:HorizontalLayout>
           </uxap:ObjectPageSubSection>
         </uxap:subSections>
       </uxap:ObjectPageSection>
 
-      <!-- ================= SECTION: Rating ================= -->
       <uxap:ObjectPageSection title="Rating" titleUppercase="false">
         <uxap:subSections>
           <uxap:ObjectPageSubSection title="Your rating">
