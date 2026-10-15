@@ -21,10 +21,10 @@ sap.ui.define([], function () {
     },
 
     toBookCreate: function (oController) {
-      var oComponent = oController.getOwnerComponent();
-      oComponent.setFclLayout("OneColumn");
-      oComponent.getRouter().navTo("bookCreate", {}, true);
-    },
+  var oComponent = oController.getOwnerComponent();
+  oComponent.setFclLayout("OneColumn");
+  oComponent.getRouter().navTo("bookCreate", {}, true);
+}, 
 
     toBookDetail: function (oController, sBookId, bEdit) {
       var oComponent = oController.getOwnerComponent();

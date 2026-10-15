@@ -10,11 +10,12 @@ sap.ui.define([
   "sap/ui/core/message/Message",
   "sap/ui/core/library",
   "ns/bookshopfiori/model/formatter",
-  "ns/bookshopfiori/controller/helpers/BookDialogHelper"
+  "ns/bookshopfiori/controller/helpers/BookDialogHelper",
+  "ns/bookshopfiori/controller/helpers/NavHelper"
 ], function (
   Controller, Filter, FilterOperator, Sorter, JSONModel,
   Fragment, MessageToast, MessageBox, Message, coreLibrary,
-  formatter, BookDialogHelper
+  formatter, BookDialogHelper, NavHelper
 ) {
   "use strict";
 
@@ -27,7 +28,7 @@ sap.ui.define([
     formatter: formatter,
 
     onInit: function () {
-      this.sSearchQuery = "";
+        this.sSearchQuery = "";
       this.sStockKey = "ALL";
       this.sAuthorId = "ALL";
       this.sAuthorName = "";

@@ -4,11 +4,13 @@
   xmlns="sap.m"
   xmlns:core="sap.ui.core"
   xmlns:f="sap.ui.layout.form"
+  xmlns:layout="sap.ui.layout"
   height="100%"
   displayBlock="true">
 
   <Page id="bookCreatePage" title="{i18n>createBook}" showNavButton="false">
 
+    <!-- Clean modern breadcrumbs mounting block -->
     <customHeader>
       <Bar>
         <contentLeft>
@@ -22,70 +24,119 @@
     </customHeader>
 
     <content>
-      <VBox class="sapUiMediumMargin">
-        <f:SimpleForm
-          editable="true"
-          layout="ResponsiveGridLayout"
-          labelSpanL="3"
-          labelSpanM="3"
-          columnsL="1"
-          columnsM="1">
+      <!-- Centered responsive layout grid container to make the form look gorgeous on large screens -->
+      <layout:Grid defaultSpan="XL9 L10 M12 S12" position="Center" class="sapUiSmallMarginTop">
+        
+        <VBox class="sapCard sapUiContentPadding">
+          <f:SimpleForm
+            id="bookCreateSimpleForm"
+            editable="true"
+            layout="ResponsiveGridLayout"
+            title="Book Specifications"
+            labelSpanXL="3"
+            labelSpanL="3"
+            labelSpanM="4"
+            labelSpanS="12"
+            adjustLabelSpan="false"
+            emptySpanXL="3"
+            emptySpanL="3"
+            emptySpanM="2"
+            emptySpanS="0"
+            columnsXL="1"
+            columnsL="1"
+            columnsM="1"
+            singleContainerFullHeight="false">
 
-          <f:content>
-            <Label text="{i18n>Title}" required="true" />
-            <Input
-              value="{form>/title}"
-              liveChange=".onFieldChange"
-              valueState="{form>/titleState}"
-              valueStateText="{form>/titleStateText}" />
+            <f:content>
+              <!-- Core Title Input Section -->
+              <core:Title text="General Information" />
+              
+              <Label text="{i18n>Title}" required="true" labelFor="inTitle" />
+              <Input
+                id="inTitle"
+                value="{form>/title}"
+                liveChange=".onFieldChange"
+                valueState="{form>/titleState}"
+                valueStateText="{form>/titleStateText}"
+                placeholder="e.g. Advanced SAPUI5 Architecture" />
 
-            <Label text="{i18n>Description}" />
-            <TextArea
-              value="{form>/description}"
-              rows="4"
-              liveChange=".onFieldChange"
-              valueState="{form>/descriptionState}"
-              valueStateText="{form>/descriptionStateText}" />
+              <Label text="{i18n>Author}" required="true" labelFor="inAuthor" />
+              <Select
+                id="inAuthor"
+                forceSelection="false"
+                selectedKey="{form>/author_ID}"
+                change=".onFieldChange"
+                width="100%"
+                valueState="{form>/authorState}"
+                valueStateText="{form>/authorStateText}"
+                items="{
+                  path: '/Authors',
+                  sorter: { path: 'name' }
+                }">
+                <core:Item key="{ID}" text="{name}" />
+              </Select>
 
-            <Label text="{i18n>Price}" required="true" />
-            <Input
-              type="Number"
-              value="{form>/price}"
-              liveChange=".onFieldChange"
-              valueState="{form>/priceState}"
-              valueStateText="{form>/priceStateText}" />
+              <Label text="{i18n>Description}" labelFor="inDescription" />
+              <TextArea
+                id="inDescription"
+                value="{form>/description}"
+                rows="5"
+                growing="true"
+                growingMaxLines="8"
+                liveChange=".onFieldChange"
+                valueState="{form>/descriptionState}"
+                valueStateText="{form>/descriptionStateText}"
+                placeholder="Provide a brief synopsis of the book contents..." />
 
-            <Label text="{i18n>Stock}" required="true" />
-            <Input
-              type="Number"
-              value="{form>/stock}"
-              liveChange=".onFieldChange"
-              valueState="{form>/stockState}"
-              valueStateText="{form>/stockStateText}" />
+              <!-- Operational Numbers Section -->
+              <core:Title text="Inventory &amp; Commercials" />
 
-            <Label text="{i18n>Author}" required="true" />
-            <Select
-              forceSelection="false"
-              selectedKey="{form>/author_ID}"
-              change=".onFieldChange"
-              width="100%"
-              valueState="{form>/authorState}"
-              valueStateText="{form>/authorStateText}"
-              items="{
-                path: '/Authors',
-                sorter: { path: 'name' }
-              }">
-              <core:Item key="{ID}" text="{name}" />
-            </Select>
-          </f:content>
-        </f:SimpleForm>
-      </VBox>
+              <Label text="{i18n>Price}" required="true" labelFor="inPrice" />
+              <Input
+                id="inPrice"
+                type="Number"
+                value="{form>/price}"
+                description="EUR"
+                fieldWidth="85%"
+                liveChange=".onFieldChange"
+                valueState="{form>/priceState}"
+                valueStateText="{form>/priceStateText}"
+                placeholder="0.00" />
+
+              <Label text="{i18n>Stock}" required="true" labelFor="inStock" />
+              <Input
+                id="inStock"
+                type="Number"
+                value="{form>/stock}"
+                description="Units"
+                fieldWidth="85%"
+                liveChange=".onFieldChange"
+                valueState="{form>/stockState}"
+                valueStateText="{form>/stockStateText}"
+                placeholder="0" />
+            </f:content>
+
+          </f:SimpleForm>
+        </VBox>
+
+      </layout:Grid>
     </content>
 
+    <!-- Footer Toolbar: Integrated Task 2 MessagePopover Status Alert Indicator -->
     <footer>
       <Toolbar>
+        <!-- Task 2 implementation: Clashes/Validation warning indicator button -->
+        <Button
+          id="btnMessagePopover"
+          icon="sap-icon://message-popup"
+          type="Reject"
+          text="0"
+          visible="false"
+          press=".onMessagePopoverPress" />
+          
         <ToolbarSpacer />
-        <Button text="{i18n>Cancel}" press=".onCancel" />
+        
+        <Button text="{i18n>Cancel}" type="Transparent" press=".onCancel" />
         <Button
           text="{i18n>create}"
           type="Emphasized"
@@ -93,5 +144,6 @@
           press=".onSave" />
       </Toolbar>
     </footer>
+
   </Page>
 </mvc:View>

@@ -121,15 +121,15 @@
           "target": ["smartBooks"]
         },
         {
-  "pattern": "book-form",
-  "name": "bookCreate",
-  "target": ["bookForm"]
-},
-{
-  "pattern": "book-form/{bookId}",
-  "name": "bookEdit",
-  "target": ["bookForm"]
-}
+          "pattern": "book-form",
+          "name": "bookCreate",
+          "target": ["bookCreate"]
+        },
+        {
+          "pattern": "book-form/{bookId}",
+          "name": "bookEdit",
+          "target": ["bookEdit"]
+        }
       ],
       "targets": {
         "books": {
@@ -143,21 +143,25 @@
           "viewLevel": 2
         },
         "createOrder": {
-  "viewId": "createOrder",
-  "viewName": "OrderWizard",
-  "controlAggregation": "beginColumnPages",
-  "viewLevel": 1
-},
+          "viewName": "OrderWizard",
+          "controlAggregation": "beginColumnPages",
+          "viewLevel": 1
+        },
         "smartBooks": {
           "viewName": "SmartBooks",
           "controlAggregation": "beginColumnPages",
           "viewLevel": 1
         },
         "bookCreate": {
-  "viewName": "BookCreate",
-  "controlAggregation": "beginColumnPages",
-  "viewLevel": 2
-}
+          "viewName": "BookCreate",
+          "controlAggregation": "beginColumnPages",
+          "viewLevel": 2
+        },
+        "bookEdit": {
+          "viewName": "BookCreate",
+          "controlAggregation": "beginColumnPages",
+          "viewLevel": 2
+        }
       }
     }
   }
