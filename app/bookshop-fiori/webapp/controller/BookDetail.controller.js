@@ -1,12 +1,22 @@
 sap.ui.define([
   "sap/ui/core/mvc/Controller",
-  "sap/ui/core/routing/History",
+  "sap/ui/model/json/JSONModel",
   "sap/m/MessageToast",
   "sap/m/MessageBox",
   "ns/bookshopfiori/model/formatter",
   "ns/bookshopfiori/controller/helpers/BookDialogHelper",
-  "ns/bookshopfiori/controller/helpers/NavHelper"
-], function (Controller, History, MessageToast, MessageBox, formatter, BookDialogHelper, NavHelper) {
+  "ns/bookshopfiori/controller/helpers/NavHelper",
+  "ns/bookshopfiori/controller/helpers/BookFormValidator"
+], function (
+  Controller,
+  JSONModel,
+  MessageToast,
+  MessageBox,
+  formatter,
+  BookDialogHelper,
+  NavHelper,
+  BookFormValidator
+) {
   "use strict";
 
   return Controller.extend("ns.bookshopfiori.controller.BookDetail", {
@@ -14,24 +24,34 @@ sap.ui.define([
     formatter: formatter,
 
     onInit: function () {
+      this.getView().setModel(new JSONModel({
+        editMode: false,
+        titleState: "None",
+        titleStateText: "",
+        descriptionState: "None",
+        descriptionStateText: "",
+        priceState: "None",
+        priceStateText: "",
+        stockState: "None",
+        stockStateText: "",
+        authorState: "None",
+        authorStateText: ""
+      }), "ui");
+
       this.getOwnerComponent()
         .getRouter()
         .getRoute("bookDetail")
-        .attachPatternMatched(this.onObjectMatched, this); // Removed underscore
+        .attachPatternMatched(this.onObjectMatched, this);
     },
 
-    /**
-     * Helper function to fetch translation text from i18n properties bundle.
-     */
-    fetchText: function (sKey) { // Renamed from _text to fetchText
+    fetchText: function (sKey) {
       return this.getView().getModel("i18n").getResourceBundle().getText(sKey);
     },
 
-    /**
-     * Binds the specific book data instance to the layout view template context.
-     */
-    onObjectMatched: function (oEvent) { // Renamed from _onObjectMatched
+    onObjectMatched: function (oEvent) {
       var sBookId = oEvent.getParameter("arguments").bookId;
+      this.getView().getModel("ui").setProperty("/editMode", false);
+
       this.getView().bindElement({
         path: "/Books(" + sBookId + ")",
         parameters: { $expand: "author" }
@@ -39,44 +59,104 @@ sap.ui.define([
     },
 
     onNavHome: function () {
-  NavHelper.toBooks(this);
-},
+      NavHelper.toBooks(this);
+    },
 
-onNavBooks: function () {
-  NavHelper.toBooks(this);
-},
+    onNavBooks: function () {
+      NavHelper.toBooks(this);
+    },
+
+    onNavBack: function () {
+      NavHelper.toBooks(this);
+    },
+
+    /* ========== EDIT ON OBJECT PAGE ========== */
 
     onEditBook: function () {
+      this.getView().getModel("ui").setProperty("/editMode", true);
+    },
+
+    onCancelEdit: function () {
+      var oUi = this.getView().getModel("ui");
+      oUi.setProperty("/editMode", false);
+
+      var oBinding = this.getView().getElementBinding();
+      if (oBinding) {
+        oBinding.refresh();
+      }
+    },
+
+    onSaveEdit: function () {
       var oCtx = this.getView().getBindingContext();
       if (!oCtx) {
         return;
       }
-      var oBook = oCtx.getObject();
-      this.oEditContext = oCtx; // Renamed from _oEditContext
 
-      BookDialogHelper.openForm(this, {
-        mode: "edit",
-        dialogTitle: this.fetchText("editBook"), // Updated function call
-        confirmText: this.fetchText("save"),     // Updated function call
+      var oBook = oCtx.getObject();
+      var oData = {
         title: oBook.title,
-        description: oBook.description || "",
+        description: oBook.description,
         price: oBook.price,
         stock: oBook.stock,
         author_ID: oBook.author_ID || (oBook.author && oBook.author.ID) || ""
+      };
+
+      var oResult = BookFormValidator.validate(oData, this.fetchText.bind(this));
+      var oUi = this.getView().getModel("ui");
+      Object.keys(oResult.states).forEach(function (sKey) {
+        oUi.setProperty("/" + sKey, oResult.states[sKey]);
       });
+
+      if (!oResult.valid) {
+        MessageBox.error(this.fetchText("formInvalid"));
+        return;
+      }
+
+      var that = this;
+      var oView = this.getView();
+      var sId = oCtx.getProperty("ID");
+      var oPayload = {
+        title: (oData.title || "").trim(),
+        description: oData.description || "",
+        price: parseFloat(oData.price),
+        stock: parseInt(oData.stock, 10),
+        author_ID: oData.author_ID
+      };
+
+      oView.setBusyIndicatorDelay(0);
+      oView.setBusy(true);
+
+      fetch("/odata/v4/catalog/Books(" + sId + ")", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(oPayload)
+      })
+        .then(function (oResponse) {
+          if (!oResponse.ok && oResponse.status !== 204) {
+            return oResponse.text().then(function (sText) {
+              throw new Error(sText || ("HTTP " + oResponse.status));
+            });
+          }
+          MessageToast.show(that.fetchText("bookUpdated"));
+          oUi.setProperty("/editMode", false);
+          var oBinding = oView.getElementBinding();
+          if (oBinding) {
+            oBinding.refresh();
+          }
+        })
+        .catch(function (oError) {
+          console.error(oError);
+          MessageBox.error(that.fetchText("updateFailed"));
+        })
+        .finally(function () {
+          oView.setBusy(false);
+        });
     },
 
-    onBookFieldChange: function (oEvent) {
-      BookDialogHelper.onFieldChange(this, oEvent);
-    },
-
-    onCloseBookForm: function () {
-      BookDialogHelper.closeForm(this);
-    },
-
-    onSaveBook: function () {
-      BookDialogHelper.saveBook(this);
-    },
+    /* ========== DELETE (unchanged pattern) ========== */
 
     onDeleteBook: function () {
       var oCtx = this.getView().getBindingContext();
@@ -93,10 +173,12 @@ onNavBooks: function () {
       var that = this;
       BookDialogHelper.confirmDelete(this, {
         afterDelete: function () {
-          that.getOwnerComponent().getRouter().navTo("books");
+          NavHelper.toBooks(that);
         }
       });
     },
+
+    /* ========== RATING (unchanged) ========== */
 
     onRatingChange: function (oEvent) {
       var iValue = oEvent.getParameter("value");
@@ -116,10 +198,11 @@ onNavBooks: function () {
         });
     },
 
+    /* ========== COVER (unchanged) ========== */
+
     onFileSizeExceed: function (oEvent) {
       var sFileName = oEvent.getParameter("fileName");
       var fFileSize = oEvent.getParameter("fileSize");
-      
       var iMaxAllowedKB = Math.round(this.getView().byId("coverUploader").getMaximumFileSize() * 1024);
       var iCurrentSizeKB = Math.round(fFileSize * 1024);
 
@@ -146,12 +229,12 @@ onNavBooks: function () {
         var sOriginalBase64 = e.target.result;
         var oImage = new Image();
         oImage.src = sOriginalBase64;
-        
+
         oImage.onload = function () {
           var oCanvas = document.createElement("canvas");
           var oCtxElement = oCanvas.getContext("2d");
 
-          var iMaxWidth = 800; 
+          var iMaxWidth = 800;
           var iMaxHeight = 800;
           var iWidth = oImage.width;
           var iHeight = oImage.height;
