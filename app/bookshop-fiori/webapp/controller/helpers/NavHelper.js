@@ -15,6 +15,17 @@ sap.ui.define([], function () {
       oComponent.getRouter().navTo("smartBooks", {}, true);
     },
 
+    toBookCreate: function (oController) {
+  var oComponent = oController.getOwnerComponent();
+  oComponent.setFclLayout("OneColumn");
+  oComponent.getRouter().navTo("bookCreate");
+},
+
+toBookEdit: function (oController, sBookId) {
+  var oComponent = oController.getOwnerComponent();
+  oComponent.setFclLayout("OneColumn");
+  oComponent.getRouter().navTo("bookEdit", { bookId: sBookId });
+},
    
     toCreateOrder: function (oController) {
       var oComponent = oController.getOwnerComponent();

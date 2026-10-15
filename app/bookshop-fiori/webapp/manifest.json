@@ -119,7 +119,17 @@
           "pattern": "smart-books",
           "name": "smartBooks",
           "target": ["smartBooks"]
-        }
+        },
+        {
+  "pattern": "book-form",
+  "name": "bookCreate",
+  "target": ["bookForm"]
+},
+{
+  "pattern": "book-form/{bookId}",
+  "name": "bookEdit",
+  "target": ["bookForm"]
+}
       ],
       "targets": {
         "books": {
@@ -142,7 +152,12 @@
           "viewName": "SmartBooks",
           "controlAggregation": "beginColumnPages",
           "viewLevel": 1
-        }
+        },
+        "bookForm": {
+  "viewName": "BookForm",
+  "controlAggregation": "beginColumnPages",
+  "viewLevel": 2
+}
       }
     }
   }
