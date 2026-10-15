@@ -153,8 +153,8 @@
           "controlAggregation": "beginColumnPages",
           "viewLevel": 1
         },
-        "bookForm": {
-  "viewName": "BookForm",
+        "bookCreate": {
+  "viewName": "BookCreate",
   "controlAggregation": "beginColumnPages",
   "viewLevel": 2
 }

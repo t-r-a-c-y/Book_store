@@ -1,5 +1,5 @@
 <mvc:View
-  controllerName="ns.bookshopfiori.controller.BookForm"
+  controllerName="ns.bookshopfiori.controller.BookCreate"
   xmlns:mvc="sap.ui.core.mvc"
   xmlns="sap.m"
   xmlns:core="sap.ui.core"
@@ -7,10 +7,7 @@
   height="100%"
   displayBlock="true">
 
-  <Page
-    id="bookFormPage"
-    title="{form>/pageTitle}"
-    showNavButton="false">
+  <Page id="bookCreatePage" title="{i18n>createBook}" showNavButton="false">
 
     <customHeader>
       <Bar>
@@ -18,7 +15,7 @@
           <Breadcrumbs class="sapUiSmallMarginBegin">
             <Link text="Home" press=".onNavBooks" />
             <Link text="Books" press=".onNavBooks" />
-            <Link text="{form>/pageTitle}" />
+            <Link text="{i18n>createBook}" />
           </Breadcrumbs>
         </contentLeft>
       </Bar>
@@ -26,24 +23,17 @@
 
     <content>
       <VBox class="sapUiMediumMargin">
-
         <f:SimpleForm
           editable="true"
           layout="ResponsiveGridLayout"
-          labelSpanXL="3"
           labelSpanL="3"
           labelSpanM="3"
-          labelSpanS="12"
-          emptySpanXL="4"
-          emptySpanL="4"
-          columnsXL="1"
           columnsL="1"
           columnsM="1">
 
           <f:content>
             <Label text="{i18n>Title}" required="true" />
             <Input
-              id="inTitle"
               value="{form>/title}"
               liveChange=".onFieldChange"
               valueState="{form>/titleState}"
@@ -51,7 +41,6 @@
 
             <Label text="{i18n>Description}" />
             <TextArea
-              id="inDescription"
               value="{form>/description}"
               rows="4"
               liveChange=".onFieldChange"
@@ -60,7 +49,6 @@
 
             <Label text="{i18n>Price}" required="true" />
             <Input
-              id="inPrice"
               type="Number"
               value="{form>/price}"
               liveChange=".onFieldChange"
@@ -69,7 +57,6 @@
 
             <Label text="{i18n>Stock}" required="true" />
             <Input
-              id="inStock"
               type="Number"
               value="{form>/stock}"
               liveChange=".onFieldChange"
@@ -78,11 +65,12 @@
 
             <Label text="{i18n>Author}" required="true" />
             <Select
-              id="inAuthor"
               forceSelection="false"
               selectedKey="{form>/author_ID}"
               change=".onFieldChange"
               width="100%"
+              valueState="{form>/authorState}"
+              valueStateText="{form>/authorStateText}"
               items="{
                 path: '/Authors',
                 sorter: { path: 'name' }
@@ -91,24 +79,19 @@
             </Select>
           </f:content>
         </f:SimpleForm>
-
       </VBox>
     </content>
 
     <footer>
       <Toolbar>
         <ToolbarSpacer />
+        <Button text="{i18n>Cancel}" press=".onCancel" />
         <Button
-          text="{i18n>Cancel}"
-          type="Transparent"
-          press=".onCancel" />
-        <Button
-          text="{form>/saveText}"
+          text="{i18n>create}"
           type="Emphasized"
           icon="sap-icon://save"
           press=".onSave" />
       </Toolbar>
     </footer>
-
   </Page>
 </mvc:View>

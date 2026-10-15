@@ -182,19 +182,23 @@ sap.ui.define([
       this.getOwnerComponent().getRouter().navTo("smartBooks");
     },
 
+    // onCreateBook: function () {
+    //   this.oEditContext = null;
+    //   BookDialogHelper.openForm(this, {
+    //     mode: "create",
+    //     dialogTitle: this.fetchText("createBook"),
+    //     confirmText: this.fetchText("create"),
+    //     title: "",
+    //     description: "",
+    //     price: "",
+    //     stock: "",
+    //     author_ID: ""
+    //   });
+    // },
+
     onCreateBook: function () {
-      this.oEditContext = null;
-      BookDialogHelper.openForm(this, {
-        mode: "create",
-        dialogTitle: this.fetchText("createBook"),
-        confirmText: this.fetchText("create"),
-        title: "",
-        description: "",
-        price: "",
-        stock: "",
-        author_ID: ""
-      });
-    },
+  NavHelper.toBookCreate(this);
+},
 
     openEditFromContext: function (oCtx) {
       if (!oCtx) {
